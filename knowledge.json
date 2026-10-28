@@ -1,3 +1,91 @@
 {
-  "units": []
+  "units": [
+    {
+      "unit": "5-1",
+      "title": "LLM Fundamentals",
+      "terms": [
+        {
+          "name": "トークン（token）",
+          "meaning": "モデルがテキストを処理する最小単位。単語・単語の一部・文字・バイトのどれにも当たりうる",
+          "analogy": "文章を細かく切ったパズルのピース。料金も上限もピースの数で数える",
+          "exam": "1トークンが何文字かはモデルと言語で変わる。正確な数はトークン計数（token counting）API で数える",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            }
+          ],
+          "addedAt": "2026-10-28"
+        },
+        {
+          "name": "コンテキストウィンドウ（context window）",
+          "meaning": "応答を作るときに参照できるテキストの全体（応答そのものも含む）。モデルの作業記憶",
+          "analogy": "作業机の広さ。学習データという図書館とは別物で、机に載っている資料しか見ながら書けない",
+          "exam": "システムプロンプト・全メッセージ・ツール定義・その回の出力（思考を含む）がすべて入る。詰め込みすぎると精度が落ちる（context rot）。入力だけで超えると 400 エラー",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-28"
+        },
+        {
+          "name": "温度（temperature）と非決定性（non-determinism）",
+          "meaning": "temperature は出力のランダムさを決める値。高いと多様、低いと無難で決定的に近づく",
+          "analogy": "料理人の冒険度。低いと定番レシピ、高いと日替わりの創作料理",
+          "exam": "temperature を 0 にしても完全には決定的にならず、同じ入力で違う出力になりうる",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            }
+          ],
+          "addedAt": "2026-10-28"
+        },
+        {
+          "name": "適応型思考（adaptive thinking）と effort",
+          "meaning": "考えるかどうか・どれだけ考えるかを Claude がリクエストごとに決める思考モード。深さは effort で調整する",
+          "analogy": "問題の難しさを見て、暗算で済ますか、メモを取って考えるかを本人が決める",
+          "exam": "thinking: {type: \"adaptive\"} と output_config.effort で設定。effort が低いと簡単な入力では思考を省くことがある。思考トークンは出力トークンとして課金され、max_tokens の一部",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Extended thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+            },
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-28"
+        },
+        {
+          "name": "事前学習（pretraining）と次トークン予測（next-token prediction）",
+          "meaning": "大量の文章で、前の文脈から次の語を予測するように学ぶ最初の学習。生成もこの予測を繰り返して行う",
+          "analogy": "文章の続きを当てる練習だけを大量に積んだ人。続きは書けるが、頼まれごとに応える練習はまだしていない",
+          "exam": "事前学習だけでは指示に従うのが得意ではなく、fine-tuning や RLHF で役に立つアシスタントに調整する",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            }
+          ],
+          "addedAt": "2026-10-28"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "拡張思考（extended thinking）と適応型思考（adaptive thinking）",
+          "text": "拡張思考は budget_tokens（最低 1,024、max_tokens 未満）で思考量を手で決め、毎回考える。\n適応型思考は Claude が思考量を決め、深さは effort で調整する。\nClaude 4.7 以降のモデルは拡張思考（type: \"enabled\"）を受け付けず 400 エラーになる。",
+          "addedAt": "2026-10-28"
+        }
+      ]
+    }
+  ]
 }

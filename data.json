@@ -37,6 +37,258 @@
       "受験は 2026-12-07 より前。Exam Guide v1.0 だけを対象にする"
     ]
   },
-  "sessions": [],
-  "notes": []
+  "sessions": [
+    {
+      "order": 1,
+      "date": "2026-10-28",
+      "label": "単元5-1 第1回",
+      "focus": "5-1",
+      "total": 10,
+      "correct": 4,
+      "byUnit": {
+        "5-1": [
+          4,
+          10
+        ]
+      }
+    }
+  ],
+  "notes": [
+    {
+      "topic": "コンテキストウィンドウに数えるもの / 学習データ・キャッシュ",
+      "question": "（2つ選択）Claude API の1回のリクエストで、コンテキストウィンドウの使用量に数えられるものはどれですか？",
+      "choices": [
+        "A. システムプロンプトとツール定義",
+        "B. モデルの学習に使われたデータ",
+        "C. その回に生成する出力（思考を含む）",
+        "D. キャッシュから読んだ入力は数えない"
+      ],
+      "myAnswer": "BC",
+      "correct": "AC",
+      "why": "システムプロンプト・全メッセージ・ツール定義に加え、その回の出力（思考を含む）もコンテキストウィンドウに数える。",
+      "whyNot": {
+        "B": "学習データはモデルが学んだ図書館で、作業机（コンテキストウィンドウ）には入らない",
+        "D": "キャッシュは料金が変わるだけで、cache_read_input_tokens もウィンドウに数える"
+      },
+      "example": "長い会話やエージェントでウィンドウの残りを見積もるとき、ツール定義と思考の分も入れて考える。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 1,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-28",
+      "nextReview": "2026-10-30"
+    },
+    {
+      "topic": "拡張思考（budget_tokens）/ 適応型思考（effort）",
+      "question": "Claude Opus 5.5 に thinking: {type: \"enabled\", budget_tokens: 8000} を付けて送ったら 400 エラーになりました。どう直しますか？",
+      "choices": [
+        "A. type を adaptive にし、深さは effort で指定",
+        "B. budget_tokens を 1,024 未満に下げる",
+        "C. budget_tokens を max_tokens より大きくする",
+        "D. temperature を 0 にして再送する"
+      ],
+      "myAnswer": "B",
+      "correct": "A",
+      "why": "Claude 4.7 以降は拡張思考（type: enabled）を受け付けず 400 になる。thinking: {type: \"adaptive\"} と output_config.effort に移す。",
+      "whyNot": {
+        "B": "1,024 は budget_tokens の最低値で、下回ると対応モデルでも弾かれる",
+        "C": "budget_tokens は max_tokens 未満が原則で、そもそもこのモデルでは使えない",
+        "D": "思考モードの指定の誤りとは無関係"
+      },
+      "example": "モデルを新しくしたときの壊れる変更（breaking behavior changes）として確認する。",
+      "sources": [
+        {
+          "title": "Extended thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+        }
+      ],
+      "explanation": "",
+      "no": 2,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-28",
+      "nextReview": "2026-10-30"
+    },
+    {
+      "topic": "適応型思考の effort low / 拡張思考の最低予算",
+      "question": "適応型思考を使い、effort を low にしています。「こんにちは」のような簡単な入力に対する振る舞いとして、最も近いものはどれですか？",
+      "choices": [
+        "A. 毎回最低 1,024 トークンは思考する",
+        "B. effort が low だと 400 エラーになる",
+        "C. 思考を省いてすぐ答えることがある",
+        "D. 必ず最大限に考えてから答える"
+      ],
+      "myAnswer": "C",
+      "correct": "C",
+      "why": "適応型思考は考えるかどうか・どれだけ考えるかを Claude が決め、effort が低いと簡単な入力では思考を省くことがある。",
+      "whyNot": {
+        "A": "1,024 は拡張思考の budget_tokens の最低値で、適応型思考に最低の思考量はない",
+        "B": "low は正しい effort の値でエラーにならない",
+        "D": "思考の量は入力と effort で変わる"
+      },
+      "example": "簡単な問い合わせが多いアプリで、速さと費用を抑えるために effort を下げる。",
+      "sources": [
+        {
+          "title": "Extended thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+        }
+      ],
+      "explanation": "",
+      "no": 3,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-28",
+      "nextReview": "2026-10-30"
+    },
+    {
+      "topic": "入力超過の 400 / model_context_window_exceeded / チャット画面の自動削除",
+      "question": "送った入力だけで、すでにモデルのコンテキストウィンドウを超えていました。API の反応として正しいものはどれですか？",
+      "choices": [
+        "A. 古いメッセージから自動で削って処理する",
+        "B. 400 エラー（prompt is too long）を返す",
+        "C. 生成して model_context_window_exceeded で止める",
+        "D. 超えた分だけ追加料金で処理する"
+      ],
+      "myAnswer": "A",
+      "correct": "B",
+      "why": "入力だけでウィンドウを超えると、どのモデルでも 400 invalid_request_error（prompt is too long）になる。",
+      "whyNot": {
+        "A": "古い順に流すのは claude.ai などのチャット画面の話で、API は自動で削らない（compaction などを自分で使う）",
+        "C": "入力は収まり、生成中に上限に届いたときの stop_reason（Claude 4.5 以降）",
+        "D": "そういう仕組みはない"
+      },
+      "example": "送る前にトークン計数 API で数えておくと避けられる。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 4,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-28",
+      "nextReview": "2026-10-30"
+    },
+    {
+      "topic": "思考トークンの課金・max_tokens・コンテキストウィンドウ",
+      "question": "（2つ選択）適応型思考を有効にしたときの思考トークンについて、正しいものはどれですか？",
+      "choices": [
+        "A. 思考トークンは課金されない",
+        "B. 出力トークンとして課金される",
+        "C. コンテキストウィンドウには数えない",
+        "D. max_tokens の一部として数える"
+      ],
+      "myAnswer": "AD",
+      "correct": "BD",
+      "why": "思考トークンは max_tokens の一部で、出力トークンとして課金され、レート制限にも数える。",
+      "whyNot": {
+        "A": "見えにくいだけで出力として課金される（usage.output_tokens_details.thinking_tokens で分かる）",
+        "C": "その回の出力（思考を含む）はコンテキストウィンドウに数える"
+      },
+      "example": "思考を有効にするときは、費用見積もりと max_tokens の設定に思考の分を入れる。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 5,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-28",
+      "nextReview": "2026-10-30"
+    },
+    {
+      "topic": "事前学習（次トークン予測）/ fine-tuning・RLHF",
+      "question": "大量の文章で事前学習だけをした言語モデルは、そのままでは指示にうまく従わないことがあります。理由として最も適切なものはどれですか？",
+      "choices": [
+        "A. 前の文脈から次の語を予測する学習だから",
+        "B. コンテキストウィンドウが小さすぎるから",
+        "C. temperature が高すぎるから",
+        "D. 学習データに指示文が一つもないから"
+      ],
+      "myAnswer": "B",
+      "correct": "A",
+      "why": "事前学習は次の語の予測を学ぶもので、指示に従う振る舞いは fine-tuning や RLHF で調整する。",
+      "whyNot": {
+        "B": "ウィンドウの大きさは長い入力を扱えるかの話で、指示に従うかとは別",
+        "C": "temperature は出力のランダムさで、指示に従う性質は学習で決まる",
+        "D": "「一つもない」の言い切りが誤りで、問題は学習の目的"
+      },
+      "example": "next-token generation は、この予測を繰り返して文章を作る仕組み。",
+      "sources": [
+        {
+          "title": "Glossary",
+          "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+        }
+      ],
+      "explanation": "",
+      "no": 6,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-28",
+      "nextReview": "2026-10-30"
+    },
+    {
+      "topic": "context rot / 全部入れる",
+      "question": "社内規程500ページが 1M トークンのコンテキストウィンドウに収まります。質問への回答精度を高めるにはどうしますか？",
+      "choices": [
+        "A. 収まるので毎回全部入れるのが最善",
+        "B. temperature を上げて幅広く探させる",
+        "C. max_tokens を 128k に上げる",
+        "D. 質問に関係する箇所を選んで入れる"
+      ],
+      "myAnswer": "A",
+      "correct": "D",
+      "why": "トークンが増えると精度や想起が落ちる（context rot）ため、何を入れるかを選ぶことが大事。",
+      "whyNot": {
+        "A": "収まることと精度が出ることは別で、費用と遅延も増える",
+        "B": "多様になるだけで根拠の正しさは上がらない",
+        "C": "出力の上限が上がるだけで入力の選び方は解決しない"
+      },
+      "example": "関係する箇所を検索して入れる RAG の考え方につながる。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 7,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-28",
+      "nextReview": "2026-10-30"
+    }
+  ]
 }
