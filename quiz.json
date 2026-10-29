@@ -3628,6 +3628,733 @@
         }
       ],
       "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u5-2-c",
+      "label": "単元5-2 セットC",
+      "focus": "5-2",
+      "lecture": {
+        "unit": "5-2",
+        "terms": [
+          {
+            "name": "同期クライアントと非同期クライアント（Anthropic / AsyncAnthropic）",
+            "meaning": "Python SDK には、呼んだら返事が来るまで待つ同期クライアント（Anthropic）と、await で待ちの間にほかの処理を進められる非同期クライアント（AsyncAnthropic）がある。使い方（メソッド名や引数）は同じ。",
+            "analogy": "同期は「レジに1人で並んで、自分の会計が終わるまで動けない」やり方です。\n非同期は「番号札をもらって、呼ばれるまでほかの買い物を続ける」やり方です。\n1人分の短いスクリプトなら同期で十分ですが、同時に何十人もさばく Web サーバーでは番号札（async / await）のほうが待ち時間を無駄にしません。",
+            "exam": "asyncio で動くアプリ（多数の同時リクエストをさばくサーバーなど）では AsyncAnthropic を使い、呼び出しに await を付ける。\n非同期のコードの中で同期クライアントを呼ぶと、返事待ちの間ほかの処理が止まる。\n同時接続の性能をさらに上げたいときは、aiohttp を HTTP の土台に使う選択肢もある。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              }
+            ]
+          },
+          {
+            "name": "SDK のストリーミング補助（messages.stream・text_stream・get_final_message）",
+            "meaning": "client.messages.stream(...) を with 文で使うと、文字だけを順に取り出す text_stream と、最後に組み上がったメッセージ全体を返す get_final_message() が使える。生のイベントだけでよければ messages.create(..., stream=True) を使う。",
+            "analogy": "宅配の荷物を想像してください。\nstream=True は「部品が1個ずつ届くので、自分で組み立てる」受け取り方です。\nmessages.stream() は「部品も1個ずつ見せてくれるうえに、最後に組み立て済みの完成品（get_final_message）も渡してくれる」受け取り方です。\n完成品まで作ってくれる分、手元に置いておく量（メモリ）は増えます。",
+            "exam": "画面に文字を流しつつ、最後に usage（トークン数）や全文を保存したい → messages.stream() と text_stream・get_final_message()。\nイベントを別の仕組みに中継するだけで、完成形は要らず、メモリを抑えたい → create(stream=True)。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              }
+            ]
+          },
+          {
+            "name": "SDK の例外クラス（APIConnectionError・RateLimitError・APIStatusError など）",
+            "meaning": "API につながらないときや 4xx・5xx が返ったとき、SDK は APIError の子クラスを投げる。接続できない → APIConnectionError、400 → BadRequestError、401 → AuthenticationError、429 → RateLimitError、500 以上 → InternalServerError、タイムアウト → APITimeoutError。",
+            "analogy": "病院の受付で「どこが痛いか」で診療科を分けるのと同じです。\n「そもそも病院に着けない」（接続エラー）、「混んでいるので少し待って」（429）、「保険証が違う」（401）では、取るべき行動が違います。\n例外の種類ごとに except を分けておくと、それぞれに合った対応ができます。",
+            "exam": "except は、細かい種類（RateLimitError など）を先に、広い種類（APIStatusError や APIError）を後に書く。広いものを先に書くと、細かいほうの分岐に入らない。\nAPIStatusError からは status_code と response を読める。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              },
+              {
+                "title": "Claude API errors",
+                "url": "https://platform.claude.com/docs/en/api/errors"
+              }
+            ]
+          },
+          {
+            "name": "リクエストごとの上書き（with_options）と環境変数（ANTHROPIC_API_KEY・ANTHROPIC_BASE_URL・ANTHROPIC_LOG）",
+            "meaning": "client.with_options(timeout=…, max_retries=…) で、その呼び出しだけ設定を変えられる。SDK は環境変数 ANTHROPIC_API_KEY からキーを、ANTHROPIC_BASE_URL から接続先を読み、ANTHROPIC_LOG=debug / info でログを出す。",
+            "analogy": "家のエアコンの「いつもの設定」（クライアント全体の設定）はそのままに、今夜だけリモコンで温度を変える（with_options）イメージです。\n環境変数は、玄関に貼った「この家のルール」の紙のようなもので、コードを書き換えずに鍵（API キー）や行き先（接続先）を差し替えられます。",
+            "exam": "1つの機能だけ短いタイムアウトやリトライ0回にしたい → with_options。クライアント全体の timeout を変えるとほかの呼び出しにも効いてしまう。\nキーは ANTHROPIC_API_KEY に置けば Anthropic() と引数なしで作れる。\n検証用サーバーやプロキシに向けたい → ANTHROPIC_BASE_URL。SDK の送受信を詳しく見たい → ANTHROPIC_LOG=debug。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "messages.stream() と messages.create(stream=True)",
+          "text": "どちらも SSE で少しずつ受け取る点は同じ。\nmessages.stream() は文字だけの text_stream と、最後のメッセージ全体（get_final_message）を組み立ててくれる補助付き。\ncreate(stream=True) はイベントを順に返すだけで、完成形を作らない分メモリが少なくて済む。\n「最後に全文や usage も欲しい」なら前者、「流すだけ」なら後者。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "非同期クライアント（AsyncAnthropic + await）/ 同期クライアント・Batches・リトライ",
+          "question": "asyncio で動く Web サーバーから、利用者ごとに Claude を呼びます。同期クライアントで呼ぶと、1人の返事を待つ間ほかの利用者の処理まで止まってしまいます。どう直しますか？",
+          "choices": [
+            "A. max_retries を増やす",
+            "B. AsyncAnthropic を使い、await で呼ぶ",
+            "C. Message Batches API に切り替える",
+            "D. 同期クライアントのまま timeout を短くする"
+          ],
+          "correct": "B",
+          "why": "AsyncAnthropic は同期クライアントと同じ使い方で、await で待つ間にほかの利用者の処理を進められる。asyncio のアプリにはこちらが合う。",
+          "whyNot": {
+            "A": "リトライは失敗したときに出し直すだけで、待ちの間に処理が止まる問題は変わらない。",
+            "C": "Batches API は結果がそろうまで最大24時間かかる非同期のまとめ処理で、その場で返事が要るチャットには合わない。",
+            "D": "待つ時間が短くなるだけで、待っている間に止まることは変わらず、長い返事は失敗するようになる。"
+          },
+          "example": "FastAPI などの非同期の Web フレームワークから Claude を呼ぶときに AsyncAnthropic を使う。",
+          "explanation": "同時接続の性能をさらに上げたいときは、pip install \"anthropic[aiohttp]\" で aiohttp を HTTP の土台に使える。",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "messages.stream（text_stream・get_final_message）/ create(stream=True)・非ストリーミング",
+          "question": "チャット画面で、返事を書けた分から表示しつつ、終わったら全文と usage（トークン数）を DB に保存したいです。自分でイベントを組み立てるコードは書きたくありません。どれを使いますか？",
+          "choices": [
+            "A. create(stream=True) で自分で連結する",
+            "B. 非ストリーミングで呼び、返った全文を一度に表示する",
+            "C. stream() の text_stream と get_final_message",
+            "D. count_tokens で先に数えてから非ストリーミングで呼ぶ"
+          ],
+          "correct": "C",
+          "why": "messages.stream() は文字だけを順に流す text_stream と、最後に組み上がったメッセージ全体を返す get_final_message() を用意してくれる。全文と usage を自分で組み立てる必要がない。",
+          "whyNot": {
+            "A": "できるが、イベントを連結して完成形を作るコードを自分で書くことになり、要件に反する。",
+            "B": "書けた分から表示するという要件を満たさない。",
+            "D": "count_tokens は送る前の入力トークンの見積もりで、出力の表示や保存の仕組みではない。"
+          },
+          "example": "チャットの返事を流しながら、終わったら会話ログと料金計算用のトークン数を保存したいときに使う。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            },
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "create(stream=True)（メモリが少ない）/ messages.stream・get_final_message",
+          "question": "中継サーバーが、Claude から届くストリーミングのイベントを、そのまま別のシステムへ転送するだけです。完成したメッセージ全体は使わず、同時に大量の転送をするのでメモリを抑えたいです。どれが最も合いますか？",
+          "choices": [
+            "A. messages.create(stream=True) でイベントを順に読む",
+            "B. messages.stream() で get_final_message() まで呼ぶ",
+            "C. 非ストリーミングで呼び、全文を受け取ってから送る",
+            "D. Message Batches API で結果をまとめて受け取る"
+          ],
+          "correct": "A",
+          "why": "create(stream=True) はイベントを順に返すだけで、最終メッセージを組み立てないのでメモリが少なくて済む。転送するだけならこれで足りる。",
+          "whyNot": {
+            "B": "完成形を組み立てる分メモリを使う。完成形は使わないので無駄になる。",
+            "C": "全文がそろうまで転送できず、届いた分から流すことができない。",
+            "D": "まとめ処理で、届いた分からすぐ転送することはできない。"
+          },
+          "example": "SSE をブラウザや別サービスへそのまま流すプロキシで、create(stream=True) を使う。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "APIConnectionError（接続できない）/ RateLimitError・AuthenticationError・BadRequestError",
+          "question": "社内ネットワークの障害で、アプリが API のサーバーにまったくつながりませんでした。Python SDK はどの例外を投げますか？",
+          "choices": [
+            "A. RateLimitError",
+            "B. AuthenticationError",
+            "C. BadRequestError",
+            "D. APIConnectionError"
+          ],
+          "correct": "D",
+          "why": "サーバーに届かず HTTP の応答そのものがないときは APIConnectionError になる。e.__cause__ に元の例外が入っている。",
+          "whyNot": {
+            "A": "429 の応答が返ったときの例外。応答が返らない今回とは違う。",
+            "B": "401（キーが無効など）の応答が返ったときの例外。",
+            "C": "400（リクエストの形が不正）の応答が返ったときの例外。"
+          },
+          "example": "接続できないときは「通信を確認してください」、429 なら「少し待って再試行」のように、例外ごとに利用者への案内を変える。",
+          "explanation": "接続エラーも SDK の既定で2回まで自動リトライされ、それでもだめなら APIConnectionError が投げられる。",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "except の順番（RateLimitError を APIStatusError より先に）/ 例外を1つにまとめる",
+          "question": "次のコードで、429 のときに「少し待ってから再試行」する分岐が一度も動きません。except APIStatusError: … の後に except RateLimitError: … が書かれています。どう直しますか？",
+          "choices": [
+            "A. RateLimitError を APIStatusError より前に",
+            "B. except を APIError 1つにまとめる",
+            "C. max_retries を 0 にする",
+            "D. 分岐を APIConnectionError に変える"
+          ],
+          "correct": "A",
+          "why": "except は上から順に照合され、最初に当てはまったものだけが動く。RateLimitError は APIStatusError の一種なので、広い APIStatusError を先に書くと 429 もそちらで捕まる。細かい種類を先に書く。",
+          "whyNot": {
+            "B": "広い APIError 1つにまとめると、429 とほかのエラーを区別できなくなる。",
+            "C": "リトライ回数を変えても、except の照合の順番は変わらない。",
+            "D": "APIConnectionError は応答がないときの例外で、429 を捕まえられない。"
+          },
+          "example": "公式の例でも、APIConnectionError・RateLimitError を先に、APIStatusError を最後に書いている。",
+          "explanation": "【解説】RateLimitError が APIStatusError の子クラスであることと、except が上から順に照合されることは Python と SDK の一般的な仕組み。公式の例は細かい例外を先に書く順番になっている。",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "with_options（1つの呼び出しだけ timeout を変える）/ クライアント全体の timeout・max_tokens",
+          "question": "入力欄の文字補完だけは、5秒で返らなければあきらめて補完を出さないことにしたいです。同じクライアントで呼ぶ長いレポート生成は、既定のタイムアウトのままにします。どうしますか？",
+          "choices": [
+            "A. クライアントを Anthropic(timeout=5.0) で作り直す",
+            "B. 補完の max_tokens を小さくする",
+            "C. 補完だけ client.with_options(timeout=5.0) で呼ぶ",
+            "D. 環境変数 ANTHROPIC_LOG に 5 を入れる"
+          ],
+          "correct": "C",
+          "why": "with_options はその呼び出しだけ設定を上書きするので、補完は5秒で打ち切り、レポート生成は既定の10分のままにできる。",
+          "whyNot": {
+            "A": "クライアント全体のタイムアウトが5秒になり、長いレポート生成まで失敗する。",
+            "B": "返事は短くなるが、待ち時間の上限を決めるものではない。",
+            "D": "ANTHROPIC_LOG はログの詳しさ（debug / info）を決める環境変数で、タイムアウトとは関係ない。"
+          },
+          "example": "応答の速さが大事な機能だけ、with_options(timeout=…, max_retries=0) で短く打ち切る。",
+          "explanation": "タイムアウトした呼び出しも既定で2回リトライされるので、5秒で確実にあきらめたいなら max_retries=0 もあわせて指定する。",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "with_options で変えられるもの（timeout・max_retries）/ レート制限・コンテキストウィンドウ",
+          "question": "Python SDK の client.with_options(...) で、その呼び出しだけ変えられる設定はどれですか？",
+          "choices": [
+            "A. 組織のレート制限（RPM）",
+            "B. タイムアウト（timeout）",
+            "C. モデルのコンテキストウィンドウの大きさ",
+            "D. 自動リトライの回数（max_retries）",
+            "E. 料金の単価"
+          ],
+          "correct": "BD",
+          "why": "with_options は SDK 側の送り方の設定を、その呼び出しだけ上書きする。公式に、timeout と max_retries をリクエストごとに変える例がある。",
+          "whyNot": {
+            "A": "レート制限は組織の利用ティアで決まる API 側の上限で、SDK の設定では変わらない。",
+            "C": "コンテキストウィンドウはモデルごとに決まっていて、SDK では変えられない。",
+            "E": "料金はモデルと使ったトークン数で決まり、SDK の設定では変わらない。"
+          },
+          "example": "夜間の一括処理だけ with_options(max_retries=5) にして、混雑に強くする。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "環境変数 ANTHROPIC_API_KEY（SDK が自動で読む）/ ヘッダー名・独自の変数名",
+          "question": "コンテナで動くアプリに、シークレット管理の仕組みから API キーを環境変数として渡します。コードでは Anthropic() と引数なしでクライアントを作りたいです。環境変数の名前はどれにしますか？",
+          "choices": [
+            "A. ANTHROPIC_API_KEY",
+            "B. ANTHROPIC_VERSION",
+            "C. CLAUDE_SECRET",
+            "D. X_API_KEY"
+          ],
+          "correct": "A",
+          "why": "Python SDK は api_key を省略すると環境変数 ANTHROPIC_API_KEY を読む。キーをコードに書かずに済む。",
+          "whyNot": {
+            "B": "API の版は anthropic-version ヘッダーで、SDK が自動で付ける。キーの置き場所ではない。",
+            "C": "SDK が自動で読む名前ではないので、引数なしではキーが見つからない。",
+            "D": "x-api-key は HTTP のヘッダー名で、SDK が自動で読む環境変数の名前ではない。"
+          },
+          "example": "ローカル開発では .env に ANTHROPIC_API_KEY を書き、python-dotenv で読み込んで、ソース管理には入れない。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "ANTHROPIC_BASE_URL（接続先の差し替え）/ API キー・anthropic-beta・ANTHROPIC_LOG",
+          "question": "結合テストでは、本物の API ではなく社内の検証用サーバーに送りたいです。アプリのコードは書き換えず、テスト環境の設定だけで切り替えたいです。どうしますか？",
+          "choices": [
+            "A. テスト用の API キーを ANTHROPIC_API_KEY に入れる",
+            "B. 環境変数 ANTHROPIC_BASE_URL を検証用に向ける",
+            "C. anthropic-beta ヘッダーに test を入れる",
+            "D. ANTHROPIC_LOG=debug にする"
+          ],
+          "correct": "B",
+          "why": "SDK は ANTHROPIC_BASE_URL から接続先を読むので、環境変数だけで送り先を検証用サーバーに変えられる。",
+          "whyNot": {
+            "A": "キーが変わるだけで、送り先は本物の API のまま。",
+            "C": "anthropic-beta はベータ機能を有効にするヘッダーで、送り先は変わらない。誤った名前は 400 になる。",
+            "D": "ログが詳しくなるだけで、送り先は変わらない。"
+          },
+          "example": "テストの CI では ANTHROPIC_BASE_URL をモックサーバーに向け、料金をかけずにアプリの動きを確かめる。",
+          "explanation": "コードで指定するなら Anthropic(base_url=...) でもよい。",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "ANTHROPIC_LOG=debug（SDK のログ）/ max_retries・request-id・anthropic-beta",
+          "question": "本番に近い環境で、SDK が実際にどんなリクエストを送り、何回出し直しているかを詳しく見たいです。コードは変えずに確かめる方法はどれですか？",
+          "choices": [
+            "A. max_retries を 0 にして様子を見る",
+            "B. anthropic-beta ヘッダーに debug を入れる",
+            "C. 環境変数 ANTHROPIC_LOG を debug にする",
+            "D. 応答の request-id を Anthropic に送って聞く"
+          ],
+          "correct": "C",
+          "why": "Python SDK は標準の logging を使い、環境変数 ANTHROPIC_LOG を debug か info にするとログを出す。コードを変えずに送受信の様子を見られる。",
+          "whyNot": {
+            "A": "コードの設定変更で、しかも動き（リトライ）そのものを変えてしまい、普段の様子を観察できない。",
+            "B": "anthropic-beta はベータ機能の名前を入れるヘッダーで、debug という名前はなく 400 になる。",
+            "D": "request-id は特定の呼び出しをサポートに問い合わせるためのもので、自分で送受信の様子を見る方法ではない。"
+          },
+          "example": "「リトライが多すぎないか」を調べるとき、まず ANTHROPIC_LOG=info で SDK のログを見る。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u5-2-d",
+      "label": "単元5-2 セットD",
+      "focus": "5-2",
+      "lecture": {
+        "unit": "5-2",
+        "terms": [
+          {
+            "name": "トークン計数エンドポイント（POST /v1/messages/count_tokens）",
+            "meaning": "Messages API に送るのと同じ形の入力（system・ツール・画像・PDF など）を渡すと、送る前に入力トークン数を返す。無料で使え、Messages API とは別枠のレート制限（RPM）がかかる。数は見積もり。",
+            "analogy": "宅配便を出す前に、窓口の秤で重さを量るようなものです。\n量るのは無料で、実際に送らなくても「このサイズなら送れるか」「送料はいくらか」が分かります。\nただし秤の目盛りは目安で、実際の送料とわずかにずれることがあります。",
+            "exam": "長い文書を送る前に、コンテキストウィンドウに収まるか・費用はいくらかを確かめる場面で使う。\n見積もりなので実際の課金とわずかに違うことがある。プロンプトキャッシュは計算に使われない。\n送った後の実績は応答の usage で見る。Opus 4.7 以降は新しいトークナイザーなので、使うモデルで数え直す。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Token counting",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+              }
+            ]
+          },
+          {
+            "name": "Models API（GET /v1/models）",
+            "meaning": "API で使えるモデルの一覧を返す。新しいモデルほど先頭に並び、id・display_name・max_input_tokens・capabilities（画像入力や思考に対応するかなど）・lifecycle（active / deprecated / retired）が分かる。",
+            "analogy": "レストランの「今日のメニュー表」です。\n料理名（id）と、辛さや量（何ができるか・どこまで入るか）が書いてあり、終売予定の品（deprecated）も分かります。\n厨房に毎回聞きに行かなくても、メニュー表を見れば注文できる料理が分かります。",
+            "exam": "モデル名をコードに固定せず、使えるモデルを画面の選択肢に出したいとき・モデルが画像入力などに対応しているか確かめたいときに使う。\n一覧は after_id・before_id でページを送る。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "List Models",
+                "url": "https://platform.claude.com/docs/en/api/models/list"
+              },
+              {
+                "title": "API overview",
+                "url": "https://platform.claude.com/docs/en/api/overview"
+              }
+            ]
+          },
+          {
+            "name": "ベータ機能の呼び方（anthropic-beta ヘッダー・client.beta・betas）",
+            "meaning": "正式公開前の機能は、anthropic-beta ヘッダーに機能名（多くは feature-name-YYYY-MM-DD の形）を入れて使う。SDK では client.beta.messages.create(..., betas=[...]) と書くとヘッダーを付けてくれる。",
+            "analogy": "新メニューの「試食会」に参加するための招待状です。\n招待状（ベータ名）を受付で見せれば試食できますが、味やレシピは変わったり、メニューから消えたりすることがあります。\n招待状の名前を書き間違えると、受付で断られます（400）。",
+            "exam": "複数のベータを使うときは、1つのヘッダーにカンマ区切りで並べる（ヘッダーを複数回送ってもよい）。\n無効な名前や使えないベータを送ると 400 invalid_request_error。\nベータ機能は予告のうえ仕様が変わったり、なくなったりすることがある。anthropic-version（API の版）とは別物。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Beta headers",
+                "url": "https://platform.claude.com/docs/en/api/beta-headers"
+              },
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              }
+            ]
+          },
+          {
+            "name": "Files API（file_id）",
+            "meaning": "ファイルを一度アップロードして file_id を受け取り、以後の Messages API では中身を送り直さずに file_id で参照する仕組み。PDF・テキストは document、画像は image ブロックで使う。",
+            "analogy": "図書館に本を一冊預けて「整理番号」をもらうようなものです。\n次からは毎回本を持ち込まなくても、番号を言えば同じ本を使ってもらえます。\nただし番号は同じ図書館（ワークスペース）の利用者なら誰でも使えるので、他人に番号を渡してはいけません。",
+            "exam": "同じ大きな PDF を何度も使うなら、毎回 base64 で埋め込むより Files API で file_id を参照する。\nアップロード・一覧・削除などの操作は無料で、Messages で使った中身は入力トークンとして課金される。\n自分がアップロードしたファイルはダウンロードできない（できるのはコード実行ツールやスキルが作ったファイルだけ）。\nfile_id はワークスペース全体で使えるので、利用者から受け取った file_id をそのまま使わない。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Files API",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/files"
+              }
+            ]
+          },
+          {
+            "name": "第三者クラウド向けクライアント（AnthropicBedrock など）とリクエストサイズの上限",
+            "meaning": "Amazon Bedrock・Google Cloud・Microsoft Foundry 経由でも、SDK の専用クライアント（AnthropicBedrock・AnthropicVertex など）で同じように呼べる。認証や課金はそのクラウドの IAM と請求に乗り、使える機能やリクエストの大きさの上限はプラットフォームごとに違う。",
+            "analogy": "同じブランドの商品を、直営店（Claude API）で買うか、いつも使っているデパート（AWS など）で買うかの違いです。\nデパートならいつものカード（クラウドの IAM と請求）で払えますが、直営店にしかない新商品（一部の機能）があり、持ち込める荷物の大きさ（リクエストの上限）も店ごとに違います。",
+            "exam": "Claude API のリクエスト上限は Messages・Token Counting が 128 MB、Batches が 256 MB、Files API が 500 MB で、超えると 413 request_too_large。Bedrock は 20 MB、Google Cloud（Google 管理）は 30 MB。\nBedrock は AWS の認証情報で呼び、Files API・Models API・Message Batches などは使えない。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "API overview",
+                "url": "https://platform.claude.com/docs/en/api/overview"
+              },
+              {
+                "title": "Claude on Amazon Bedrock (Opus 4.6 and earlier)",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy"
+              },
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "Files API で file_id を参照する場合と、base64 で毎回埋め込む場合",
+          "text": "base64 で埋め込むと、呼ぶたびにファイルの中身をリクエストに入れて送り直す。\nFiles API なら一度アップロードし、以後は file_id だけを送る。同じファイルを何度も使うならこちらが向く。\nどちらでも、Messages で使った中身は入力トークンとして課金される。\nトークン計数エンドポイントは file_id の参照を受け付けないので、数えるときは base64 で送る。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "トークン計数エンドポイント（送る前に数える）/ usage・Models API・Batches",
+          "question": "利用者がアップロードした長い契約書を Claude に渡す前に、モデルのコンテキストウィンドウに収まるかと、おおよその費用を確かめたいです。実際の生成はまだしたくありません。どうしますか？",
+          "choices": [
+            "A. 一度 Messages API で送り、応答の usage を見る",
+            "B. Models API でモデルの一覧を取る",
+            "C. トークン計数エンドポイントで入力トークン数を数える",
+            "D. Message Batches API に入れて結果を待つ"
+          ],
+          "correct": "C",
+          "why": "トークン計数エンドポイントは、Messages と同じ形の入力を受け取り、送る前に入力トークン数を返す。生成はせず、無料で使える。",
+          "whyNot": {
+            "A": "実際に生成して料金がかかり、収まらなければエラーになる。送った後の実績を見る方法で、送る前の確認ではない。",
+            "B": "モデルの最大入力トークン数は分かるが、この契約書が何トークンかは分からない。",
+            "D": "まとめ処理で実際に生成してしまい、送る前の確認にならない。"
+          },
+          "example": "長い文書を受け付けるアプリで、収まらなければ分割や要約に回す判断に使う。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Token counting",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "トークン計数の性質（無料・別枠のレート制限）/ 課金と完全一致・キャッシュを反映",
+          "question": "トークン計数エンドポイントについて、正しい説明はどれですか？",
+          "choices": [
+            "A. 返る数は、実際の課金と必ず一致する",
+            "B. 使うのに料金はかからない",
+            "C. プロンプトキャッシュが効いた後の数を返す",
+            "D. Messages API とは別枠のレート制限がかかる"
+          ],
+          "correct": "BD",
+          "why": "トークン計数は無料で、利用ティアごとの RPM の上限がある。この上限はメッセージ作成とは別で、互いに影響しない。",
+          "whyNot": {
+            "A": "数は見積もりで、実際の入力トークン数とわずかに違うことがある。",
+            "C": "トークン計数はキャッシュの仕組みを使わない。cache_control を付けても、キャッシュが働くのは実際のメッセージ作成のときだけ。"
+          },
+          "example": "大量の文書を事前に数えても、本番の Messages API の枠を食わない。",
+          "explanation": "Opus 4.7 以降のモデルは新しいトークナイザーで、同じ文でも以前より約3割多く数えられる。使うモデルを指定して数え直す。",
+          "sources": [
+            {
+              "title": "Token counting",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "Models API（使えるモデルの一覧）/ count_tokens・anthropic-version・コードに固定",
+          "question": "社内ツールの設定画面に「使うモデル」の選択肢を出します。新しいモデルが出るたびにコードを書き換えずに済むよう、そのとき API で使えるモデルを取ってきたいです。どれを使いますか？",
+          "choices": [
+            "A. GET /v1/models（Models API）",
+            "B. POST /v1/messages/count_tokens",
+            "C. anthropic-version ヘッダーを最新の日付にする",
+            "D. モデル名の一覧を設定ファイルに書いておく"
+          ],
+          "correct": "A",
+          "why": "Models API は API で使えるモデルの一覧を、新しいものから順に返す。id と display_name をそのまま選択肢に使える。",
+          "whyNot": {
+            "B": "入力トークン数を数えるもので、モデルの一覧は返さない。",
+            "C": "API の版を決めるヘッダーで、使えるモデルの一覧は取れない。",
+            "D": "新しいモデルが出るたびに書き換えが必要で、要件に反する。"
+          },
+          "example": "管理画面のモデル選択や、終売予定（deprecated）のモデルを使っていないかの点検に使う。",
+          "explanation": "既定では active と deprecated のモデルが返り、retired は lifecycle で指定したときだけ含まれる。",
+          "sources": [
+            {
+              "title": "List Models",
+              "url": "https://platform.claude.com/docs/en/api/models/list"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "Models API の capabilities（画像入力に対応するか）/ 送って試す・count_tokens",
+          "question": "利用者が画像を添えて質問できる機能を作ります。設定で選ばれたモデルが画像入力に対応しているかを、送る前にプログラムで確かめたいです。どうしますか？",
+          "choices": [
+            "A. 画像を付けて送り、エラーが出たら非対応と判断する",
+            "B. count_tokens に画像を渡し、0 なら非対応と判断する",
+            "C. anthropic-beta ヘッダーに vision を入れる",
+            "D. Models API の capabilities.image_input を見る"
+          ],
+          "correct": "D",
+          "why": "Models API はモデルごとの capabilities を返し、image_input で画像を受け付けるかが分かる。送る前に確かめられる。",
+          "whyNot": {
+            "A": "実際に送って料金や待ち時間をかけ、エラーの理由も画像以外かもしれない。",
+            "B": "トークン数の見積もりで、対応しているかを判定する方法ではない。",
+            "C": "vision というベータ名はなく、無効な名前は 400 になる。"
+          },
+          "example": "PDF 入力（pdf_input）や思考（thinking）に対応するかも、同じ capabilities で確かめられる。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "List Models",
+              "url": "https://platform.claude.com/docs/en/api/models/list"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "ベータ機能の呼び方（client.beta + betas）/ anthropic-version・モデル名・別キー",
+          "question": "Python SDK で、ドキュメントに「ベータ」と書かれた機能を試したいです。ドキュメントには、送るべきベータ名が書いてあります。どう呼びますか？",
+          "choices": [
+            "A. anthropic-version ヘッダーにベータ名を入れる",
+            "B. client.beta.messages.create(..., betas=[ベータ名])",
+            "C. model の名前の末尾に -beta を付ける",
+            "D. ベータ専用の API キーを発行して使う"
+          ],
+          "correct": "B",
+          "why": "SDK の client.beta から呼び、betas にベータ名を渡すと、SDK が anthropic-beta ヘッダーを付けて送る。",
+          "whyNot": {
+            "A": "anthropic-version は API の版（日付）を指定するヘッダーで、ベータ機能を有効にするのは anthropic-beta。",
+            "C": "そのような名前のモデルはなく、エラーになる。",
+            "D": "ベータ専用のキーという仕組みはない。キーはそのままで、ヘッダーで有効にする。"
+          },
+          "example": "コンテキスト編集（context-management-2025-06-27）を試すときに、betas にその名前を入れる。",
+          "explanation": "ベータ機能は予告のうえ仕様が変わったり、なくなったり、料金やレート制限が違ったりすることがある。",
+          "sources": [
+            {
+              "title": "Beta headers",
+              "url": "https://platform.claude.com/docs/en/api/beta-headers"
+            },
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "複数のベータ（カンマ区切り）/ 1つしか使えない・別リクエスト",
+          "question": "curl で Messages API を直接呼んでいます。1回のリクエストで、2つのベータ機能 feature-a と feature-b を両方使いたいです。どう送りますか？",
+          "choices": [
+            "A. 1回に使えるベータは1つなので、2回に分けて送る",
+            "B. anthropic-version: feature-a,feature-b を付ける",
+            "C. anthropic-beta: feature-a,feature-b を付ける",
+            "D. リクエストの本文に beta: true を足す"
+          ],
+          "correct": "C",
+          "why": "複数のベータは、anthropic-beta ヘッダーにカンマ区切りで並べる。Claude API ではヘッダーを2回に分けて送ってもよい。",
+          "whyNot": {
+            "A": "1つのリクエストで複数のベータを使える。",
+            "B": "anthropic-version は API の版を入れるヘッダーで、ベータ名を入れる場所ではない。",
+            "D": "そのようなフィールドはなく、ベータ名も伝わらない。"
+          },
+          "example": "SDK なら betas=[\"feature-a\", \"feature-b\"] と並べる。",
+          "explanation": "Google Cloud（Google 管理）は anthropic-beta ヘッダーを1つしか読まないので、必ず1つのヘッダーにカンマ区切りでまとめる。",
+          "sources": [
+            {
+              "title": "Beta headers",
+              "url": "https://platform.claude.com/docs/en/api/beta-headers"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "Files API（一度アップロードして file_id で参照）/ base64 で毎回送る・Batches・count_tokens",
+          "question": "200ページの製品マニュアル（PDF）について、サポート担当が1日に何十回も質問します。今は毎回 PDF を base64 にして送っています。毎回ファイルを送り直さずに済む方法はどれですか？",
+          "choices": [
+            "A. Files API で一度アップロードし、file_id で参照する",
+            "B. Message Batches API で質問をまとめて送る",
+            "C. count_tokens で PDF を数えてから送る",
+            "D. PDF を anthropic-beta ヘッダーに入れる"
+          ],
+          "correct": "A",
+          "why": "Files API は一度アップロードすれば file_id がもらえ、以後の Messages では document ブロックに file_id を書くだけで同じファイルを使える。",
+          "whyNot": {
+            "B": "まとめ処理で、すぐ答えが要る質問には合わず、各リクエストには PDF を入れる必要が残る。",
+            "C": "数えるだけで、送り直しは減らない。count_tokens は file_id の参照も受け付けない。",
+            "D": "ヘッダーはベータ名を入れる場所で、ファイルは入らない。"
+          },
+          "example": "同じ資料に何度も質問する社内ヘルプデスクで、資料を Files API に置いておく。",
+          "explanation": "Messages で使った中身は入力トークンとして課金される。繰り返し同じ中身を読ませる費用を下げたいなら、プロンプトキャッシュも組み合わせる。",
+          "sources": [
+            {
+              "title": "Files API",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/files"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "Files API の file_id はワークスペース共有（利用者から受け取らない）/ file_id をそのまま使う",
+          "question": "複数の会社が使うサービスで、各社の資料を Files API に置きます。画面から利用者が file_id を送ってくる作りにしたところ、レビューで危ないと指摘されました。正しい直し方はどれですか？",
+          "choices": [
+            "A. file_id を暗号化して画面に渡す",
+            "B. 対応はサーバー側で持ち、会社ごとにワークスペースを分ける",
+            "C. ファイルを毎日アップロードし直す",
+            "D. 利用者が送る file_id の文字数を確かめる"
+          ],
+          "correct": "B",
+          "why": "ファイルはワークスペース単位で共有され、同じワークスペースのキーならどのファイルも参照できる。file_id は利用者から受け取らずサーバー側で対応を持ち、会社ごとにワークスペースを分けて隔離する。",
+          "whyNot": {
+            "A": "暗号化しても、利用者が送ってきた値で他社のファイルを参照できる作り自体は変わらない。",
+            "C": "file_id が変わるだけで、他社の file_id を使える危険は残る。",
+            "D": "形が正しい他社の file_id は通ってしまう。"
+          },
+          "example": "マルチテナントのサービスでは、テナントごとにワークスペースを作り、そのワークスペース用のキーだけで読む。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Files API",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/files"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "Bedrock 向けクライアント（AWS の認証・請求）/ Anthropic の API キー・Files API・anthropic-beta",
+          "question": "会社の方針で、AI の利用も AWS の請求と IAM の権限管理にまとめることになりました。既存の Python アプリから Claude を呼び続けたいです。どれが最も合いますか？",
+          "choices": [
+            "A. Anthropic の API キーのまま接続先だけ AWS にする",
+            "B. anthropic-beta ヘッダーに bedrock を入れる",
+            "C. Files API にアプリのデータを移す",
+            "D. SDK の Bedrock 用クライアントを AWS の認証情報で使う"
+          ],
+          "correct": "D",
+          "why": "SDK には Bedrock 用のクライアント（AnthropicBedrock など）があり、AWS の認証情報で呼べる。請求と権限は AWS 側にまとまり、messages.create などの使い方はほぼ同じ。",
+          "whyNot": {
+            "A": "Bedrock の認証は AWS の仕組みで、Anthropic の API キーでは呼べない。",
+            "B": "bedrock というベータ名はなく、接続先や請求も変わらない。",
+            "C": "Files API はファイルを置く仕組みで、請求や権限の移し先ではない。Bedrock では Files API は使えない。"
+          },
+          "example": "pip install \"anthropic[bedrock]\" で入れ、AWS の認証情報とリージョンを設定して使う。",
+          "explanation": "Bedrock では Files API・Models API・Message Batches など、使えない機能がある。必要な機能が使えるか、先にプラットフォームのページで確かめる。",
+          "sources": [
+            {
+              "title": "Claude on Amazon Bedrock (Opus 4.6 and earlier)",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy"
+            },
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "リクエストサイズの上限（Claude API 128 MB / Bedrock 20 MB、413）/ トークン数・レート制限",
+          "question": "画像を数十枚まとめて送る機能を、Claude API から Bedrock に移しました。合計 60 MB ほどのリクエストが、Claude API では通っていたのに Bedrock では通りません。トークン数はコンテキストウィンドウに収まっています。主な原因はどれですか？",
+          "choices": [
+            "A. Bedrock ではリクエストの大きさの上限が 20 MB だから",
+            "B. Bedrock では画像を受け付けないから",
+            "C. Bedrock のレート制限（RPM）に当たったから",
+            "D. Bedrock では max_tokens の上限が小さいから"
+          ],
+          "correct": "A",
+          "why": "Claude API の Messages は 128 MB までだが、Bedrock はリクエストを 20 MB までに制限している。トークン数が収まっていても、大きさの上限に先に当たる。",
+          "whyNot": {
+            "B": "Bedrock でも画像入力は使える。",
+            "C": "1件のリクエストの大きさの問題で、回数の上限ではない。",
+            "D": "出力の長さの上限で、送るリクエストの大きさとは関係ない。"
+          },
+          "example": "大きな画像や PDF を多く送るなら、縮小・分割して上限内に収める。Claude API で 128 MB を超えると 413 request_too_large になる。",
+          "explanation": "Google Cloud（Google 管理）は 30 MB、Claude Platform on AWS・Microsoft Foundry などは 32 MB が上限。",
+          "sources": [
+            {
+              "title": "API overview",
+              "url": "https://platform.claude.com/docs/en/api/overview"
+            },
+            {
+              "title": "Claude on Amazon Bedrock (Opus 4.6 and earlier)",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
     }
   ]
 }
