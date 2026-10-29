@@ -1,3 +1,3633 @@
 {
-  "sets": []
+  "sets": [
+    {
+      "id": "u5-1-a",
+      "label": "単元5-1 セットA",
+      "focus": "5-1",
+      "lecture": {
+        "unit": "5-1",
+        "terms": [
+          {
+            "name": "サンプリングパラメータ（sampling parameters: temperature / top_p / top_k）",
+            "meaning": "次のトークンを確率に従ってどう選ぶか（サンプリング）を調整するリクエストの値。Claude Opus 5.5 などの新しいモデルでは指定すると 400 エラーになる",
+            "analogy": "くじ引きの箱の中身をいじる道具。新しいモデルでは箱に触れず、頼み方（プロンプト）で結果を導く",
+            "exam": "Claude Opus 5.5 への移行では temperature・top_p・top_k を外し、振る舞いはプロンプトで導く。temperature 0 でも以前から同じ出力は保証されていなかった",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Claude Opus 5.5 migration guide",
+                "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+              },
+              {
+                "title": "Glossary",
+                "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+              }
+            ]
+          },
+          {
+            "name": "高速モード（fast mode）",
+            "meaning": "同じモデルを速い推論設定で動かし、出力トークン毎秒（OTPS）を最大 2.5 倍にするモード。リクエストに speed: \"fast\" を付ける。料金は割増",
+            "analogy": "同じ料理人が特急料金で手を速める。腕前（賢さ）は変わらず、出来上がるまでが速くなる",
+            "exam": "賢さは変わらない。速くなるのは OTPS で、最初のトークンまでの時間（TTFT）ではない。Batch API と一緒には使えない。使われた速度は usage.speed で確かめる。標準速度に切り替えるとプロンプトキャッシュは共有されない",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Fast mode",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+              }
+            ]
+          },
+          {
+            "name": "zero-shot と single-shot（one-shot）プロンプト【解説】",
+            "meaning": "zero-shot は例を付けず指示だけで頼む方法。single-shot は例を1つだけ付けて頼む方法",
+            "analogy": "zero-shot は口頭の説明だけで仕事を頼む。single-shot は見本を1枚だけ渡す。見本が1枚だと、その見本のクセまでまねされやすい",
+            "exam": "出力の形式・口調・構造がぶれるなら例を足す。例は実際の用途に近く、多様にする（似た例ばかりだと意図しないパターンを拾う）。公式ドキュメントに zero-shot・single-shot の定義はなく、few-shot（multishot）の説明から読み取った",
+            "verified": false
+          }
+        ],
+        "distinguish": {
+          "title": "高速モード（fast mode）とストリーミング（streaming）",
+          "text": "高速モードは生成そのものを速くし、出力トークン毎秒（OTPS）を上げる。割増料金がかかる。\nストリーミングは生成の速さは変えず、できた部分から順に返すので、待たされている感じを減らす。\n両方は一緒に使え、高速モードの効果はストリーミングで最も目に見える。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "temperature 0 と非決定性 / 出力の再現",
+          "question": "監査のため「同じ入力には毎回同じ回答を返す」仕組みが要ります。設計書には「temperature を 0 にすれば満たせる」とあります。正しい指摘はどれですか？",
+          "choices": [
+            "A. temperature 0 なら完全に同じ出力になる",
+            "B. 0 でも同一は保証されず、回答の保存が要る",
+            "C. top_k を 1 にすれば完全に同じ出力になる",
+            "D. effort を max にすれば出力が固定される"
+          ],
+          "correct": "B",
+          "why": "temperature を 0 にしても完全には決定的にならず、同じ入力で違う出力になりうる。同じ回答を返す必要があるなら、一度出た回答を保存して返す仕組みが要る。",
+          "whyNot": {
+            "A": "公式に、temperature 0 でも同一の入力で違う出力になりうるとある",
+            "C": "サンプリングの値で決定性は保証されず、Opus 5.5 などでは top_k 自体が 400 エラーになる",
+            "D": "effort は使うトークンの量を決める値で、出力を固定する機能ではない"
+          },
+          "example": "監査や回帰テストで同じ回答が要るときは、モデルの再生成に頼らず結果を保存する。",
+          "explanation": "「回答を保存して返す」はこの場面の設計案で、公式に書かれているのは temperature 0 でも決定的にならない点。",
+          "sources": [
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            },
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "Opus 5.5 で外すサンプリングパラメータ / 使える設定",
+          "question": "Claude Opus 4.6 向けのリクエストをそのまま Claude Opus 5.5 に送ると 400 エラーになりました。外すべき設定はどれですか？",
+          "choices": [
+            "A. temperature: 0.2",
+            "B. output_config.effort: \"high\"",
+            "C. max_tokens: 4096",
+            "D. top_p: 0.9",
+            "E. thinking: {type: \"adaptive\"}"
+          ],
+          "correct": "AD",
+          "why": "Claude Opus 5.5 では temperature・top_p・top_k を送ると拒否される。振る舞いはプロンプトで導く。",
+          "whyNot": {
+            "B": "effort は Opus 5.5 で思考の深さを決める唯一の値で、5段階すべて使える",
+            "C": "max_tokens は必須の値で、外すとかえってエラーになる",
+            "E": "Opus 5.5 は適応型思考が常に有効で、adaptive の指定は送らないのと同じ扱い"
+          },
+          "example": "モデルを新しくするときは、移行ガイドの「拒否される設定」をリクエストから外す。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "高速モード / モデル変更・effort・Batch",
+          "question": "Claude Opus 5.5 でコードの書き換え案を長く出すツールがあります。賢さはそのままに、出力が出そろうまでの時間を縮めたいです。最適な方法はどれですか？",
+          "choices": [
+            "A. Message Batches API に切り替える",
+            "B. effort を max に上げる",
+            "C. リクエストに speed: \"fast\" を付ける",
+            "D. temperature を下げて迷いを減らす"
+          ],
+          "correct": "C",
+          "why": "高速モードは同じモデルを速い推論設定で動かし、賢さを変えずに出力トークン毎秒を最大 2.5 倍にする。",
+          "whyNot": {
+            "A": "Batch API は非同期でまとめて処理する仕組みで、すぐ結果が要る用途には合わず、高速モードとも併用できない",
+            "B": "max は思考を増やすので、出そろうまでの時間はむしろ延びやすい",
+            "D": "Opus 5.5 では temperature を送ると 400 エラーになり、速さも変わらない"
+          },
+          "example": "対話的に長い出力を待つコーディング支援で、割増料金を払ってでも速さが欲しいときに使う。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Fast mode",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "高速モードで速くなる指標 / OTPS・TTFT",
+          "question": "高速モード（fast mode）を有効にしました。主に改善が見込める指標はどれですか？",
+          "choices": [
+            "A. 出力トークン毎秒（OTPS）",
+            "B. 最初のトークンまでの時間（TTFT）",
+            "C. 回答の正確さ（精度）",
+            "D. コンテキストウィンドウの大きさ"
+          ],
+          "correct": "A",
+          "why": "高速モードの効果は出力トークン毎秒（OTPS）に集中しており、TTFT は対象ではない。",
+          "whyNot": {
+            "B": "公式に、速さの効果は OTPS に集中し TTFT ではないとある",
+            "C": "同じモデルを動かすので、賢さや能力は変わらない",
+            "D": "コンテキストウィンドウはモデルで決まり、速度の設定では変わらない"
+          },
+          "example": "長い回答を出す用途ほど効果が大きい。最初の反応の遅さが課題ならほかの対策を考える。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Fast mode",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "高速モードと Batch API の併用",
+          "question": "毎晩5万件の要約を Message Batches API で送っています。さらに早く終わらせるため、各リクエストに speed: \"fast\" を付ける案が出ました。正しい判断はどれですか？",
+          "choices": [
+            "A. 付ければ全件が 2.5 倍速く終わる",
+            "B. 付けると料金が半額になる",
+            "C. 付けると精度が上がり再実行が減る",
+            "D. Batch API では高速モードを使えない"
+          ],
+          "correct": "D",
+          "why": "高速モードは Batch API では使えない。速さが必要な処理は通常の Messages API で高速モードを使う。",
+          "whyNot": {
+            "A": "Batch API と高速モードは併用できない",
+            "B": "高速モードは割増料金で、安くはならない",
+            "C": "高速モードは賢さや能力を変えない"
+          },
+          "example": "安さ優先の大量処理は Batch API、待ち時間優先の対話は高速モードと使い分ける。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Fast mode",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "高速モードの 429 と標準速度への切り替え / キャッシュ",
+          "question": "高速モードのリクエストが 429 エラーで失敗しました。標準速度に切り替えて応答を返す設計について、正しい説明はどれですか？",
+          "choices": [
+            "A. 429 なら API が自動で標準速度で返す",
+            "B. speed を外して再送すれば標準速度で返る",
+            "C. 標準速度でも高速モードのキャッシュが効く",
+            "D. 高速モードの上限は標準の上限と共通",
+            "E. 速度を変えるとプロンプトキャッシュは外れる"
+          ],
+          "correct": "BE",
+          "why": "429 を受けたら speed: \"fast\" を外して再送すれば標準速度で処理される。速度が違うリクエストはキャッシュした接頭辞を共有しないので、切り替えるとキャッシュは外れる。",
+          "whyNot": {
+            "A": "対応モデルでは 429 などのエラーが返る。自動で標準速度に落とすのは Opus 4.6 の例外だけ",
+            "C": "速度が違うリクエストはキャッシュを共有しない",
+            "D": "高速モードには標準の Opus とは別の専用レート制限がある"
+          },
+          "example": "待つより早く返したいときは、最初の高速リクエストの自動再試行を 0 にして、失敗したら標準速度で送り直す。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Fast mode",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "使われた速度の確認 / usage.speed",
+          "question": "高速モードの費用を集計するため、各リクエストが実際にどの速度で処理されたかを記録したいです。どこを見ますか？",
+          "choices": [
+            "A. レスポンスの stop_reason",
+            "B. レスポンスの usage.speed",
+            "C. レスポンスの model",
+            "D. レスポンスの usage.service_tier"
+          ],
+          "correct": "B",
+          "why": "レスポンスの usage には speed があり、\"fast\" か \"standard\" のどちらで処理されたかが入る。",
+          "whyNot": {
+            "A": "stop_reason は生成が止まった理由（end_turn など）で、速度は分からない",
+            "C": "高速モードでもモデル名は同じなので区別できない",
+            "D": "service_tier は standard・priority・batch の区別で、速度とは別"
+          },
+          "example": "組織全体の費用は Usage and Cost API でも追える。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Fast mode",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+            },
+            {
+              "title": "Create a Message",
+              "url": "https://platform.claude.com/docs/en/api/messages/create"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "zero-shot / single-shot・multi-shot・プリフィル",
+          "question": "システムプロンプトに「問い合わせを『請求』『障害』『その他』に分類し、ラベルだけ返す」とだけ書き、例は付けていません。このプロンプトの手法はどれですか？",
+          "choices": [
+            "A. single-shot（one-shot）プロンプト",
+            "B. multi-shot（few-shot）プロンプト",
+            "C. zero-shot プロンプト",
+            "D. アシスタントのプリフィル（prefill）"
+          ],
+          "correct": "C",
+          "why": "例を1つも付けず、指示だけで課題をこなさせるのが zero-shot。",
+          "whyNot": {
+            "A": "single-shot は入出力の例を1つ付ける手法",
+            "B": "multi-shot は例を複数（公式の目安は 3〜5 個）付ける手法",
+            "D": "プリフィルはアシスタントの返答の書き出しを先に入れる手法で、Opus 5.5 では拒否される"
+          },
+          "example": "まず zero-shot で試し、出力がぶれるなら例を足す。",
+          "explanation": "【解説】zero-shot・single-shot の語は公式ドキュメントに定義がなく、few-shot（multishot）の説明から整理した。",
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "single-shot の例のクセ / 例の多様さ",
+          "question": "見出しの書き方を見せるため、例を1つだけ付けました（single-shot）。すると、どの記事でも見出しがその例と同じ「〇〇の3つのポイント」になりました。最適な直し方はどれですか？",
+          "choices": [
+            "A. 型の違う例を足し、例どうしに幅を持たせる",
+            "B. 例を消し、指示も最小限にする",
+            "C. 同じ型の例を5つに増やす",
+            "D. 「例をまねしないで」とだけ書き足す"
+          ],
+          "correct": "A",
+          "why": "例は多様にし、意図しないパターンを拾わないようにするのが公式の推奨。例が1つだと、その例のクセまでまねされやすい。",
+          "whyNot": {
+            "B": "例は出力の形式・口調・構造をそろえる最も確かな方法の一つで、消すと形がぶれやすい",
+            "C": "同じ型の例を増やすと、そのパターンがより強く固定される",
+            "D": "例が1つのままでは、何が変えてよい部分なのかが伝わらない"
+          },
+          "example": "例を足すときは、実際の用途に近く、端のケースも含むように選ぶ。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "zero-shot の出力のぶれ / 例を足す・サンプリング",
+          "question": "zero-shot で問い合わせを分類させると、ラベルが「請求」「請求関連」「料金」など毎回ばらつきます。Claude Opus 5.5 で最初に試すべき改善はどれですか？",
+          "choices": [
+            "A. temperature を 0 にする",
+            "B. effort を max に上げる",
+            "C. 高速モードを有効にする",
+            "D. 入出力の例をいくつか付ける"
+          ],
+          "correct": "D",
+          "why": "例は出力の形式・口調・構造をそろえる最も確かな方法の一つで、few-shot（multishot）にすると正確さと一貫性が上がる。",
+          "whyNot": {
+            "A": "Opus 5.5 では temperature を送ると 400 エラーになり、0 でも出力は固定されない",
+            "B": "effort は考える量を増やすだけで、ラベルの書き方はそろわない",
+            "C": "高速モードは速さを変えるだけで、出力の中身は変わらない"
+          },
+          "example": "ラベルの一覧と、各ラベルの入出力例を <examples> タグで付ける。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            },
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u5-1-b",
+      "label": "単元5-1 セットB",
+      "focus": "5-1",
+      "lecture": {
+        "unit": "5-1",
+        "terms": [
+          {
+            "name": "multi-shot（few-shot / multishot）プロンプト",
+            "meaning": "入出力の例を複数付けて、出力の形式・口調・構造を導く手法",
+            "analogy": "新人に見本を何枚か見せる。似た見本ばかりだとクセまでまね、幅のある見本だと要点をつかむ",
+            "exam": "目安は 3〜5 個。例は <example> タグ（複数なら <examples>）で囲み指示と区別する。実際の用途に近く、多様にする。例の評価や追加を Claude に頼んでもよい。思考と組み合わせるときは「問題・解き方・期待する答え」の形で示す",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Prompting best practices",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+              }
+            ]
+          },
+          {
+            "name": "effort の各レベル（low / medium / high / xhigh / max）",
+            "meaning": "応答に使うトークンの量を決める5段階の値。output_config.effort で指定する",
+            "analogy": "仕事の念の入れ方の指示。low は手早く、high はしっかり、xhigh は長丁場の大仕事、max は徹底的に",
+            "exam": "low は簡単な作業やサブエージェント、medium は速さ・費用・性能の釣り合い、high は難しい推論やコーディング、xhigh は30分を超える長時間のエージェント作業、max は最も深い推論。既定は多くのモデルで high、Opus 5.5 と Haiku 5.5 は medium。effort を下げるとツール呼び出しも減る",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Effort",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+              }
+            ]
+          },
+          {
+            "name": "レイテンシ（latency）と TTFT（time to first token）",
+            "meaning": "レイテンシはプロンプトを送ってから出力を受け取るまでの時間。TTFT は最初のトークンが出るまでの時間",
+            "analogy": "レイテンシは注文してから料理が全部そろうまで。TTFT は最初の一皿が出てくるまで",
+            "exam": "下げる方法は、速いモデルを選ぶ、入力と出力のトークンを減らす、ストリーミングで返す。TTFT はストリーミングと組み合わせると体感の速さに効く。まず性能の出るプロンプトを作ってから、速さの対策をする",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Reducing latency",
+                "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+              },
+              {
+                "title": "Glossary",
+                "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "effort と thinking（思考モード）",
+          "text": "thinking は、答える前に思考ブロックで考えるかどうか（考え方のモード）を決める。\neffort は、応答全体にどれだけ手間をかけるかを決め、適応型思考ではどれだけ頻繁に深く考えるかも左右する。\nadaptive は思考モードの名前で、effort の値ではない。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "few-shot の例の区切り / <example> タグ",
+          "question": "プロンプトに指示と例を続けて書いたら、Claude が例の中の一文を指示だと受け取ってしまいました。公式の推奨に沿った直し方はどれですか？",
+          "choices": [
+            "A. 例をすべて削り zero-shot にする",
+            "B. 例を指示より前に置く",
+            "C. 例を別のリクエストで先に送る",
+            "D. 例を <example> タグで囲む"
+          ],
+          "correct": "D",
+          "why": "例は <example> タグ（複数なら <examples> タグ）で囲むと、Claude が指示と例を区別できる。",
+          "whyNot": {
+            "A": "例は出力をそろえる確かな方法で、区別の問題は消さずに直せる",
+            "B": "順番を変えても、どこまでが例かの境目ははっきりしない",
+            "C": "別のリクエストの内容は次のリクエストのコンテキストに入らない"
+          },
+          "example": "<examples> の中に <example> を並べ、各例に入力と出力を書く。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "few-shot の例の数の目安",
+          "question": "社内向けメールの口調をそろえるため、few-shot（multishot）で例を付けます。公式ドキュメントが示す、よい結果を得るための例の数の目安はどれですか？",
+          "choices": [
+            "A. 1 個",
+            "B. 3〜5 個",
+            "C. 20〜30 個",
+            "D. 多いほどよく、上限はない"
+          ],
+          "correct": "B",
+          "why": "公式は、よい結果のために 3〜5 個の例を入れることを勧めている。",
+          "whyNot": {
+            "A": "1個だと single-shot で、その例のクセまでまねされやすい",
+            "C": "目安より大幅に多く、入力トークンとレイテンシが増える",
+            "D": "例もコンテキストを使い、多すぎると費用と待ち時間が増える"
+          },
+          "example": "まず 3〜5 個の多様な例を用意し、出力を見て足りない型を足す。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "思考と multishot の例の示し方",
+          "question": "適応型思考を使う数学の採点アプリで、解き方の手順を Claude にまねさせたいです。例の示し方として最も適切なものはどれですか？",
+          "choices": [
+            "A. 問題・使う解き方・期待する答えの順に示す",
+            "B. 問題と最終の答えだけを示す",
+            "C. 思考ブロックの文面を例として貼る",
+            "D. 例は付けず effort を max にする"
+          ],
+          "correct": "A",
+          "why": "例は思考と組み合わせても効き、例の解き方は Claude の思考ブロックでの考え方に反映される。各例を「問題・使う方法・期待する答え」の形で示す。",
+          "whyNot": {
+            "B": "答えだけでは、まねさせたい解き方が伝わらない",
+            "C": "新しいモデルでは思考の中身は既定で空になり、思考の文面を例にする手法は公式の推奨にない",
+            "D": "effort は考える量を増やすだけで、特定の解き方には導けない"
+          },
+          "example": "採点基準や手順を守らせたいとき、手順を書いた解答例を付ける。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "few-shot の例の選び方 / 関連性・多様さ・Claude への依頼",
+          "question": "問い合わせ返信の few-shot（multishot）の例を作り直します。公式の推奨に沿うものはどれですか？",
+          "choices": [
+            "A. 実際の問い合わせに近い例を選ぶ",
+            "B. 例はすべて同じ長さと構成にそろえる",
+            "C. 例の関連性と多様さを Claude に評価させる",
+            "D. 端のケースは混乱するので例から外す"
+          ],
+          "correct": "AC",
+          "why": "例は実際の用途に近く（関連性）、端のケースを含めて多様にする。例の関連性と多様さの評価や、追加の例づくりを Claude に頼むこともできる。",
+          "whyNot": {
+            "B": "そろえすぎると、長さや構成まで意図せずまねされる",
+            "D": "公式は端のケースも例に含めて多様にすることを勧めている"
+          },
+          "example": "最初の数例を渡し、「足りない種類の例を3つ作って」と Claude に頼む。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "effort の既定値 / Opus 5 と Opus 5.5",
+          "question": "effort を指定せずに Claude Opus 5 で動かしていたエージェントを、Claude Opus 5.5 に切り替えました。何が起きると考えられ、どう対処しますか？",
+          "choices": [
+            "A. 既定が max になるので low を指定する",
+            "B. 既定は変わらないので何もしなくてよい",
+            "C. 既定が medium で1段下がるので評価して指定",
+            "D. effort 未指定は 400 になるので必ず指定する"
+          ],
+          "correct": "C",
+          "why": "Opus 5 以前の Opus は high が既定だが、Opus 5.5 の既定は medium。指定しないと1段低いレベルで動くので、自分の評価で effort を確かめて明示する。",
+          "whyNot": {
+            "A": "Opus 5.5 の既定は medium で、max ではない",
+            "B": "Opus 5（high）と Opus 5.5（medium）で既定が違う",
+            "D": "effort は省略でき、省略するとモデルの既定が使われる"
+          },
+          "example": "モデルを替えたら、前の設定を持ち越さず effort を振って評価し直す。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Effort",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "effort xhigh / max・high の使い分け",
+          "question": "数百万トークンを使い、1時間以上かけてリポジトリ全体を改修するコーディングエージェントを作ります。公式の表で、この用途に合うとされる effort はどれですか？",
+          "choices": [
+            "A. low",
+            "B. medium",
+            "C. high",
+            "D. xhigh"
+          ],
+          "correct": "D",
+          "why": "xhigh は長期の作業向けで、30分を超え、トークン予算が数百万に及ぶエージェントやコーディングの作業に合うとされる。",
+          "whyNot": {
+            "A": "low は単純でコストと速さを優先する作業向け",
+            "B": "medium は速さ・費用・性能の釣り合いを取るエージェント作業向け",
+            "C": "high は難しい推論やコーディング向けだが、長時間の大仕事には xhigh が挙がる"
+          },
+          "example": "xhigh や max では、思考と回答の合計の上限である max_tokens を大きくとる。",
+          "explanation": "max は最も深い推論が要る作業向けで、xhigh に対応しないモデルもある。",
+          "sources": [
+            {
+              "title": "Effort",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "effort low とサブエージェント / 用途別のレベル",
+          "question": "メインのエージェントが、ファイル名の一覧作りなど単純な調べものを多数のサブエージェントに任せます。サブエージェントの effort として公式の表に沿うものはどれですか？",
+          "choices": [
+            "A. low",
+            "B. high",
+            "C. xhigh",
+            "D. max"
+          ],
+          "correct": "A",
+          "why": "low は最も効率的で、速さとコストを優先する単純な作業（サブエージェントなど）に向くとされる。",
+          "whyNot": {
+            "B": "high は複雑な推論や難しいコーディング向けで、単純な作業には過剰",
+            "C": "xhigh は30分を超える長時間の作業向け",
+            "D": "max は最も深い推論が要る作業向けで、トークンを惜しまず使う"
+          },
+          "example": "メインは high、下請けのサブエージェントは low のように役割で分ける。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Effort",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "effort とツール呼び出しの振る舞い",
+          "question": "ツールを使うエージェントで effort を high から low に下げました。振る舞いの変化として、公式の説明に最も近いものはどれですか？",
+          "choices": [
+            "A. ツールを一切呼ばなくなる",
+            "B. 呼び出しをまとめ、前置きなしで動く",
+            "C. 行動の前に計画を詳しく説明する",
+            "D. 変更点の詳しいまとめを毎回付ける"
+          ],
+          "correct": "B",
+          "why": "effort を下げると、複数の操作を少ないツール呼び出しにまとめ、前置きなしで行動し、完了時の確認も短くなる傾向がある。",
+          "whyNot": {
+            "A": "呼び出しが減る傾向はあるが、使わなくなるわけではない",
+            "C": "計画の説明は effort を上げたときの傾向",
+            "D": "詳しいまとめは effort を上げたときの傾向"
+          },
+          "example": "途中経過の説明が要らない自動処理では、effort を下げて手数と費用を減らす。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Effort",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "TTFT とストリーミング / レイテンシの指標",
+          "question": "チャットの利用者から「送信後しばらく画面に何も出ない」と苦情が来ました。測るべき指標と対策の組み合わせとして最適なものはどれですか？",
+          "choices": [
+            "A. 出力トークン毎秒を測り、max_tokens を増やす",
+            "B. 総トークン数を測り、例を増やす",
+            "C. TTFT を測り、ストリーミングで返す",
+            "D. コンテキスト長を測り、Batch API に移す"
+          ],
+          "correct": "C",
+          "why": "最初の反応の遅さは TTFT（最初のトークンまでの時間）で測る。ストリーミングにすると、できた部分から表示でき、体感の応答の速さが大きく上がる。",
+          "whyNot": {
+            "A": "出力の速さは最初の反応とは別の指標で、max_tokens を増やしても早く出始めない",
+            "B": "例を増やすと入力が増え、遅くなる方向に働く",
+            "D": "Batch API は非同期処理で、対話の待ち時間はかえって長くなる"
+          },
+          "example": "対話型のアプリでは、ストリーミングで少しずつ表示し、TTFT を監視する。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Reducing latency",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+            },
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-1",
+          "topic": "レイテンシの下げ方 / モデル選び・トークン削減・語数指定",
+          "question": "問い合わせの短い要約を返す機能で、プロンプトの質は十分になったので次は応答時間を縮めたいです。公式が挙げるレイテンシの下げ方はどれですか？",
+          "choices": [
+            "A. 「ちょうど50語で」と語数を厳密に指定する",
+            "B. Haiku 5.5 など速いモデルを選ぶ",
+            "C. 背景説明を足し、プロンプトを長くする",
+            "D. 「2文で」と頼み、出力を短くする",
+            "E. effort を max にして一度で答えさせる"
+          ],
+          "correct": "BD",
+          "why": "速いモデルを選ぶことと、入力と出力のトークンを減らすこと（短い回答を頼む、max_tokens で上限を付ける）が、公式の挙げる下げ方。",
+          "whyNot": {
+            "A": "トークンで数えるため語数指定は効きにくく、文や段落の数で頼むほうがよいとされる",
+            "C": "入力トークンが増え、処理が遅くなる",
+            "E": "max は思考を増やすので、応答時間は延びやすい"
+          },
+          "example": "速さ重視の要約は Haiku 5.5 を effort low で動かし、文の数で長さを指定する。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Reducing latency",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u5-2-a",
+      "label": "単元5-2 セットA",
+      "focus": "5-2",
+      "lecture": {
+        "unit": "5-2",
+        "terms": [
+          {
+            "name": "クライアント SDK（client SDK）が REST API を包む仕組み",
+            "meaning": "Claude API は https://api.anthropic.com の REST API で、SDK はその HTTP 呼び出しを各言語の関数として包み、ヘッダー付与・型・リトライ・ストリーミングなどを肩代わりする道具。",
+            "analogy": "REST API は「郵便局の窓口」、SDK は「代筆と投函をしてくれる秘書」です。\n窓口に直接行くなら、宛名（URL）・切手（ヘッダー）・書式（JSON）を自分で全部そろえます。\n秘書に「この手紙を出して」と頼めば、切手を貼り、届かなければ出し直しまでしてくれます。\nただし、窓口の営業時間や1日の受付枚数（レート制限）は秘書がいても変わりません。",
+            "exam": "SDK が自動でしてくれるのは、認証・anthropic-version・content-type ヘッダーの付与、型付きの入出力、一時的なエラーの自動リトライ、ストリーミング、タイムアウト管理。\n料金やレート制限の上限は SDK を使っても変わらない、という取り違えを狙われやすい。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "API overview",
+                "url": "https://platform.claude.com/docs/en/api/overview"
+              },
+              {
+                "title": "SDKs, CLI, and libraries",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/overview"
+              }
+            ]
+          },
+          {
+            "name": "ストリーミング（streaming）と SSE（server-sent events）",
+            "meaning": "リクエストに \"stream\": true を付けると、応答が完成するのを待たずに、SSE というイベントの列で少しずつ届く仕組み。",
+            "analogy": "宅配で言えば、通常の応答は「全部そろってから1箱で届く」配送、ストリーミングは「できた分から順に小包で届く」配送です。\n小包には順番の札が付いていて、最初に「これから送ります」（message_start）、途中に中身（content_block_delta）、最後に「これで全部です」（message_stop）が届きます。\nときどき「まだ配達中です」というはがき（ping）も混ざります。",
+            "exam": "イベントの順番は message_start → content_block_start → content_block_delta（複数）→ content_block_stop → message_delta → message_stop。\n文字の断片は content_block_delta の text_delta に入る。\n新しいイベント種別が追加されることがあるので、知らないイベントは落ちずに無視するよう作る。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Streaming messages",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+              },
+              {
+                "title": "Versions",
+                "url": "https://platform.claude.com/docs/en/api/versioning"
+              }
+            ]
+          },
+          {
+            "name": "API キーとリクエストヘッダー（Authorization / x-api-key、anthropic-version）",
+            "meaning": "API キーは Console で作る秘密の文字列で、Authorization: Bearer（または従来の x-api-key）ヘッダーで送る。anthropic-version と content-type も必須のヘッダー。",
+            "analogy": "API キーはマンションの「合鍵」です。\n合鍵を玄関マット（ソースコードや公開リポジトリ）の下に置けば、誰でも入れてしまいます。\nだから金庫（シークレットマネージャーや環境変数）にしまい、なくしたかもと思ったらすぐ鍵を無効にして作り直します。\nanthropic-version は「どの版の取扱説明書で話すか」を伝える名札です。",
+            "exam": "キーは環境変数 ANTHROPIC_API_KEY やシークレットマネージャーに置き、コードやブラウザ側に埋め込まない。\n漏れた疑いがあれば Console で無効化（Disable）か削除（Delete）し、新しいキーに差し替える。\nanthropic-version は必須だが、SDK を使えば自動で送られる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Authentication",
+                "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+              },
+              {
+                "title": "API overview",
+                "url": "https://platform.claude.com/docs/en/api/overview"
+              },
+              {
+                "title": "Versions",
+                "url": "https://platform.claude.com/docs/en/api/versioning"
+              }
+            ]
+          },
+          {
+            "name": "自動リトライと指数バックオフ（exponential backoff）",
+            "meaning": "接続エラーや 429・5xx などの一時的な失敗を、待ち時間を少しずつ延ばしながら自動で出し直す仕組み。公式 SDK は既定で2回まで行う。",
+            "analogy": "人気店に電話がつながらないとき、1秒おきにかけ続けるとさらに回線が混みます。\n1回目は少し待って、2回目はもう少し長く待って、とかけ直す間隔を広げるのが指数バックオフです。\nただし「注文の書き方が間違っている」（400）なら、何度かけ直しても断られるので、注文を直すしかありません。",
+            "exam": "SDK が既定でリトライするのは、接続エラー・408・409・429・5xx（529 を含む）。回数は max_retries で変えたり 0 で止めたりできる。\nretry-after ヘッダーがあればその秒数を守る。\n400 invalid_request_error や 401 はリトライしても直らないので、リクエストやキーを直す。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              },
+              {
+                "title": "Claude API errors",
+                "url": "https://platform.claude.com/docs/en/api/errors"
+              }
+            ]
+          },
+          {
+            "name": "ステートレス（stateless）な Messages API",
+            "meaning": "Messages API は前の会話を覚えていないので、毎回それまでの会話履歴を messages に全部入れて送る。",
+            "analogy": "毎回ちがう担当者が出るコールセンターのようなものです。\n前回の担当者に話した内容は引き継がれないので、毎回「これまでの経緯」を書いたメモを最初から渡します。\nメモ（会話履歴）が長くなるほど、読む量（入力トークン）も増えます。",
+            "exam": "2ターン目で前の話を覚えていないのは不具合ではなく仕様。履歴を自分で保持して毎回送る。\nセッション ID やストリーミングで記憶させる、という選択肢は誤り。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Using the Messages API",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "SDK を使って呼ぶ場合と HTTP（curl）で直接呼ぶ場合",
+          "text": "どちらも同じ REST API（POST /v1/messages）を呼んでおり、料金・レート制限・モデルの能力は同じ。\nSDK はヘッダーの付与、型、一時的なエラーの自動リトライ（既定2回）、ストリーミングの組み立て、タイムアウト管理を肩代わりする。\ncurl などで直接呼ぶときは、Authorization（または x-api-key）・anthropic-version・content-type を自分で付け、リトライも自分で書く。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "SDK が肩代わりすること / 料金・レート制限は変わらない",
+          "question": "社内ツールが curl で Claude API を呼んでいます。公式 Python SDK に書き換えると、コードを足さなくても得られるものはどれですか？",
+          "choices": [
+            "A. トークン単価の割引",
+            "B. 認証と anthropic-version ヘッダーの自動付与",
+            "C. 組織のレート制限の上限引き上げ",
+            "D. 一時的なエラーの自動リトライ",
+            "E. 会話履歴の API 側での保存"
+          ],
+          "correct": "BD",
+          "why": "SDK は認証・anthropic-version・content-type のヘッダーを自動で送り、接続エラーや 429・5xx を既定で2回まで自動リトライする。",
+          "whyNot": {
+            "A": "料金は呼び方に関係なく同じ。SDK は HTTP 呼び出しを包むだけ。",
+            "C": "レート制限は組織の利用ティアで決まり、SDK では変わらない。",
+            "E": "Messages API はステートレスで、SDK を使っても履歴は自分で送る。"
+          },
+          "example": "既存の curl スクリプトを保守しやすくしたいとき、SDK に移すとヘッダーとリトライの手書きが不要になる。",
+          "explanation": "SDK の利点は、ヘッダー管理・型安全・リトライ・ストリーミング・タイムアウト管理。",
+          "sources": [
+            {
+              "title": "API overview",
+              "url": "https://platform.claude.com/docs/en/api/overview"
+            },
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "ストリーミング（stream: true）/ Batches API・max_tokens",
+          "question": "チャット画面で、Claude の返事が完成するまで何十秒も空白になり、利用者が離れていきます。書けた分から文字を表示するには、どうしますか？",
+          "choices": [
+            "A. Message Batches API に切り替える",
+            "B. max_tokens を小さくする",
+            "C. リクエストに stream: true を付ける",
+            "D. max_retries を増やす"
+          ],
+          "correct": "C",
+          "why": "stream: true を付けると、応答が SSE のイベントとして少しずつ届くので、届いた断片から画面に表示できる。",
+          "whyNot": {
+            "A": "Batches API は非同期のまとめ処理で、結果は後で取りに行く。即時表示には向かない。",
+            "B": "回答が途中で切れるだけで、完成まで何も表示されない点は変わらない。",
+            "D": "失敗時の再試行回数で、表示の早さには関係しない。"
+          },
+          "example": "対話型 UI で体感の待ち時間を短くしたいときはストリーミングを使う。",
+          "explanation": "SDK には stream ヘルパーがあり、text_stream で文字だけを順に受け取れる。",
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "content_block_delta（text_delta）/ message_start・message_stop・ping",
+          "question": "SDK を使わずに SSE を自前で読んでいます。生成された文字の断片を画面に追記するには、どのイベントを処理しますか？",
+          "choices": [
+            "A. message_start",
+            "B. ping",
+            "C. message_stop",
+            "D. content_block_delta"
+          ],
+          "correct": "D",
+          "why": "文字の断片は content_block_delta イベントの delta（type が text_delta）に入って届く。",
+          "whyNot": {
+            "A": "最初に届くイベントで、content が空の Message が入っているだけ。",
+            "B": "接続を保つための合図で、中身の文字はない。",
+            "C": "ストリームの終わりを知らせるイベントで、文字は入っていない。"
+          },
+          "example": "text_delta の text を順に足していくと、最終的な回答の文字列になる。",
+          "explanation": "流れは message_start → content_block_start → content_block_delta（複数）→ content_block_stop → message_delta → message_stop。",
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "知らないイベント種別は無視する / エラーで止める",
+          "question": "自前の SSE 処理で、想定していない type のイベントが届くと例外で止まってしまいます。公式の方針に合う直し方はどれですか？",
+          "choices": [
+            "A. 知らない種別は読み飛ばして処理を続ける",
+            "B. 届いたら接続を切ってリクエストをやり直す",
+            "C. anthropic-version を古い版に固定する",
+            "D. ストリーミングをやめて通常の応答にする"
+          ],
+          "correct": "A",
+          "why": "バージョン方針で、ストリーミングのイベント種別は今後も追加されうるとされ、知らない種別はうまく無視するよう求められている。",
+          "whyNot": {
+            "B": "同じイベントがまた届くので、やり直しても止まり続け、料金も無駄になる。",
+            "C": "同じ版の中でも新しいイベント種別は追加されうるので、根本の対策にならない。",
+            "D": "ストリーミングの利点を捨てる回避策で、イベント処理の直し方ではない。"
+          },
+          "example": "switch 文の default で何もしないようにしておくと、新しいイベントが増えても止まらない。",
+          "explanation": "Versions のページ: 同じ版でも出力に値やイベント種別が足されることがある。",
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            },
+            {
+              "title": "Versions",
+              "url": "https://platform.claude.com/docs/en/api/versioning"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "API キーの置き場所（環境変数・シークレットマネージャー）/ ブラウザ・ソースに埋め込む",
+          "question": "Web アプリに Claude の要約機能を付けます。API キーの扱いとして最も適切なのはどれですか？",
+          "choices": [
+            "A. ブラウザの JavaScript に書いて直接呼ぶ",
+            "B. サーバー側でシークレットマネージャーから読む",
+            "C. 設定ファイルに書いて Git にコミットする",
+            "D. 毎回 URL のクエリ文字列に付けて送る"
+          ],
+          "correct": "B",
+          "why": "公式はキーをシークレットマネージャーに保管するよう勧めている。サーバー側で読み、ANTHROPIC_API_KEY などで SDK に渡せば利用者に見えない。",
+          "whyNot": {
+            "A": "ブラウザに配ったコードは誰でも読めるので、キーが盗まれる。",
+            "C": "リポジトリを見られる人全員にキーが渡り、履歴にも残る。",
+            "D": "キーはヘッダーで送るもので、URL に載せるとログなどに残りやすい。"
+          },
+          "example": "本番サーバーではシークレットマネージャー、手元の開発では .env（Git には入れない）から環境変数で渡す。",
+          "explanation": "キーは定期的に作り直し（ローテーション）、有効期限も設定できる。",
+          "sources": [
+            {
+              "title": "Authentication",
+              "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+            },
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "キー漏洩時の対応（無効化・削除と差し替え）/ 期限待ち・ヘッダー変更",
+          "question": "API キーを含むファイルを、誤って公開リポジトリに push してしまいました。すぐに行うべきことはどれですか？",
+          "choices": [
+            "A. Console でそのキーを無効化または削除する",
+            "B. anthropic-version を新しい版に変える",
+            "C. キーの有効期限が来るまで様子を見る",
+            "D. 新しいキーを作り、保管場所の値を差し替える",
+            "E. SDK の max_retries を 0 にする"
+          ],
+          "correct": "AD",
+          "why": "公式は、漏れた疑いのあるキーは無効化か削除するよう求めている。そのうえで新しいキーを作り、環境変数やシークレットマネージャーの値を差し替える。",
+          "whyNot": {
+            "B": "API の版を指定するヘッダーで、キーの効力には関係しない。",
+            "C": "有効期限は被害の期間を短くする補助で、待つ間に悪用される。",
+            "E": "リトライ回数の設定で、漏れたキーの悪用は止められない。"
+          },
+          "example": "Disable は元に戻せ、Delete は元に戻せない。調査が要るならまず Disable する。",
+          "explanation": "期限切れのキーで呼ぶと 401 authentication_error になる。",
+          "sources": [
+            {
+              "title": "Authentication",
+              "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "anthropic-version ヘッダー / anthropic-beta・request-id",
+          "question": "curl で Messages API を直接呼ぶと、使う API の版を指定していないため 400 になりました。どのリクエストヘッダーを付けますか？",
+          "choices": [
+            "A. request-id",
+            "B. anthropic-version",
+            "C. anthropic-beta",
+            "D. x-api-version"
+          ],
+          "correct": "B",
+          "why": "anthropic-version は必須のリクエストヘッダーで、使う API の版（例 2023-06-01、2026-10-21）を指定する。SDK なら自動で送られる。",
+          "whyNot": {
+            "A": "API が応答に付けるヘッダーで、問い合わせ用の識別子。",
+            "C": "ベータ機能を有効にするためのヘッダーで、版の指定ではない。",
+            "D": "Claude API にはないヘッダー名。"
+          },
+          "example": "SDK のメジャーバージョンごとに、送る anthropic-version が1つ決まっている。",
+          "explanation": "同じ版の中では既存のパラメータは保たれ、任意の入力や出力の値が足されることはある。",
+          "sources": [
+            {
+              "title": "API overview",
+              "url": "https://platform.claude.com/docs/en/api/overview"
+            },
+            {
+              "title": "Versions",
+              "url": "https://platform.claude.com/docs/en/api/versioning"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "ステートレス（履歴を毎回送る）/ セッション ID・ストリーミング",
+          "question": "1回目に名前を伝えたのに、2回目の呼び出しで Claude が名前を知りません。コードは毎回、最新の発言だけを messages に入れています。どう直しますか？",
+          "choices": [
+            "A. それまでの発言と返答を messages に全部入れて送る",
+            "B. 1回目の応答の id を次のリクエストに付ける",
+            "C. stream: true にして接続を保ったままにする",
+            "D. 同じ API キーで続けて呼ぶようにする"
+          ],
+          "correct": "A",
+          "why": "Messages API はステートレスなので、会話の続きにはそれまでの user と assistant の発言を毎回すべて送る。",
+          "whyNot": {
+            "B": "応答の id を付けても、API が過去の会話を思い出す仕組みはない。",
+            "C": "ストリーミングは1回の応答の届け方で、次の呼び出しには何も引き継がない。",
+            "D": "API キーは認証のためのもので、会話の記憶には関係しない。"
+          },
+          "example": "チャットボットでは、会話履歴をアプリ側の DB などに保存し、毎回 messages に並べて送る。",
+          "explanation": "履歴が長くなると入力トークンが増えるので、要約や削り込みで管理する（6-1 の範囲）。",
+          "sources": [
+            {
+              "title": "Using the Messages API",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "SDK の既定の自動リトライ（2回・指数バックオフ）/ サーバー側の再実行",
+          "question": "ログを見ると、529 overloaded_error が1回出たのに、リトライのコードを書いていないアプリの処理は成功していました。理由として正しいのはどれですか？",
+          "choices": [
+            "A. API がサーバー側で同じリクエストを再実行した",
+            "B. 529 は警告で、応答本文は正常に返っていた",
+            "C. SDK が既定で指数バックオフ付きの再試行をした",
+            "D. ストリーミングに自動で切り替わった"
+          ],
+          "correct": "C",
+          "why": "公式 SDK は、接続エラー・429・5xx などの一時的な失敗を、既定で2回まで短い指数バックオフを入れて自動で出し直す。",
+          "whyNot": {
+            "A": "再試行するのはクライアント側の SDK で、API が勝手にやり直すわけではない。",
+            "B": "529 は API が一時的に混んでいるというエラーで、応答本文は返らない。",
+            "D": "SDK がリクエストの方式を勝手に変えることはない。"
+          },
+          "example": "自前でリトライも書くと二重になるので、SDK の max_retries で回数を調整する。",
+          "explanation": "max_retries=0 で自動リトライを止められる。",
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            },
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "リトライしても直らないエラー（400）/ 429・500・接続エラー",
+          "question": "次のうち、SDK に任せて出し直しても直らず、リクエストの中身を直す必要があるものはどれですか？",
+          "choices": [
+            "A. 429 rate_limit_error（retry-after あり）",
+            "B. 500 api_error",
+            "C. ネットワークの一時的な接続エラー",
+            "D. 400 invalid_request_error"
+          ],
+          "correct": "D",
+          "why": "400 はリクエストの形式や中身に問題があるというエラーで、同じ内容を送り直しても同じ結果になる。SDK もこれは自動リトライしない。",
+          "whyNot": {
+            "A": "時間がたてば枠が戻るので、retry-after の秒数だけ待てば通る。SDK もリトライの対象にしている。",
+            "B": "Anthropic 側の一時的なエラーで、指数バックオフでの再試行が勧められている。",
+            "C": "一時的な通信の問題で、SDK が自動でリトライする。"
+          },
+          "example": "400 が出たら、エラーの message を読んでパラメータや messages の並びを直す。",
+          "explanation": "401（キーの問題）や 403（権限）も、出し直しでは直らない。",
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            },
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u5-2-b",
+      "label": "単元5-2 セットB",
+      "focus": "5-2",
+      "lecture": {
+        "unit": "5-2",
+        "terms": [
+          {
+            "name": "WebSocket【解説】",
+            "meaning": "1本の接続をつないだままにして、サーバーとクライアントがどちらからでも好きなときにデータを送り合える双方向の通信方式。",
+            "analogy": "SSE は「ラジオ」で、放送局（サーバー）からの声を聞くだけです。\nWebSocket は「つなぎっぱなしの電話」で、どちらからでも話しかけられます。\nエージェントが作業している最中に、利用者が「やっぱりこっちを先に」と割り込みたいなら、電話のほうが向いています。",
+            "exam": "Claude の Messages API のストリーミングは WebSocket ではなく SSE（サーバーからの一方向）。\nWebSocket は、自分のアプリとブラウザの間で、作業中のエージェントに追加の指示を送るなど双方向のやり取りが要る場面で使う。Agent SDK をコンテナで常駐させる構成では、コンテナが HTTP か WebSocket の窓口を公開する。",
+            "verified": false,
+            "sources": [
+              {
+                "title": "Hosting the Agent SDK",
+                "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+              }
+            ]
+          },
+          {
+            "name": "レート制限（rate limit）と 429・retry-after",
+            "meaning": "組織ごとに、1分あたりのリクエスト数（RPM）・入力トークン数（ITPM）・出力トークン数（OTPM）に上限があり、超えると 429 rate_limit_error が返る仕組み。",
+            "analogy": "回転寿司のレーンを思い浮かべてください。\nお皿（枠）は空いた分だけ少しずつ補充され、1分ごとに一気に満タンに戻るわけではありません（トークンバケット）。\n一度にお皿を取りすぎると、店員さんに「〇秒待ってください」（retry-after）と言われます。",
+            "exam": "429 で retry-after ヘッダーがあれば、その秒数だけ待ってから出し直す。\n60 RPM が「1秒1リクエスト」のように短い間隔で効くことがあり、短いバーストでも 429 になる。急に利用量を増やすと加速制限（acceleration limits）でも 429 になるので、徐々に増やす。\n月の支出上限（spend cap）に達した 429 には retry-after がなく、リトライしても直らない。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Rate limits",
+                "url": "https://platform.claude.com/docs/en/api/rate-limits"
+              },
+              {
+                "title": "Claude API errors",
+                "url": "https://platform.claude.com/docs/en/api/errors"
+              }
+            ]
+          },
+          {
+            "name": "タイムアウト（timeout）と長いリクエスト",
+            "meaning": "応答を待つ時間の上限。Python SDK の既定は10分で、timeout オプションで変えられる。長くかかる生成はストリーミングか Message Batches API を使う。",
+            "analogy": "レストランで「10分待って料理が来なければ帰る」と決めているお客さんのようなものです。\n大皿料理（大きい max_tokens）を頼むと10分では出てきません。\nそこで「できた分から少しずつ運んでもらう」（ストリーミング）か、「あとで取りに来る持ち帰り予約」（Batches API）にします。",
+            "exam": "非ストリーミングで約10分を超えそうなリクエストは、SDK がエラーにして止める。stream=True にすれば避けられる。\n長く無通信の接続はネットワークの途中で切られることがある。\nタイムアウトした呼び出しも既定で2回リトライされる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              },
+              {
+                "title": "Claude API errors",
+                "url": "https://platform.claude.com/docs/en/api/errors"
+              }
+            ]
+          },
+          {
+            "name": "HTTP エラーの種類（529 overloaded・ストリーム途中のエラー）と request-id",
+            "meaning": "API はエラーを JSON（error.type と message）で返し、すべての応答に request-id ヘッダーが付く。529 は API 全体が混んでいる状態。ストリーミングでは 200 の後に error イベントとしてエラーが届くことがある。",
+            "analogy": "429 は「あなたは今日もう回数を使い切りました」、529 は「お店全体が満席です」という違いです。\nrequest-id は「レシートの番号」で、問い合わせのときにこれを伝えると、お店がその注文をすぐ探せます。\nストリーミング中のエラーは、料理を運び始めた後で「やっぱり作れなくなりました」と言われるようなものです。",
+            "exam": "サポートに問い合わせるときは request-id（SDK なら _request_id）を添える。API キーは渡さない。\nストリーミングでは HTTP 200 が返った後に overloaded_error などの error イベントが届くことがあるので、ステータスコードだけでなくイベントも見る。\n途中で切れたら、受け取った分を使って続きを頼むリクエストを作れる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Claude API errors",
+                "url": "https://platform.claude.com/docs/en/api/errors"
+              },
+              {
+                "title": "Streaming messages",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+              },
+              {
+                "title": "API overview",
+                "url": "https://platform.claude.com/docs/en/api/overview"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "SSE（server-sent events）と WebSocket",
+          "text": "SSE は HTTP の上で、サーバーからクライアントへ一方向にイベントを流し続ける方式。Claude の Messages API のストリーミングはこれ。\nWebSocket は1本の接続でサーバーとクライアントが双方向にやり取りする方式【解説】。\nClaude から文字を少しずつ受け取るだけなら SSE、作業中のエージェントに利用者が追加の指示を送り込むなら、自分のアプリ側に WebSocket の窓口を用意する。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "WebSocket（双方向）/ SSE・Batches API・ポーリング",
+          "question": "Agent SDK を自社のコンテナで常駐させます。ブラウザの利用者が、エージェントの作業中にも追加の指示を送り、進み具合も受け取りたいです。ブラウザとコンテナの間の通信に最も向くのはどれですか？",
+          "choices": [
+            "A. Message Batches API で結果をまとめて受け取る",
+            "B. コンテナに WebSocket の窓口を用意する",
+            "C. 1日1回、結果をメールで送る",
+            "D. Claude API の SSE をブラウザに直接つなぐ"
+          ],
+          "correct": "B",
+          "why": "WebSocket は1本の接続で双方向に送り合えるので、作業中の追加指示と進み具合の通知を両方扱える。Agent SDK の常駐構成では、コンテナが HTTP か WebSocket の窓口を公開する。",
+          "whyNot": {
+            "A": "Batches API は非同期のまとめ処理で、作業中のやり取りはできない。",
+            "C": "リアルタイムのやり取りという要件を満たさない。",
+            "D": "SSE はサーバーから一方向で、しかもブラウザから API キーを使って直接呼ぶことになり危ない。"
+          },
+          "example": "チャット型のエージェント画面で「止めて」「こっちを先に」を送れるようにしたいときに WebSocket を使う。",
+          "explanation": "【解説】WebSocket の双方向性は一般的な Web 技術の知識。Claude 公式は Agent SDK の常駐構成で HTTP か WebSocket の窓口を挙げている。",
+          "sources": [
+            {
+              "title": "Hosting the Agent SDK",
+              "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+            },
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "レート制限の単位（RPM・ITPM・OTPM）/ max_tokens・接続数",
+          "question": "Messages API のレート制限は、何を単位に測られますか？",
+          "choices": [
+            "A. 1分あたりのリクエスト数（RPM）",
+            "B. 送った max_tokens の合計",
+            "C. 同時に開いている接続の数",
+            "D. 1分あたりの入力トークン数（ITPM）",
+            "E. 会話のターン数"
+          ],
+          "correct": "AD",
+          "why": "Messages API のレート制限は、モデルごとに RPM・ITPM・OTPM（1分あたりの出力トークン数）で測られる。",
+          "whyNot": {
+            "B": "OTPM は実際に生成したトークンで数え、max_tokens の値は計算に入らない。",
+            "C": "同時接続数は Messages API のレート制限の単位として挙げられていない。",
+            "E": "API はステートレスで、ターン数ではなくリクエスト数とトークン数で数える。"
+          },
+          "example": "429 の本文には、どの制限を超えたかが書かれている。",
+          "explanation": "多くのモデルでは、キャッシュから読んだ入力トークンは ITPM に数えない。",
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "429 と retry-after（指定秒数待つ）/ 即時連打・キー作り直し",
+          "question": "夜間の一括処理で 429 rate_limit_error が返り、応答に retry-after: 20 が付いていました。どう対応しますか？",
+          "choices": [
+            "A. 新しい API キーを作って、すぐ送り直す",
+            "B. 成功するまで間を空けずに送り続ける",
+            "C. 20秒待ってから送り直す",
+            "D. anthropic-version を変えて送り直す"
+          ],
+          "correct": "C",
+          "why": "retry-after は再試行まで待つ秒数で、それより早く送っても失敗する。SDK もこの値を守って自動リトライする。",
+          "whyNot": {
+            "A": "レート制限は組織単位なので、同じ組織のキーを増やしても枠は増えない。",
+            "B": "失敗が続くうえ、混雑をさらに悪くする。",
+            "D": "API の版を指定するヘッダーで、レート制限とは関係ない。"
+          },
+          "example": "大量処理では、送る速さ自体を枠の内側に抑え、429 が出たら retry-after に従う。",
+          "explanation": "急ぎでない大量処理なら Message Batches API も候補（別のレート制限が適用される）。",
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "支出上限の 429（retry-after なし）/ レート制限の 429",
+          "question": "月末、何度リトライしても 429 が続きます。応答に retry-after はなく、error_code は enforced_spend_limit_reached です。正しい理解はどれですか？",
+          "choices": [
+            "A. 月の支出上限に達したので、待つか上限を上げる",
+            "B. 1分待てばトークンバケットが回復する",
+            "C. SDK の max_retries を増やせば通る",
+            "D. API が混んでいるので、529 と同じく再試行する"
+          ],
+          "correct": "A",
+          "why": "利用ティアの月の支出上限に達すると、翌月の始まり（UTC）まで 429 が続く。retry-after がなく、リトライでは直らないので、上限の引き上げを申請するか待つ。",
+          "whyNot": {
+            "B": "それはレート制限の 429 の話。支出上限の 429 は時間がたっても月内は直らない。",
+            "C": "SDK の自動リトライも含め、何度出し直しても失敗する。",
+            "D": "529 は API 全体の混雑で、支出上限とは原因が違う。"
+          },
+          "example": "429 を受けたら、retry-after の有無と error_code を見て、待てば直るものかを見分ける。",
+          "explanation": "自分で設定した支出上限に達したときは、429 ではなく 400 invalid_request_error が返る。",
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "短いバーストでの 429（トークンバケット）/ 1分ごとのリセット",
+          "question": "上限は 60 RPM で、1分間に送るのは 50 件だけです。それでも、50 件を同じ瞬間に一斉に送ると 429 が返ります。理由と対策として正しいのはどれですか？",
+          "choices": [
+            "A. 1分ごとにリセットされるので、次の分まで待てばよい",
+            "B. API キーごとに上限があるので、キーを分ける",
+            "C. ストリーミングにすれば RPM に数えられない",
+            "D. 枠は少しずつ補充されるので、送信を均等にならす"
+          ],
+          "correct": "D",
+          "why": "レート制限はトークンバケット方式で、枠は決まった時刻に一気に戻るのではなく少しずつ補充される。60 RPM が1秒1件のように効くこともあるので、短いバーストを避けて送信をならす。",
+          "whyNot": {
+            "A": "固定の間隔でリセットされるのではなく、連続して補充される方式。",
+            "B": "上限は組織単位で、キーを分けても枠は増えない。",
+            "C": "ストリーミングでも1回のリクエストとして数えられる。"
+          },
+          "example": "大量送信では、キューと一定間隔の送信（スロットリング）で山をならす。",
+          "explanation": "急に利用量を増やすと加速制限（acceleration limits）でも 429 が出るので、徐々に増やす。",
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "ITPM とプロンプトキャッシュ（キャッシュ読み込みは数えない）/ max_tokens・RPM",
+          "question": "毎回同じ長いシステムプロンプト（数万トークン）を付けて呼んでおり、ITPM の上限に当たって 429 が出ます。上限を変えずに処理量を増やすには、何が有効ですか？",
+          "choices": [
+            "A. max_tokens を小さくする",
+            "B. 同じ部分をプロンプトキャッシュにする",
+            "C. リクエストを細かく分けて回数を増やす",
+            "D. anthropic-beta ヘッダーを付ける"
+          ],
+          "correct": "B",
+          "why": "多くのモデルでは、キャッシュから読んだ入力トークン（cache_read_input_tokens）は ITPM に数えないので、同じ長い部分をキャッシュすると実質の処理量が増える。",
+          "whyNot": {
+            "A": "max_tokens は出力の上限で、入力トークンの ITPM は減らない。OTPM の計算にも入らない。",
+            "C": "毎回同じ長いプロンプトを送るので、入力トークンは減らず RPM も圧迫する。",
+            "D": "ベータ機能を有効にするヘッダーで、ITPM の数え方は変わらない。"
+          },
+          "example": "システム指示・ツール定義・大きな資料など、毎回同じ部分はキャッシュの対象にする。",
+          "explanation": "キャッシュの細かい使い方は単元5-4（コストとトークン管理）で扱う。",
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "長いリクエストはストリーミング（10分の目安）/ max_retries・バージョン",
+          "question": "長いレポートを1回で書かせようと、Python SDK で大きな max_tokens を指定して通常の呼び出しをしたところ、送る前に「10分を超えそう」というエラーで止まりました。公式の勧めに合う直し方はどれですか？",
+          "choices": [
+            "A. max_retries を 10 に増やす",
+            "B. anthropic-version を古い版にする",
+            "C. ストリーミングで呼び、最終メッセージを受け取る",
+            "D. API キーを別のワークスペースのものに替える"
+          ],
+          "correct": "C",
+          "why": "SDK は、通常の呼び出しが約10分を超えそうだと止める。長い生成はストリーミングで受け取るよう勧められており、SDK のヘルパーで最終メッセージにまとめて受け取れる。",
+          "whyNot": {
+            "A": "送る前に止まっているので、再試行の回数を増やしても変わらない。",
+            "B": "版の指定で、長いリクエストの扱いは変わらない。",
+            "D": "認証の問題ではないので、キーを替えても同じ。"
+          },
+          "example": "急がない長い生成を大量に行うなら、Message Batches API も候補になる。",
+          "explanation": "途中のネットワークは長く無通信の接続を切ることがあるので、長い応答はストリーミングで少しずつ受け取る。",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "タイムアウトも既定でリトライされる / タイムアウトはリトライされない",
+          "question": "Python SDK で timeout=5 秒を設定したら、遅い呼び出しでエラーになるまで約15秒かかり、API には同じリクエストが3回届いていました。なぜですか？",
+          "choices": [
+            "A. タイムアウトも既定で2回リトライされるから",
+            "B. timeout の単位が秒ではなく3倍されるから",
+            "C. API がタイムアウトを検知して3回処理したから",
+            "D. ストリーミングが自動で有効になったから"
+          ],
+          "correct": "A",
+          "why": "Python SDK では、タイムアウトしたリクエストも既定で2回リトライされる。1回目と再試行2回で、計3回送られる。",
+          "whyNot": {
+            "B": "timeout は秒で指定する値で、3倍されることはない。",
+            "C": "やり直しているのはクライアント側の SDK で、API が勝手に繰り返すのではない。",
+            "D": "SDK が勝手にストリーミングへ切り替えることはない。"
+          },
+          "example": "短いタイムアウトにするなら、max_retries も合わせて決め、待ち時間の合計と料金を見積もる。",
+          "explanation": "タイムアウトすると SDK は APITimeoutError を投げる。",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "request-id（問い合わせに添える）/ API キー・プロンプト全文",
+          "question": "特定の呼び出しだけ 500 api_error が続くので、Anthropic のサポートに問い合わせます。その呼び出しを特定してもらうために添えるべきものはどれですか？",
+          "choices": [
+            "A. 使っている API キーそのもの",
+            "B. 送った anthropic-version の値",
+            "C. 応答の request-id",
+            "D. SDK のインストール手順"
+          ],
+          "correct": "C",
+          "why": "すべての応答には一意の request-id ヘッダーが付き、エラー本文にも request_id として入る。問い合わせにこれを添えると、そのリクエストをすぐ特定できる。",
+          "whyNot": {
+            "A": "API キーは秘密情報で、誰にも渡さない。",
+            "B": "多くの利用者が同じ値を送るので、呼び出しを特定できない。",
+            "D": "どのリクエストかを特定する情報にはならない。"
+          },
+          "example": "SDK では応答の _request_id を、失敗したリクエストのログに必ず残しておく。",
+          "explanation": "500 は指数バックオフで再試行し、続くときに request-id を添えてサポートに連絡する。",
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            },
+            {
+              "title": "API overview",
+              "url": "https://platform.claude.com/docs/en/api/overview"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-2",
+          "topic": "ストリーム途中の error イベント（200 の後）/ ステータスコードだけ見る",
+          "question": "ストリーミングで HTTP 200 が返り文字も届き始めたのに、途中で overloaded_error の error イベントが届いて止まりました。正しい理解はどれですか？",
+          "choices": [
+            "A. 200 が返った以上、応答は必ず最後まで届く",
+            "B. 200 の後でも、エラーはイベントとして届きうる",
+            "C. overloaded_error は 401 と同じく認証の問題",
+            "D. ストリーミングではエラーは起きない"
+          ],
+          "correct": "B",
+          "why": "SSE では 200 が返った後にエラーが起きることがあり、そのときは error イベントで届く。overloaded_error は通常の応答なら 529 にあたる。",
+          "whyNot": {
+            "A": "200 は開始の合図で、最後まで届くことの保証ではない。",
+            "C": "overloaded_error は API の一時的な混雑で、キーの問題ではない。",
+            "D": "公式が、混雑時にストリームの中でエラーが届くことがあると書いている。"
+          },
+          "example": "途中で切れたら、受け取ったテキストを使って「続きから書いて」と頼む新しいリクエストを作る。",
+          "explanation": "tool_use や thinking のブロックは途中から復元できないので、続きは最後のテキストブロックから再開する。",
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u2-4-a",
+      "label": "単元2-4 セットA",
+      "focus": "2-4",
+      "lecture": {
+        "unit": "2-4",
+        "terms": [
+          {
+            "name": "REST API と HTTP ステータスコード（HTTP status code）",
+            "meaning": "決まった URL に HTTP で要求を送り、結果を番号（ステータスコード）付きで受け取る仕組み。Claude の Messages API は POST /v1/messages で呼ぶ。",
+            "analogy": "レストランの注文票。注文（リクエスト）を出すと、厨房から「200: できました」「401: 会員証が無効です」「529: 今は満席です」と番号付きの返事が来る。400番台は注文票の書き方が悪い（客側の問題）、500番台は厨房側の問題。",
+            "exam": "400 invalid_request_error・401 authentication_error・403 permission_error は送る側を直す。429 rate_limit_error・500 api_error・529 overloaded_error は時間をおいて再試行する。エラー本文は JSON で、error.type と request_id が入る。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Claude API errors",
+                "url": "https://platform.claude.com/docs/en/api/errors"
+              }
+            ]
+          },
+          {
+            "name": "JSON と構造化出力（structured outputs）",
+            "meaning": "Claude の応答を、指定した JSON スキーマどおりの形に制約する機能。output_config.format に type: json_schema とスキーマを渡す。",
+            "analogy": "役所の申請書の記入欄。白紙に「名前とメールを書いて」と頼むと人によって書き方がばらばらだが、欄が決まった申請書なら必ず同じ場所に同じ種類の値が入る。",
+            "exam": "スキーマに合う JSON が返り、JSON.parse の失敗や再試行が要らなくなる。ただし stop_reason が refusal や max_tokens のときはスキーマに合わないことがある。オブジェクトの additionalProperties は false にする必要がある。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Structured outputs",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+              }
+            ]
+          },
+          {
+            "name": "非同期処理（async/await）と AsyncAnthropic",
+            "meaning": "返事を待つ間に処理を止めず、ほかの要求も進める書き方。Python SDK では AsyncAnthropic を使い、await client.messages.create(...) と書く。",
+            "analogy": "洗濯機・炊飯器・電子レンジを同時に回す家事。1台ずつ終わるのを前で待つ（同期）と時間が足し算になるが、全部スタートさせてから終わった順に取り出す（非同期）と、いちばん長い1台ぶんの時間で済む。",
+            "exam": "複数の文書を同時に要約するような、互いに待つ必要のない API 呼び出しを並行させる場面で選ぶ。同期クライアント（Anthropic）と非同期クライアント（AsyncAnthropic）は同じ書き方で使える。並行させすぎると 429 が出るので、同時に送る数は絞る。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              }
+            ]
+          },
+          {
+            "name": "指数バックオフ（exponential backoff）とリトライ",
+            "meaning": "一時的なエラーのとき、待ち時間を 1秒→2秒→4秒 のように倍々に延ばしながら再試行する方法。公式 SDK は接続エラー・429・5xx を既定で2回、指数バックオフで自動再試行し、retry-after ヘッダーがあれば従う。",
+            "analogy": "混んでいる電話窓口にかけ直すとき。話し中ですぐかけ直し続けると、みんなが同じことをしてますます繋がらない。1分後、2分後、4分後と間を空けると、窓口が空いたときに繋がりやすい。",
+            "exam": "再試行してよいのは一時的なエラー（429・500・529 など）だけ。401 や 400 は何度送っても同じ結果になる。月の利用上限に達した 429 には retry-after がなく、再試行しても回復しない。SDK の再試行回数は max_retries で変えられる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Claude API errors",
+                "url": "https://platform.claude.com/docs/en/api/errors"
+              },
+              {
+                "title": "Rate limits",
+                "url": "https://platform.claude.com/docs/en/api/rate-limits"
+              },
+              {
+                "title": "Python SDK",
+                "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "直して送り直すエラー（400・401・403）と、待って再試行するエラー（429・500・529）",
+          "text": "400・401・403 は、リクエストの中身や API キー・権限が原因なので、送る側を直さない限り何度送っても失敗する。\n429・500・529 は、混雑やサーバー側の一時的な問題なので、指数バックオフで待って再試行すれば通ることが多い。\nただし 429 でも月の利用上限（enforced_spend_limit_reached）は例外で、retry-after がなく、上限を見直すまで回復しない。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "401 authentication_error / 再試行・max_tokens",
+          "question": "社内ツールから Claude API を呼ぶと、毎回 401 authentication_error が返ります。最初に取るべき対応はどれですか？",
+          "choices": [
+            "A. 指数バックオフで再試行する",
+            "B. max_tokens を大きくする",
+            "C. API キーが有効かを確かめて差し替える",
+            "D. ストリーミングに切り替える"
+          ],
+          "correct": "C",
+          "why": "401 は API キーが不正・失効・期限切れなど認証の問題で、キーを直さない限り何度送っても失敗します。",
+          "whyNot": {
+            "A": "再試行は 429・5xx など一時的なエラー向けで、認証エラーは待っても直らない。",
+            "B": "max_tokens は出力の長さの上限で、認証とは関係がない。",
+            "D": "ストリーミングは長い応答を少しずつ受け取る方法で、認証エラーは解決しない。"
+          },
+          "example": "キーの更新漏れや環境変数 ANTHROPIC_API_KEY の設定ミスで起きやすい。",
+          "explanation": "4xx は送る側を直す、429・5xx は待って再試行する、と分けて覚える。",
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "529 overloaded_error / 400 invalid_request_error",
+          "question": "夕方の混む時間帯だけ、Claude API から 529 overloaded_error がときどき返ります。リクエストの中身は正しいことを確認済みです。どう対応しますか？",
+          "choices": [
+            "A. 待ち時間を延ばしながら再試行する",
+            "B. リクエストの JSON の形式を見直す",
+            "C. API キーを新しく発行し直す",
+            "D. エラーは常に無視して次の処理へ進む"
+          ],
+          "correct": "A",
+          "why": "529 は API 全体が一時的に混んでいることを示すので、指数バックオフで間を空けて再試行するのが適切です。",
+          "whyNot": {
+            "B": "形式の誤りなら 400 invalid_request_error になる。中身は確認済み。",
+            "C": "キーの問題なら 401 になる。529 はキーとは関係がない。",
+            "D": "結果を捨てることになり、利用者に何も返らない。「常に無視」は誤り。"
+          },
+          "example": "公式 SDK を使えば、5xx は既定で2回まで自動で再試行される。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "構造化出力の stop_reason max_tokens / 正規表現で補修",
+          "question": "構造化出力（output_config.format）で請求書データを JSON で受け取っています。ある応答だけ JSON が途中で切れていて、stop_reason は max_tokens でした。どう対応しますか？",
+          "choices": [
+            "A. 正規表現で閉じ括弧を補って読み込む",
+            "B. スキーマの additionalProperties を true にする",
+            "C. 構造化出力をやめてプロンプトだけで頼む",
+            "D. max_tokens を増やして同じ要求を送り直す"
+          ],
+          "correct": "D",
+          "why": "max_tokens で止まった出力は途中で切れていてスキーマに合わないことがあるため、上限を上げて送り直します。",
+          "whyNot": {
+            "A": "足りない値は補えず、壊れたデータを正しいものとして扱ってしまう。",
+            "B": "additionalProperties は false が必須で、true にすると 400 エラーになる。",
+            "C": "形が保証されなくなり、かえって JSON の崩れが増える。"
+          },
+          "example": "明細が多い請求書など、出力が長くなる入力で起きやすい。",
+          "explanation": "stop_reason が refusal のときも、スキーマに合わない出力になることがある。",
+          "sources": [
+            {
+              "title": "Structured outputs",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "API の後方互換（出力に値が増える）/ 厳密な完全一致チェック",
+          "question": "Claude API の応答 JSON を読むコードを書いています。将来も壊れにくくするには、どう読むのがよいですか？",
+          "choices": [
+            "A. 必要なキーだけ読み、知らないキーは無視する",
+            "B. 知らないキーがあれば例外にして止める",
+            "C. 応答全体を文字列として完全一致で比べる",
+            "D. 応答のキーの数が変わらないかを毎回確かめる"
+          ],
+          "correct": "A",
+          "why": "Anthropic は同じ API バージョンの中でも、出力に値を足したり列挙型の値を増やしたりすることがあると明記しているので、知らない値を許す読み方が安全です。",
+          "whyNot": {
+            "B": "フィールドが足されただけで本番が止まってしまう。",
+            "C": "Claude の出力は毎回同じとは限らず、フィールド追加でも一致しなくなる。",
+            "D": "キーが増えることは仕様上ありうるので、正常な応答を異常と判定してしまう。"
+          },
+          "example": "ストリーミングのイベント型も増えることがあるので、知らないイベントは読み飛ばす。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Versions",
+              "url": "https://platform.claude.com/docs/en/api/versioning"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "AsyncAnthropic で並行 / for ループの同期呼び出し・Message Batches API",
+          "question": "Web 画面で、利用者がアップロードした10件の文書を Claude で要約し、数秒〜十数秒で画面に返したいです。Python でどう書きますか？",
+          "choices": [
+            "A. 同期クライアントで for ループし1件ずつ待つ",
+            "B. AsyncAnthropic で10件を並行して await する",
+            "C. Message Batches API に送り結果を待つ",
+            "D. 10件を1つのプロンプトに連結して送る"
+          ],
+          "correct": "B",
+          "why": "互いに待つ必要のない10件の呼び出しを非同期で並行させると、待ち時間がほぼ最も長い1件ぶんで済みます。",
+          "whyNot": {
+            "A": "1件ずつ待つので、10件分の時間が足し算になる。",
+            "C": "バッチは安くなる代わりに結果がすぐ返る保証がなく、画面で待つ用途に向かない。",
+            "D": "文書ごとの要約が混ざりやすく、出力も長くなって遅くなる。"
+          },
+          "example": "asyncio.gather などで複数の await をまとめて待つ。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "SDK の自動リトライ（既定2回・retry-after）/ 400 の再試行・無制限",
+          "question": "公式 Python SDK の自動リトライについて、正しい説明はどれですか？",
+          "choices": [
+            "A. 400 エラーも内容を直して自動で再送する",
+            "B. 既定では2回まで再試行する",
+            "C. 成功するまで回数の上限なく再試行する",
+            "D. retry-after ヘッダーがあれば待ち時間に従う",
+            "E. 再試行は止められず、設定も変えられない"
+          ],
+          "correct": "BD",
+          "why": "SDK は接続エラー・429・5xx などを既定で2回、短い指数バックオフで再試行し、retry-after があればそれに従います。",
+          "whyNot": {
+            "A": "400 は再試行の対象外で、SDK がリクエストの中身を直すこともない。",
+            "C": "既定は2回で、無制限ではない。",
+            "E": "max_retries で回数を変えたり 0 にして止めたりできる。"
+          },
+          "example": "自前で再試行を重ねるときは、SDK の再試行と二重にならないよう max_retries を確認する。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "並行数の上げすぎによる 429 / 同時数の制限",
+          "question": "非同期で500件の分類を一斉に送り出したところ、429 rate_limit_error が大量に出ました。どう直すのが適切ですか？",
+          "choices": [
+            "A. 同期処理に戻し、1件ずつ送る",
+            "B. 新しい API キーを何本も作って分散する",
+            "C. 同時に送る数を絞り、429 は間を空けて再試行",
+            "D. max_tokens を小さくすれば 429 は出なくなる"
+          ],
+          "correct": "C",
+          "why": "短い時間に要求が集中するとレート制限を超えるので、同時実行数を制限し、429 は retry-after や指数バックオフで待ってから再試行します。",
+          "whyNot": {
+            "A": "429 は避けられるが、並行の利点まで捨てて大幅に遅くなる。",
+            "B": "レート制限は組織単位でかかるので、キーを増やしても上限は増えない。",
+            "D": "出力トークンの上限は max_tokens では計算されず、要求数の集中は解消しない。"
+          },
+          "example": "asyncio.Semaphore などで同時に飛ばす数を決めておく。",
+          "explanation": "急にトラフィックを増やすと acceleration limits による 429 も出るので、徐々に増やす。",
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "構造化出力の additionalProperties / スキーマの制約",
+          "question": "構造化出力のスキーマで、オブジェクトに additionalProperties: true を指定して送ったところ 400 エラーになりました。原因はどれですか？",
+          "choices": [
+            "A. API キーに構造化出力の権限がない",
+            "B. additionalProperties は false しか使えない",
+            "C. 混雑していたので時間をおけば通る",
+            "D. JSON スキーマは YAML で書く必要がある"
+          ],
+          "correct": "B",
+          "why": "構造化出力では、オブジェクトの additionalProperties は false でなければならず、ほかの値は対応していません。",
+          "whyNot": {
+            "A": "権限の問題なら 403 permission_error になる。",
+            "C": "混雑なら 529 になる。400 はリクエストの中身の問題で、待っても直らない。",
+            "D": "スキーマは JSON で渡す。"
+          },
+          "example": "minLength や minimum など対応していない制約を使っても 400 になる。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Structured outputs",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "Messages API の必須ヘッダー（x-api-key・anthropic-version）",
+          "question": "SDK を使わず、curl で Claude の Messages API（POST /v1/messages）を直接呼びます。content-type のほかに必要なヘッダーはどれですか？",
+          "choices": [
+            "A. x-api-key",
+            "B. Authorization: Basic",
+            "C. request-id",
+            "D. anthropic-version",
+            "E. retry-after"
+          ],
+          "correct": "AD",
+          "why": "Messages API には API キーを入れる x-api-key と、API のバージョンを指定する anthropic-version が必要です（SDK はこれらを自動で付けます）。",
+          "whyNot": {
+            "B": "Claude API の API キーは x-api-key ヘッダーで渡す。",
+            "C": "request-id は API が応答に付けて返すヘッダーで、送る側が付けるものではない。",
+            "E": "retry-after は 429 などの応答に付く、待ち時間を知らせるヘッダー。"
+          },
+          "example": "障害を問い合わせるときは、応答の request-id を控えておく。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Versions",
+              "url": "https://platform.claude.com/docs/en/api/versioning"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "月の利用上限の 429（retry-after なし）/ 通常のレート制限",
+          "question": "429 rate_limit_error が返り続けています。応答に retry-after ヘッダーがなく、error.details.error_code は enforced_spend_limit_reached でした。どう判断しますか？",
+          "choices": [
+            "A. 月の利用上限に達しており、上限を見直す",
+            "B. 一時的な混雑なので数秒待てば通る",
+            "C. SDK の再試行回数を増やせば通る",
+            "D. リクエストの JSON に誤りがある"
+          ],
+          "correct": "A",
+          "why": "enforced_spend_limit_reached はティアの月額上限に達した印で、retry-after がなく、上限を引き上げるか翌月になるまで再試行しても失敗します。",
+          "whyNot": {
+            "B": "混雑による一時的な 429 なら retry-after が付き、待てば通る。今回は違う。",
+            "C": "上限に達している間は、SDK の自動再試行も含めて失敗し続ける。",
+            "D": "JSON の誤りなら 400 invalid_request_error になる。"
+          },
+          "example": "監視では error_code を見て、レート制限と利用上限を別のアラートに分ける。",
+          "explanation": "自分で設定した利用上限に達したときは、429 ではなく 400 が返る。",
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u2-4-b",
+      "label": "単元2-4 セットB",
+      "focus": "2-4",
+      "lecture": {
+        "unit": "2-4",
+        "terms": [
+          {
+            "name": "Git のブランチとワークツリー（git worktree）",
+            "meaning": "ブランチは作業の枝分かれ、ワークツリーは1つのリポジトリから別の作業用フォルダを作る仕組み。Claude Code は claude --worktree <名前> で、別のチェックアウトで並行セッションを動かせる。",
+            "analogy": "1冊のレシピノートをコピーして、料理人2人に1冊ずつ渡す。同じノートに2人で同時に書き込むと字が重なるが、別々のコピーに書けばぶつからず、あとで良い変更だけ本体に書き写せる。",
+            "exam": "機能追加とバグ修正のように、同時に進める作業の編集をぶつけたくない場面で選ぶ。ワークツリーは新しいチェックアウトなので、.env のような gitignore 対象のファイルや依存パッケージは入っていない（.worktreeinclude でコピーを指定できる）。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Common workflows",
+                "url": "https://code.claude.com/docs/en/common-workflows"
+              },
+              {
+                "title": "Best practices for Claude Code",
+                "url": "https://code.claude.com/docs/en/best-practices"
+              }
+            ]
+          },
+          {
+            "name": "SDLC への組み込み（CI/CD）と Claude Code GitHub Actions",
+            "meaning": "開発の流れ（設計→実装→テスト→レビュー→リリース）の中に Claude を組み込むこと。GitHub Actions で anthropics/claude-code-action を使うと、@claude のメンションや PR の作成などのイベントで Claude Code が動く。",
+            "analogy": "工場のベルトコンベアに検査係を立たせる。製品（PR）が流れてくるたびに自動で見てもらえるので、誰かが思い出して呼びに行く必要がない。ただし検査係に金庫の鍵（API キー）をむき出しで渡してはいけない。",
+            "exam": "API キーはリポジトリに直接書かず GitHub の Secrets に入れる。ワークフローには必要な権限だけ与え、Claude の変更はマージ前に人が見る。CI の中では claude -p（非対話モード）で動かし、--output-format json で結果を機械的に読む。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Claude Code GitHub Actions",
+                "url": "https://code.claude.com/docs/en/github-actions"
+              },
+              {
+                "title": "Run Claude Code programmatically",
+                "url": "https://code.claude.com/docs/en/headless"
+              }
+            ]
+          },
+          {
+            "name": "コードレビュー（code review）と Claude の Code Review",
+            "meaning": "書いたコードを別の目で読み、不具合や危険を見つける工程。Claude の Code Review は、複数のエージェントが PR を調べ、検証ステップで誤検知を落としてから、重大度順にインラインコメントを付ける。",
+            "analogy": "作文を書いた本人は、自分の思い込みで読み飛ばすので誤字に気づきにくい。書いた過程を見ていない友だちに読んでもらうと、すぐに見つかる。",
+            "exam": "Code Review は PR を承認もブロックもせず、マージの判断はチームに残る。/code-review は会話を見ていない新しいサブエージェントでレビューするので、書いたときの理屈に引きずられない。レビュー観点は REVIEW.md と CLAUDE.md で調整する。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Code Review",
+                "url": "https://code.claude.com/docs/en/code-review"
+              },
+              {
+                "title": "Best practices for Claude Code",
+                "url": "https://code.claude.com/docs/en/best-practices"
+              }
+            ]
+          },
+          {
+            "name": "リファクタリング（refactoring）の小規模と大規模",
+            "meaning": "外から見た振る舞いを変えずに、コードの中身を読みやすく・直しやすく整えること。1ファイルの整理が小規模、多数のファイルにまたがる一斉の置き換えが大規模。",
+            "analogy": "家具の配置替え。部屋の使い方（振る舞い）はそのままで、使いやすく並べ直す。1部屋なら自分で少しずつ動かして確かめればよいが、家全体なら部屋ごとに担当を分けて、1部屋ずつ終わらせる。",
+            "exam": "Claude Code に頼むときは「振る舞いを保ったまま」と伝え、小さくテストできる単位で進め、最後にテストを走らせる。多数のファイルへの機械的な変更には /batch があり、作業を5〜30の単位に分けて、単位ごとにワークツリーで実行し PR を開く。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Common workflows",
+                "url": "https://code.claude.com/docs/en/common-workflows"
+              },
+              {
+                "title": "Best practices for Claude Code",
+                "url": "https://code.claude.com/docs/en/best-practices"
+              }
+            ]
+          },
+          {
+            "name": "回帰テスト（regression test）で振る舞いを固定する【解説】",
+            "meaning": "直したり整理したりした後も、前と同じ結果が出るかを確かめるテスト。テストのない古いコードは、リファクタリングの前に今の振る舞いをテストで固定しておく。",
+            "analogy": "模様替えの前に部屋の写真を撮っておく。終わったあとに写真と見比べれば、大事な物がなくなっていないかすぐ分かる。",
+            "exam": "AI が書き換えたコードが「動いていそう」かではなく、テストの結果という証拠で判断する。テストがないままの大きな書き換えは選ばない。",
+            "verified": false,
+            "sources": []
+          }
+        ],
+        "distinguish": {
+          "title": "Claude Code のチェックポイント（/rewind）と Git のコミット",
+          "text": "チェックポイントは、Claude が自分のファイル編集ツールで変えたファイルを、会話の前の時点に戻せる仕組み。\nBash コマンドで変わったファイルは対象外で、Git の代わりにはならず、Git と一緒に使う。\nGit のコミットは、チーム全体で共有・レビュー・取り消しができる正式な変更の記録。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "小規模リファクタリングの頼み方 / 一気に全面書き換え",
+          "question": "古い utils.js を、Claude Code に新しい JavaScript の書き方へ整理させたいです。最も安全な頼み方はどれですか？",
+          "choices": [
+            "A. 全ファイルを一度に書き換え、最後に目で確かめる",
+            "B. 振る舞いを保つよう伝え、小さく変えてテストする",
+            "C. テストは遅くなるので消してから書き換える",
+            "D. 機能追加も同じ変更にまとめて PR を減らす"
+          ],
+          "correct": "B",
+          "why": "リファクタリングは振る舞いを変えないことが前提なので、それを明示し、小さくテストできる単位で進めて、テストで確かめます。",
+          "whyNot": {
+            "A": "変更が大きすぎて、どこで壊れたか分からなくなる。目視だけでは証拠にならない。",
+            "C": "振る舞いが変わっていないかを確かめる手段を自分で捨てることになる。",
+            "D": "整理と機能追加が混ざると、レビューでどちらの変更か区別できない。"
+          },
+          "example": "「ES2024 の書き方にして、同じ振る舞いを保って。終わったらテストを実行して」と頼む。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Common workflows",
+              "url": "https://code.claude.com/docs/en/common-workflows"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "大規模リファクタリング（/batch）/ 1セッションで全部",
+          "question": "200個の API ハンドラを、新しい共通ヘルパーを使う形に機械的に置き換えます。Claude Code でどう進めますか？",
+          "choices": [
+            "A. 1つの会話で200ファイルを順に直させる",
+            "B. 手作業で直し、Claude は使わない",
+            "C. Code Review に置き換えを頼む",
+            "D. /batch で単位に分け、単位ごとに PR を作る"
+          ],
+          "correct": "D",
+          "why": "/batch は大きな機械的変更を5〜30の単位に分けて計画を見せ、単位ごとにワークツリーで実行して PR を開くので、レビューしやすい大きさに保てます。",
+          "whyNot": {
+            "A": "コンテキストがふくらみ、1つの巨大な差分になってレビューしにくい。",
+            "B": "機械的な一斉置き換えは、分割して任せるのに向いている作業。",
+            "C": "Code Review は PR を読んで指摘するだけで、コードを書き換えない。"
+          },
+          "example": "フレームワークの移行や、非推奨 API の一斉置き換え。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Best practices for Claude Code",
+              "url": "https://code.claude.com/docs/en/best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "並行作業（claude --worktree）/ 同じフォルダで2セッション",
+          "question": "Claude Code で、機能追加とバグ修正を同じリポジトリで同時に進めたいです。編集がぶつからないようにするにはどうしますか？",
+          "choices": [
+            "A. claude --worktree で別のチェックアウトを使う",
+            "B. 同じフォルダで2つのセッションを開く",
+            "C. 片方が終わるまでもう片方は plan mode にする",
+            "D. 作業ごとに CLAUDE.md を書き換える"
+          ],
+          "correct": "A",
+          "why": "ワークツリーは別ブランチの別チェックアウトなので、2つのセッションの編集が同じファイルでぶつかりません。",
+          "whyNot": {
+            "B": "同じファイルを両方のセッションが書き換え、変更が混ざる。",
+            "C": "plan mode は編集前に計画を確認する機能で、並行作業の分離ではない。",
+            "D": "CLAUDE.md はプロジェクトの指示書で、作業場所は分けられない。"
+          },
+          "example": "claude --worktree feature-auth と claude --worktree bugfix-123 を別の端末で起動する。",
+          "explanation": "ワークツリーには .env などの gitignore 対象ファイルが入らないので、.worktreeinclude で指定する。",
+          "sources": [
+            {
+              "title": "Common workflows",
+              "url": "https://code.claude.com/docs/en/common-workflows"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "チェックポイントの対象（Bash の変更は戻らない）/ Git",
+          "question": "Claude Code が Bash の sed コマンドで設定ファイルを書き換えました。/rewind で会話を前に戻せば、このファイルも元に戻りますか？",
+          "choices": [
+            "A. 戻る。すべての変更が記録されている",
+            "B. 戻る。ただし Git の履歴も消える",
+            "C. 戻らない。Bash の変更は対象外なので Git で戻す",
+            "D. 戻らない。/rewind は会話だけで、ファイルは一切戻せない"
+          ],
+          "correct": "C",
+          "why": "チェックポイントが戻せるのは Claude が自分のファイル編集ツールで変えたファイルで、Bash コマンドで変わったファイルは戻りません。Git と一緒に使います。",
+          "whyNot": {
+            "A": "Bash による変更は記録の対象外。",
+            "B": "チェックポイントは Git の履歴とは別の仕組みで、Git の代わりにもならない。",
+            "D": "/rewind はコード・会話・その両方を戻せる。戻せないのは Bash による変更。"
+          },
+          "example": "大胆な案を試す前にコミットしておくと、どの方法で変わったファイルでも戻せる。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Best practices for Claude Code",
+              "url": "https://code.claude.com/docs/en/best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "Code Review はマージを承認・ブロックしない / 指摘なし＝安全",
+          "question": "チームで Claude の Code Review を有効にしました。運用の説明として正しいものはどれですか？",
+          "choices": [
+            "A. 指摘がなければ安全なので自動でマージされる",
+            "B. 重大な指摘があると PR が自動でブロックされる",
+            "C. レビューの中で不具合を直すコミットも push する",
+            "D. 承認もブロックもせず、マージ判断はチームが行う"
+          ],
+          "correct": "D",
+          "why": "Code Review は指摘をインラインコメントとチェックランで残しますが、PR を承認もブロックもしないので、マージの判断はチームに残ります。",
+          "whyNot": {
+            "A": "指摘がないことは、不具合やセキュリティの問題がないことの証明にならない。",
+            "B": "チェックランは失敗として終わらず、PR をブロックしない。",
+            "C": "レビュー中のリポジトリへのアクセスは読み取りのみで、コミットは push しない。"
+          },
+          "example": "重要なリポジトリは review level を Deep にし、マージ前に人が指摘を確認する。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Code Review",
+              "url": "https://code.claude.com/docs/en/code-review"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "新しい文脈でのレビュー（/code-review）/ 同じ会話でレビュー",
+          "question": "Claude Code に長い会話で実装させたコードを、PR を出す前にレビューしたいです。思い込みに引きずられにくいのはどれですか？",
+          "choices": [
+            "A. 同じ会話で「今のコードを見直して」と頼む",
+            "B. /code-review で新しいサブエージェントに見せる",
+            "C. effort を下げて素早く見直させる",
+            "D. 実装の理由を長く説明してから見直させる"
+          ],
+          "correct": "B",
+          "why": "/code-review は会話を見ていない新しいサブエージェントで差分を読むので、実装したときの理屈に左右されません。",
+          "whyNot": {
+            "A": "同じ会話では、書いたときの理由づけを前提に読んでしまいやすい。",
+            "C": "effort を下げると確認が浅くなり、見落としが増える。",
+            "D": "書き手の理屈を先に渡すと、かえってその見方に引きずられる。"
+          },
+          "example": "2つ目のセッションを開いてファイルだけ渡しても、同じように独立したレビュー役になる。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Best practices for Claude Code",
+              "url": "https://code.claude.com/docs/en/best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "GitHub Actions の安全な運用（Secrets・最小権限）",
+          "question": "Claude Code GitHub Actions をリポジトリに導入します。安全な運用として正しいものはどれですか？",
+          "choices": [
+            "A. API キーをワークフローの YAML に直接書く",
+            "B. API キーは GitHub の Secrets に入れて参照する",
+            "C. Claude に main へ直接マージする権限を与える",
+            "D. 必要な権限だけ与え、マージ前に変更を人が見る",
+            "E. 公開リポジトリなら誰の @claude にも反応させる"
+          ],
+          "correct": "BD",
+          "why": "公式の手引きは、キーをリポジトリに直接コミットせず Secrets に入れること、ワークフローには必要な権限だけ与え、マージ前に Claude の変更を確認することを勧めています。",
+          "whyNot": {
+            "A": "リポジトリを読める人全員にキーが漏れる。",
+            "C": "人の確認を飛ばすことになり、誤った変更がそのまま本番に入る。",
+            "E": "既定では書き込み権限のある人の起動だけを受け付ける。誰でも動かせるとコストや悪用の危険がある。"
+          },
+          "example": "anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }} のように参照する。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Claude Code GitHub Actions",
+              "url": "https://code.claude.com/docs/en/github-actions"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "claude -p の JSON 出力（result・structured_output）/ 終了コード",
+          "question": "CI のスクリプトで claude -p を実行し、結果をプログラムで読みたいです。正しい説明はどれですか？",
+          "choices": [
+            "A. -p は実行中に必ず対話で許可を求める",
+            "B. --output-format json で result 欄に本文が入る",
+            "C. --json-schema の結果は structured_output 欄に入る",
+            "D. 失敗しても終了コードは常に 0 になる",
+            "E. JSON 出力は stream-json でしか得られない"
+          ],
+          "correct": "BC",
+          "why": "--output-format json では本文が result に、--json-schema を併用するとスキーマどおりの結果が structured_output に入ります。",
+          "whyNot": {
+            "A": "-p は非対話モードで、許可が必要な操作は --allowedTools などで前もって決める。",
+            "D": "成功で 0、失敗で 0 以外を返すので、スクリプトで分岐できる。",
+            "E": "json でも得られる。stream-json は1行ずつ流す形式。"
+          },
+          "example": "structured_output が無い応答（断られた場合など）もあるので、使う前に有無を確かめる。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Run Claude Code programmatically",
+              "url": "https://code.claude.com/docs/en/headless"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "AI レビューの指摘の絞り方（スタイルを除く）/ 指摘を全部直す",
+          "question": "AI にレビューさせた指摘をすべて直したら、不要な抽象化や起こりえないケースのテストが増えました。次からどう頼みますか？",
+          "choices": [
+            "A. 正しさに関わる指摘に絞り、スタイルは除くと伝える",
+            "B. 指摘の数が多いほど良いので、もっと細かく探させる",
+            "C. レビューをやめて、テストだけで判断する",
+            "D. 指摘を出さないように頼む"
+          ],
+          "correct": "A",
+          "why": "問題を探すよう頼まれたレビュー役は必ず何かを見つけるので、仕様に照らして正しさに影響する点に絞り、スタイルは除くと明示します。",
+          "whyNot": {
+            "B": "細かい指摘が増えるほど、不要な変更も増える。",
+            "C": "テストでは見つからない設計や仕様漏れを見る機会を失う。",
+            "D": "本当の不具合まで見逃すことになる。"
+          },
+          "example": "「SPEC.md と照らして、全要件があるか確かめて。正しさに関わる抜けだけ報告し、スタイルは除いて」と頼む。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Best practices for Claude Code",
+              "url": "https://code.claude.com/docs/en/best-practices"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-4",
+          "topic": "回帰テストで振る舞いを固定してからリファクタリング【解説】",
+          "question": "テストが1本もない古い料金計算の関数を、Claude Code に整理させたいです。最初に何をしますか？",
+          "choices": [
+            "A. まず整理させ、後でテストを書く",
+            "B. 本番に出して利用者の報告で確かめる",
+            "C. 今の振る舞いを確かめるテストを先に書かせる",
+            "D. コメントを増やせばテストは要らない"
+          ],
+          "correct": "C",
+          "why": "【解説】先に今の入出力をテストで固定すると、整理の後も同じ結果が出るかをテストという証拠で確かめられます。",
+          "whyNot": {
+            "A": "整理の後に書くテストは、変わってしまった振る舞いを正しいとみなしてしまう。",
+            "B": "料金の誤りが利用者に届いてから気づくことになる。",
+            "D": "コメントは振る舞いを確かめる手段にならない。"
+          },
+          "example": "「境目の値も含めて今の結果を確かめるテストを書いて、通ることを確認してから整理して」と頼む。",
+          "explanation": "Claude Code の手引きも、テストを足すときは境目の値やエラー条件を含めるよう勧めている。",
+          "sources": [
+            {
+              "title": "Common workflows",
+              "url": "https://code.claude.com/docs/en/common-workflows"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u2-3-a",
+      "label": "単元2-3 セットA",
+      "focus": "2-3",
+      "lecture": {
+        "unit": "2-3",
+        "terms": [
+          {
+            "name": "メッセージの構造（role・content blocks・system）",
+            "meaning": "Messages API は状態を持たず、毎回 user と assistant の会話履歴（content blocks の配列）を全部送り、最初から効く指示は最上位の system に書く。",
+            "analogy": "毎回まっさらな記憶で来る通訳さんに、これまでのやり取りの議事録を全部渡してから次の質問をする感じ。",
+            "exam": "「前の発言を覚えていない」は履歴を送っていないのが原因。system は messages の先頭ではなく最上位のパラメータに書く（system ロールのメッセージは messages の先頭に置けない）。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Using the Messages API",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+              }
+            ]
+          },
+          {
+            "name": "ツール使用（tool_use と tool_result）",
+            "meaning": "tools に name・description・input_schema を渡すと、Claude が stop_reason \"tool_use\" と tool_use ブロックで呼び出しを返し、アプリが実行して tool_result で結果を返す。",
+            "analogy": "料理長（Claude）が「冷蔵庫の在庫を見てきて」とメモを出し、見習い（アプリ）が見てきてメモ番号付きで報告する流れ。",
+            "exam": "tool_result は tool_use の直後の user メッセージに入れ、content の先頭に置く（テキストは後ろ）。失敗は is_error: true で返す。ツール選択の精度を一番左右するのは description の詳しさ。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Tool use with Claude",
+                "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+              },
+              {
+                "title": "Handle tool calls",
+                "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+              },
+              {
+                "title": "Define tools",
+                "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+              }
+            ]
+          },
+          {
+            "name": "ストリーミング（streaming / server-sent events）",
+            "meaning": "\"stream\": true で、応答を server-sent events（message_start → content_block_start/delta/stop → message_delta → message_stop）として少しずつ受け取る。",
+            "analogy": "手紙が書き上がるまで待つのではなく、電話で話しながら聞いていくようなもの。",
+            "exam": "message_delta の usage は累積値なので足し合わせない。ストリーム途中でも overloaded_error などの error イベントが来る。max_tokens が大きいと SDK はタイムアウト回避のためストリーミングを求める。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Streaming messages",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+              }
+            ]
+          },
+          {
+            "name": "ビジョン（vision / 画像入力）",
+            "meaning": "user メッセージに image ブロック（base64・url・Files API の file）を入れて画像を読ませる。JPEG・PNG・GIF・WebP に対応する。",
+            "analogy": "質問の紙の上に写真をクリップで留めて渡すイメージ。",
+            "exam": "画像は文章より前に置くと良い。画像が多いと上限（1リクエストの画像数・サイズ）に当たるので、Files API の file_id で送ったり縮小したりする。画像1枚のコストは 28×28 ピクセルのパッチ数で決まる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Vision",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "クライアントツールとサーバーツール",
+          "text": "クライアントツール（自作のツールや bash・text_editor）はアプリ側で実行し、tool_result を自分で返す。\nサーバーツール（web_search・web_fetch・code_execution など）は Anthropic 側で実行され、結果が同じ応答に入る。\n「tool_result を返す処理を書く必要があるか」で見分ける。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "Messages API はステートレス / 会話履歴の送り方",
+          "question": "社内 FAQ ボットを Messages API で作りました。2回目の質問で「さっきの件ですが」と聞くと、Claude が1回目の内容を知らない様子で答えます。まず直すべき点はどれですか？",
+          "choices": [
+            "A. 1回目と同じ API キーで呼び出す",
+            "B. 毎回これまでの user と assistant を全部送る",
+            "C. temperature を下げて答えを安定させる",
+            "D. 1回目の応答の id を次のリクエストに付ける"
+          ],
+          "correct": "B",
+          "why": "Messages API はステートレスで、サーバー側は会話を覚えていません。前のやり取りを踏まえさせるには、毎回これまでの user と assistant のメッセージを messages に並べて送ります。",
+          "whyNot": {
+            "A": "API キーは認証のためのもので、会話の記憶とは関係ありません。",
+            "C": "temperature は出力のばらつきの調整で、前の会話を知らない問題は直りません（新しいモデルでは指定自体ができません）。",
+            "D": "応答の id を付けても会話は引き継がれません。Messages API には前の応答を id で参照して続ける仕組みはありません。"
+          },
+          "example": "チャット画面では、画面上の履歴をそのまま messages 配列にして毎回送る。",
+          "explanation": "履歴は Claude が実際に出した文でなくてもよく、作った assistant メッセージを入れることもできます。",
+          "sources": [
+            {
+              "title": "Using the Messages API",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "最上位の system パラメータ / messages 内の system ロール",
+          "question": "会話の最初から「回答は敬語で、社内規程の範囲だけ答える」という役割を Claude に守らせたいです。この指示はどこに書くのが適切ですか？",
+          "choices": [
+            "A. messages の先頭に role が system のメッセージで",
+            "B. tools の description に役割として書く",
+            "C. リクエスト最上位の system パラメータに書く",
+            "D. 最初の assistant メッセージに先に書いておく"
+          ],
+          "correct": "C",
+          "why": "最初から効かせたい指示は、リクエスト最上位の system フィールドに書きます。公式ドキュメントも「最初から適用する指示は最上位の system を使う」としています。",
+          "whyNot": {
+            "A": "内容のある system ロールのメッセージは messages の先頭に置けません。会話の途中で指示を足すためのものです。",
+            "B": "tools の description はツールの用途を説明する場所で、全体の役割を指示する場所ではありません。",
+            "D": "assistant メッセージは Claude の発言として扱われ、指示にはなりません。新しいモデルでは最後に置く assistant の先出し（prefill）も 400 になります。"
+          },
+          "example": "ペルソナ・口調・答える範囲などの決まりごとは system にまとめる。",
+          "explanation": "新しいモデルでは、user ターンの後に role: system のメッセージを入れて、途中から指示を足すこともできます。",
+          "sources": [
+            {
+              "title": "Using the Messages API",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "tool_result の置き方 / content の順番",
+          "question": "Claude が tool_use で在庫検索を呼んだので、次の user メッセージの content を [テキスト「結果です」, tool_result] の順で送ったら 400 エラーになりました。どう直しますか？",
+          "choices": [
+            "A. tool_result を content の先頭にし、テキストは後ろに",
+            "B. tool_result を system パラメータに移す",
+            "C. tool_result を assistant メッセージに入れる",
+            "D. tool_choice を none にしてから送り直す"
+          ],
+          "correct": "A",
+          "why": "tool_result を返す user メッセージでは、tool_result ブロックを content 配列の先頭に置き、テキストはすべての tool_result の後ろに置く決まりです。",
+          "whyNot": {
+            "B": "tool_result は system には置けません。tool_use の直後の user メッセージに入れます。",
+            "C": "assistant メッセージには Claude の出力（tool_use など）が入ります。tool_result はアプリ側の返事なので user メッセージに入れます。",
+            "D": "tool_choice を none にするとツールを使わなくなるだけで、今のメッセージの並びの誤りは直りません。"
+          },
+          "example": "並列で複数のツールが呼ばれたときも、tool_result を全部先に並べ、補足のテキストは最後に付ける。",
+          "explanation": "tool_use の assistant メッセージと tool_result の user メッセージの間に、別のメッセージを挟むこともできません。",
+          "sources": [
+            {
+              "title": "Handle tool calls",
+              "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "ツール定義の書き方 / description と名前",
+          "question": "社内向けに GitHub と Slack のツールを20個以上渡したところ、Claude が似たツールを取り違えることが増えました。ツール定義の改善として公式の推奨に合うものはどれですか？",
+          "choices": [
+            "A. description は短く1文にして読む量を減らす",
+            "B. いつ使い、いつ使わないかを description に書く",
+            "C. 名前に github_ や slack_ などの接頭辞を付ける",
+            "D. 操作ごとにツールを細かく分けて数を増やす",
+            "E. input_schema を省いて Claude に推測させる"
+          ],
+          "correct": "BC",
+          "why": "ツールの性能を一番左右するのは description の詳しさで、何をするか・いつ使うか（使わないか）・引数の意味を書きます。ツールが複数のサービスにまたがるときは、サービス名の接頭辞を名前に付けると選び間違いが減ります。",
+          "whyNot": {
+            "A": "短い description は Claude に判断材料を与えません。公式は1ツールあたり3〜4文以上を勧めています。",
+            "D": "公式は逆に、関連する操作を action 引数でまとめてツールの数を減らすことを勧めています。",
+            "E": "input_schema はユーザー定義ツールに必要な項目で、省くと引数の形を伝えられません。"
+          },
+          "example": "github_list_prs と slack_send_message のように、サービス名で始まる名前にそろえる。",
+          "explanation": "入力が複雑なツールには、input_examples で正しい入力の例を足すこともできます。",
+          "sources": [
+            {
+              "title": "Define tools",
+              "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "is_error / ツール実行の失敗の返し方",
+          "question": "Claude が呼んだ天気取得ツールで、外部の天気 API が HTTP 500 を返しました。Claude にユーザーへ適切に説明させるには、アプリはどう返すのがよいですか？",
+          "choices": [
+            "A. 何も返さず、同じリクエストを最初から送り直す",
+            "B. 空の assistant メッセージを足して会話を進める",
+            "C. system に「ツールが壊れている」と追記して送る",
+            "D. tool_result に原因を書き is_error を true にする"
+          ],
+          "correct": "D",
+          "why": "ツールの実行が失敗したときは、tool_result の content にエラーの内容を書き、is_error: true を付けて返します。Claude はそれを踏まえてユーザーに説明したり、別の方法を試したりします。",
+          "whyNot": {
+            "A": "tool_use に対応する tool_result がないまま会話を続けると、形式の誤りでエラーになります。最初から送り直しても失敗の情報は伝わりません。",
+            "B": "assistant メッセージを足しても tool_result の代わりにはならず、Claude に失敗が伝わりません。",
+            "C": "system は全体の指示を書く場所です。個々の呼び出しの結果は、その tool_use_id に対応する tool_result で返します。"
+          },
+          "example": "\"failed\" ではなく「レート制限です。60秒後に再試行してください」のように、次に何をすべきかが分かる文にする。",
+          "explanation": "web_search などのサーバーツールのエラーは Anthropic 側で処理されるので、is_error を自分で返す必要はありません。",
+          "sources": [
+            {
+              "title": "Handle tool calls",
+              "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "ストリーミングの usage は累積値 / message_delta",
+          "question": "ストリーミングの応答で、message_delta イベントに出る usage.output_tokens をイベントごとに足し合わせて課金の見込みを出したら、実際より多くなりました。正しい集計方法はどれですか？",
+          "choices": [
+            "A. content_block_delta の数を数えて出力量とする",
+            "B. 最後の message_delta の値をそのまま使う",
+            "C. message_start の usage だけを使う",
+            "D. ping イベントの数を足して補正する"
+          ],
+          "correct": "B",
+          "why": "message_delta の usage に出るトークン数は累積値です。足し合わせると二重に数えるので、最後の message_delta の値を使います。",
+          "whyNot": {
+            "A": "content_block_delta は文字のかたまりの単位で、トークン数とは一致しません。",
+            "C": "message_start はまだ中身が空の時点の Message で、出力トークンの最終的な数は入っていません。",
+            "D": "ping イベントは接続を保つためのもので、トークン数とは関係ありません。"
+          },
+          "example": "コストのダッシュボードには、ストリームの最後の usage を1回分として記録する。",
+          "explanation": "イベントの流れは message_start → content_block_start / delta / stop の繰り返し → message_delta → message_stop です。",
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "ストリーム中の error イベント / HTTP ステータス",
+          "question": "ストリーミングで呼び出すと HTTP 200 が返ったのに、途中で event: error（overloaded_error）が届いて応答が止まることがあります。アプリ側の対応として正しいものはどれですか？",
+          "choices": [
+            "A. ストリーム中の error イベントも処理し再試行する",
+            "B. HTTP 200 なら成功なので error イベントは無視する",
+            "C. ping イベントが来なくなったら成功とみなす",
+            "D. ストリーミングをやめれば過負荷は起きなくなる"
+          ],
+          "correct": "A",
+          "why": "API はストリームの途中で error イベントを送ることがあり、混雑時の overloaded_error は非ストリーミングなら HTTP 529 にあたるものです。最初のステータスが 200 でも、ストリーム内の error イベントを見て再試行などを行います。",
+          "whyNot": {
+            "B": "ストリームは 200 で始まった後でも失敗し得ます。error イベントを無視すると途中で切れた応答を完成品として扱ってしまいます。",
+            "C": "ping は接続維持のために任意の回数届くイベントで、成功・失敗の判定には使えません。",
+            "D": "過負荷はサーバー側の混雑によるもので、非ストリーミングでも 529 として起こります。"
+          },
+          "example": "SDK のストリーム処理で例外を受け取り、少し待ってから再送する（4.6 以降は途中までの文を user メッセージで渡して続きを頼む）。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "大きな max_tokens と SDK のタイムアウト / .stream() と最終メッセージ",
+          "question": "長いレポートを作らせるため max_tokens を大きくしたら、SDK がストリーミングを求めて止まりました。画面に少しずつ出す必要はなく、最後に完成した応答だけが欲しいです。どうしますか？",
+          "choices": [
+            "A. max_tokens を減らし、何回にも分けて頼む",
+            "B. Message Batches API に切り替えて翌日受け取る",
+            "C. HTTP のタイムアウトを無制限にして create を使う",
+            "D. .stream() で呼び、最後に完成した Message を受け取る"
+          ],
+          "correct": "D",
+          "why": "SDK には内部でストリーミングしつつ、create と同じ完成済みの Message を返す使い方（Python なら .stream() と get_final_message()）があります。max_tokens が大きいリクエストで HTTP タイムアウトを避けるのに向いています。",
+          "whyNot": {
+            "A": "分割すると文脈が切れ、手間も増えます。ストリーミングで受ければ1回で済みます。",
+            "B": "Batches API は急がない大量処理向けで、結果は非同期に届きます。1件をすぐ欲しい場面には合いません。",
+            "C": "SDK がストリーミングを求めるのは長いリクエストの HTTP タイムアウトを避けるためで、公式が勧めるのはタイムアウトを延ばすことではなくストリーミングで受けることです。"
+          },
+          "example": "バックエンドのジョブで長文を作るときは、ストリームで受けて最終メッセージだけを保存する。",
+          "explanation": "SDK がストリーミングを求めるのはクライアント側の検証で、API の制限ではありません。",
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            },
+            {
+              "title": "Thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "画像と文章の順番 / ビジョンの置き方",
+          "question": "レシートの写真から合計金額を読み取らせます。1枚の画像と「合計金額を答えて」という指示を同じ user メッセージで送るとき、推奨される並べ方はどれですか？",
+          "choices": [
+            "A. 指示の文 → 画像の順にする",
+            "B. 画像 → 指示の文の順にする",
+            "C. 画像は system に、指示は user に入れる",
+            "D. 画像を別の user メッセージに分けて先に送る"
+          ],
+          "correct": "B",
+          "why": "長い文書を質問の前に置くのと同じく、Claude は画像が文章より前にあるときに最もよく働きます。用途が許すなら「画像 → 文章」の並びにします。",
+          "whyNot": {
+            "A": "文章の後に画像を置いても動きますが、推奨は画像を先に置く並びです。",
+            "C": "画像は user メッセージの content に image ブロックとして入れます。system に画像を入れる使い方はありません。",
+            "D": "user メッセージを続けて2つ送る必要はありません。1つの user メッセージの中で image ブロックを先に、text ブロックを後に並べます。"
+          },
+          "example": "複数の画像を比べさせるときも、画像を先に並べてから質問を書く。",
+          "explanation": "画像は base64・url・Files API の file のどれかで渡せます。",
+          "sources": [
+            {
+              "title": "Vision",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "画像が多いリクエスト / Files API と縮小",
+          "question": "製品マニュアルのページ画像を1リクエストで数十〜数百枚送りたいのですが、サイズや枚数の上限でエラーになります。Claude API（直接）での対策として適切なものはどれですか？",
+          "choices": [
+            "A. Files API に上げて file_id で参照する",
+            "B. 画像を文章より後ろに移して読み込ませる",
+            "C. 長い辺が 2000px 以下になるよう縮小する",
+            "D. max_tokens を増やしてリクエストの上限を広げる",
+            "E. 画像をすべて system パラメータに入れる"
+          ],
+          "correct": "AC",
+          "why": "多くの画像を送ると、枚数より先にリクエストサイズの上限に当たることがあるため、Files API で上げて file_id で参照するとリクエストが小さくなります。また 1リクエストに20枚を超える画像があると1枚あたりの寸法の上限が厳しくなるので、各辺 2000px 以下に縮小します。",
+          "whyNot": {
+            "B": "画像の位置は上限には関係なく、推奨はむしろ画像を先に置く並びです。",
+            "D": "max_tokens は出力の上限で、入力のリクエストサイズや画像の枚数の上限は広がりません。",
+            "E": "画像は user メッセージの image ブロックで渡します。system に入れても上限は回避できません。"
+          },
+          "example": "スキャンした PDF のページ画像は、縮小してから Files API に上げ、file_id で並べて送る。",
+          "explanation": "Amazon Bedrock や Google Cloud（Google managed）では url や Files API の画像ソースが使えず、base64 だけになる点も押さえておきます。",
+          "sources": [
+            {
+              "title": "Vision",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u2-3-b",
+      "label": "単元2-3 セットB",
+      "focus": "2-3",
+      "lecture": {
+        "unit": "2-3",
+        "terms": [
+          {
+            "name": "プロンプトキャッシュ（prompt caching）と cache_control",
+            "meaning": "tools → system → messages の順に並んだプロンプトの先頭部分（プレフィックス）を cache_control の位置までキャッシュし、次のリクエストで安く速く読み直す仕組み。",
+            "analogy": "毎回同じ前置きの資料をコピーし直す代わりに、机の上に開いたまま置いておき、続きのページだけ足していく感じ。",
+            "exam": "変わらない部分を前に、変わる部分を後ろに置く。既定の寿命は5分（使うたびに延長）、1時間も選べる。書き込みは 5分で1.25倍・1時間で2倍、読み出しは0.1倍。ヒットは usage の cache_read_input_tokens で確かめる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Prompt caching",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+              }
+            ]
+          },
+          {
+            "name": "Message Batches API",
+            "meaning": "大量の Messages リクエストをまとめて非同期に処理する API。費用は50%引きで、多くは1時間以内、遅くとも24時間で終わる。",
+            "analogy": "郵便の「急がない便」。まとめて出すと安くなるが、届く時刻は指定できない。",
+            "exam": "結果の順番は送った順と限らないので custom_id で突き合わせる。stream: true は使えない。結果は29日間取得できる。すぐ返事が要る対話には向かない。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Batch processing",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+              }
+            ]
+          },
+          {
+            "name": "第三者ベンダー経由の利用（Amazon Bedrock・Claude Models on Google Cloud）",
+            "meaning": "AWS や Google Cloud の認証・請求・クォータで Claude を呼ぶ方法。Anthropic の SDK では AnthropicBedrock や AnthropicVertex のクライアントを使う。",
+            "analogy": "同じブランドの商品を、直営店ではなく行きつけのデパートで買うようなもの。支払いはデパートのカードでできるが、品ぞろえが直営店と少し違う。",
+            "exam": "API キーではなくクラウドの資格情報で認証する。Message Batches API、Files API、画像の URL ソースなど使えない機能がある。データの置き場所を限定する地域（regional / multi-region）エンドポイントは global より10%高い。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Claude on Amazon Bedrock (Opus 4.6 and earlier)",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy"
+              },
+              {
+                "title": "Claude Models on Google Cloud (Google managed)",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed"
+              }
+            ]
+          },
+          {
+            "name": "思考ブロック（thinking block）と signature",
+            "meaning": "思考が有効なとき応答の先頭に来る thinking ブロック。表示用の要約（または空）と、思考全体を暗号化した signature を持つ。",
+            "analogy": "答案の前に付いた封をした下書き。中身は見えなくても、続きを書くときは封のまま一緒に返す必要がある。",
+            "exam": "ツール使用中は tool_result と一緒に、thinking ブロックを完全・無変更で返す（redacted_thinking も落とさない）。課金は要約ではなく元の思考トークン全体。思考の設定を変えるとキャッシュが外れる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Thinking",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "リアルタイム（Messages API）とバッチ（Message Batches API）の選び方",
+          "text": "ユーザーが画面で待っている、またはツールの結果を見て次の一手を決める処理は、Messages API（必要ならストリーミング）で呼ぶ。\n結果が数時間後でもよい大量の処理（評価・分類・要約の一括実行）は、Message Batches API で50%安く流す。\n迷ったら「誰かが今この返事を待っているか」で決める。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "cache_control の置き場所 / キャッシュするプレフィックス",
+          "question": "法務相談ボットは、毎回同じツール定義と長い規程集（system）を送り、その後にユーザーごとの質問が続きます。入力のコストを下げるには、cache_control をどこに付けますか？",
+          "choices": [
+            "A. 最後の user メッセージだけに付ける",
+            "B. ツール定義の前（リクエストの先頭）に付ける",
+            "C. 変わらない system の最後のブロックに付ける",
+            "D. max_tokens と同じ階層に ttl だけを書く"
+          ],
+          "correct": "C",
+          "why": "キャッシュは tools → system → messages の順に、cache_control を付けたブロックまでのプレフィックスに対して効きます。毎回同じツール定義と規程集の終わりに付ければ、その部分が2回目以降に安く読み出されます。",
+          "whyNot": {
+            "A": "毎回変わる質問の位置に付けると、その質問まで含めたプレフィックスになり、次のリクエストでは一致しません（会話が続くマルチターンなら別です）。",
+            "B": "cache_control は「ここまでをキャッシュする」という印なので、先頭に付けてもキャッシュする中身がありません。",
+            "D": "ttl は cache_control の中に書く項目で、それだけを書いても今回の規程集をキャッシュする位置は決まりません。"
+          },
+          "example": "RAG の固定の指示や大きな参考文書を system に置き、その末尾をブレークポイントにする。",
+          "explanation": "明示的なブレークポイントは最大4つまで置けます。最上位に cache_control を1つ書く自動キャッシュもあります。",
+          "sources": [
+            {
+              "title": "Prompt caching",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "キャッシュが当たらない原因 / プレフィックスに変わる値",
+          "question": "system の先頭に「現在時刻: 10:42:07」を入れ、その後に長い固定の指示を置いて末尾に cache_control を付けました。しかし毎回 cache_read_input_tokens が 0 です。どう直しますか？",
+          "choices": [
+            "A. 時刻をブレークポイントより後ろ（質問側）に移す",
+            "B. TTL を1時間に延ばしてキャッシュを長持ちさせる",
+            "C. cache_control を system の先頭に移す",
+            "D. 同じ内容を2回続けて送ってキャッシュを温める"
+          ],
+          "correct": "A",
+          "why": "キャッシュはプレフィックスが完全に一致したときだけ当たります。先頭に毎回変わる時刻があると、後ろの固定部分も一致しなくなるので、変わる値はブレークポイントより後ろに移します。",
+          "whyNot": {
+            "B": "寿命を延ばしても、毎回プレフィックスが違えば一度もヒットしません。",
+            "C": "先頭に付けると、キャッシュの対象がほとんど空になり、長い固定の指示がキャッシュされません。",
+            "D": "時刻が変わるたびに別のプレフィックスになるので、何度送っても次のリクエストでは当たりません。"
+          },
+          "example": "日付やユーザー名などの変わる値は、固定の指示の後ろか、user メッセージ側に置く。",
+          "explanation": "キャッシュできる最小の長さに届かない場合も、エラーは出ずにキャッシュされないだけなので、cache_read_input_tokens で確かめる習慣を付けます。",
+          "sources": [
+            {
+              "title": "Prompt caching",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "思考ブロックの受け渡し / ツール使用中の thinking",
+          "question": "思考を有効にしたエージェントで、応答に thinking ブロックと tool_use ブロックが来ました。ログを軽くするため thinking ブロックを消して tool_result を返したらエラーになります。正しい返し方はどれですか？",
+          "choices": [
+            "A. thinking の文だけ要約して書き換えてから返す",
+            "B. thinking ブロックは user メッセージに移して返す",
+            "C. 思考を無効にしてから tool_result を返す",
+            "D. thinking ブロックを完全・無変更のまま返す"
+          ],
+          "correct": "D",
+          "why": "ツールの結果を返すとき、Claude は同じ応答の続きを組み立てるので、前の推論が残っている必要があります。assistant メッセージの thinking ブロックを、tool_use ブロックと一緒に完全・無変更で返します。",
+          "whyNot": {
+            "A": "thinking ブロックは signature で検証されるので、書き換えてはいけません。中身を変えても思考の再構成には使われません。",
+            "B": "thinking ブロックは Claude の出力なので、もとの assistant メッセージの中に入れたまま返します。",
+            "C": "ツールのやり取りの途中で設定を切り替えても、今の応答の続きに必要な推論は戻りません。キャッシュも外れます。"
+          },
+          "example": "SDK の response.content をそのまま assistant メッセージとして履歴に足し、その後に tool_result の user メッセージを続ける。",
+          "explanation": "種類で絞り込むコードを書くときは、redacted_thinking ブロックも落とさないようにします。",
+          "sources": [
+            {
+              "title": "Thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "Bedrock の global エンドポイント / regional エンドポイント",
+          "question": "金融機関が Amazon Bedrock で Claude を使います。規制のため、推論のデータを日本の地域内だけで処理したいです。費用の差も含めて正しい選び方はどれですか？",
+          "choices": [
+            "A. global を選ぶ。料金は同じで地域も守られる",
+            "B. 地域の推論プロファイル（jp. など）を使い約10%高い",
+            "C. 地域を守るには Anthropic の API キーに切り替える",
+            "D. Message Batches API にすればデータは日本に留まる"
+          ],
+          "correct": "B",
+          "why": "Bedrock の regional エンドポイント（jp. などの接頭辞の推論プロファイル）は、データを特定の地域で処理したいデータ所在地やコンプライアンスの要件に使い、global より10%高い料金になります。",
+          "whyNot": {
+            "A": "global は空いている地域へ動的に振り分ける方式で、可用性は高いものの地域は限定されません。",
+            "C": "Bedrock では AWS の資格情報で認証し、Anthropic の API キーは使いません。キーの種類で処理地域は決まりません。",
+            "D": "Bedrock では Message Batches API が使えず、バッチにしても処理地域を指定することにはなりません。"
+          },
+          "example": "データ所在地の要件がなければ global（推奨・追加料金なし）、要件があれば地域の接頭辞を付けた ID を使う。",
+          "explanation": "Claude Models on Google Cloud（Google managed）でも、multi-region と regional のエンドポイントは global より10%高い料金です。",
+          "sources": [
+            {
+              "title": "Claude on Amazon Bedrock (Opus 4.6 and earlier)",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy"
+            },
+            {
+              "title": "Claude Models on Google Cloud (Google managed)",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "キャッシュが無効になる変更 / キャッシュに影響しない操作",
+          "question": "ツール定義と system をキャッシュした多ターンの会話で、キャッシュの効き方を見直しています。キャッシュされた内容が無効になる（作り直しになる）変更はどれですか？",
+          "choices": [
+            "A. ツールの説明文（description）を書き換える",
+            "B. 会話の最後に新しい user メッセージを足す",
+            "C. 思考の設定（モードや予算）を途中で変える",
+            "D. 5分以内に同じプレフィックスで再び送る",
+            "E. キャッシュされた部分を読むだけのリクエストを送る"
+          ],
+          "correct": "AC",
+          "why": "ツール定義（名前・説明・引数）を変えるとキャッシュ全体が無効になります。思考の設定はプロンプトに埋め込まれるので、変えるとメッセージ部分のキャッシュが外れます。",
+          "whyNot": {
+            "B": "後ろに足すだけならプレフィックスは変わらないので、前の部分はそのまま読み出されます。",
+            "D": "5分以内に同じプレフィックスで送ればヒットし、寿命も追加費用なしで延びます。",
+            "E": "キャッシュを読むことは無効化にはならず、使うたびに寿命が延びます。"
+          },
+          "example": "ツールの説明は会話の途中で変えず、改善はデプロイの単位でまとめて反映する。",
+          "explanation": "画像の追加・削除や tool_choice の変更も、メッセージ部分のキャッシュに影響します。",
+          "sources": [
+            {
+              "title": "Prompt caching",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            },
+            {
+              "title": "Thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "リアルタイムとバッチの選び方 / Batches に向く処理",
+          "question": "次の4つの処理のうち、Message Batches API に切り替えるのが最も適しているのはどれですか？",
+          "choices": [
+            "A. 顧客がチャット画面で返事を待つサポート",
+            "B. ツール結果を見て次を決めるコーディング支援",
+            "C. 毎週末に2万件のテストケースで回答品質を採点",
+            "D. エディタで打つたびに出す補完の候補"
+          ],
+          "correct": "C",
+          "why": "Message Batches API は、すぐの返事が要らない大量の処理（評価や分析など）を非同期に流し、費用を50%下げる用途に向きます。週末に採点するなら、多くが1時間以内、遅くとも24時間で終われば間に合います。",
+          "whyNot": {
+            "A": "ユーザーが画面で待っているので、Messages API（必要ならストリーミング）で即時に返す処理です。",
+            "B": "各ステップがツールの結果に依存するので、1回ずつ結果を受け取って次を送る必要があり、非同期のバッチは合いません。",
+            "D": "数百ミリ秒単位で返す必要があり、終わる時刻が読めないバッチは使えません。"
+          },
+          "example": "夜間の一括分類や、モデル変更前の評価データの採点はバッチで流す。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Batch processing",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "バッチ結果の順番 / custom_id での突き合わせ",
+          "question": "1万件の問い合わせ分類をバッチで流し、結果ファイルの行を送った順番どおりに元のデータへ書き戻したら、分類がずれていました。どうすべきでしたか？",
+          "choices": [
+            "A. 各リクエストに一意の custom_id を付け、それで照合",
+            "B. 結果を created_at の時刻順に並べ替えて照合",
+            "C. 1件ずつ別のバッチに分けて順番を保つ",
+            "D. stream: true を付けて届いた順に受け取る"
+          ],
+          "correct": "A",
+          "why": "バッチの結果は送った順と同じとは限りません。各リクエストに一意の custom_id を付け、結果の custom_id で元のデータと突き合わせます。",
+          "whyNot": {
+            "B": "結果は処理が終わった順などで並ぶことがあり、時刻で並べ替えても送った順に戻る保証はありません。",
+            "C": "1件ずつ別のバッチにするとまとめて流す利点がなくなり、管理も重くなります。",
+            "D": "バッチのリクエストで stream: true を付けると検証エラーになります。結果は1つのファイルで返ります。"
+          },
+          "example": "custom_id に問い合わせの ID（英数字・-・_ で64文字以内）を入れておく。",
+          "explanation": "",
+          "sources": [
+            {
+              "title": "Batch processing",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "バッチの進み具合の確かめ方 / errored・expired の扱い",
+          "question": "バッチの完了を待つ仕組みを作ります。どのように終わりを判断し、失敗分をどう扱うのが正しいですか？",
+          "choices": [
+            "A. 結果ファイルの行数が送った数に届くまで待つ",
+            "B. ストリームの message_stop イベントを待つ",
+            "C. 24時間後に必ず全件 succeeded になるので放置する",
+            "D. processing_status が ended になるまで確かめる"
+          ],
+          "correct": "D",
+          "why": "バッチの processing_status は in_progress から始まり、全リクエストの処理が終わると ended になります。そこで結果を取り出し、errored や expired の分は直して送り直します（これらは課金されません）。",
+          "whyNot": {
+            "A": "結果は処理が終わった後にまとめて取り出すもので、行数を数えて途中経過を待つ方法ではありません。",
+            "B": "message_stop はストリーミングのイベントで、バッチは stream に対応していません。",
+            "C": "24時間以内に処理されなかったリクエストは expired になり、無効なリクエストは errored になります。全件成功する保証はありません。"
+          },
+          "example": "数分おきに状態を確かめ、ended になったら結果を読み、errored と expired だけを次のバッチに回す。",
+          "explanation": "結果は作成から29日間ダウンロードできます。",
+          "sources": [
+            {
+              "title": "Batch processing",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "バッチとプロンプトキャッシュ / 1時間の TTL",
+          "question": "同じ長い製品カタログ（system）を共有する5千件のリクエストをバッチで流し、キャッシュも効かせたいです。ヒット率を上げるための設定として勧められているのはどれですか？",
+          "choices": [
+            "A. cache_control を付けない。バッチでは使えない",
+            "B. 1時間の TTL のキャッシュを使う",
+            "C. 5分の TTL のまま、件数を増やして密度を上げる",
+            "D. max_tokens を 0 にして事前にキャッシュを温める"
+          ],
+          "correct": "B",
+          "why": "バッチは処理に5分以上かかることがあるため、共有する文脈があるときは1時間のキャッシュを使うとヒット率が上がると公式が勧めています。ただしバッチのリクエストは並行・順不同で処理されるので、ヒットはベストエフォートです。",
+          "whyNot": {
+            "A": "プロンプトキャッシュは Message Batches API でも使えます。",
+            "C": "バッチがいつどの順で処理されるかは選べないので、5分の寿命では途中で切れやすくなります。",
+            "D": "max_tokens: 0 はバッチの中では受け付けられません。バッチで書いたキャッシュは後続が動く前に切れやすいからです。"
+          },
+          "example": "共通の長い参考資料を持つ一括要約では、cache_control に ttl: \"1h\" を指定する。",
+          "explanation": "1時間のキャッシュの書き込みは基本の入力料金の2倍で、読み出しは0.1倍です。",
+          "sources": [
+            {
+              "title": "Batch processing",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+            },
+            {
+              "title": "Prompt caching",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "2-3",
+          "topic": "Google Cloud（Google managed）で使えない機能 / 使える機能",
+          "question": "Claude API で直接動かしていたアプリを、Claude Models on Google Cloud（Google managed）へ移します。今のままでは動かず、作り直しが必要になる機能はどれですか？",
+          "choices": [
+            "A. 夜間の Message Batches API の一括処理",
+            "B. system に付けた cache_control のキャッシュ",
+            "C. 自作ツールの tool_use と tool_result",
+            "D. url を指定した画像（image）の読み込み",
+            "E. ストリーミングでの応答の受け取り"
+          ],
+          "correct": "AD",
+          "why": "Claude Models on Google Cloud（Google managed）は Message Batches API に対応しておらず、画像やドキュメントの URL ソースと Files API も使えません。画像は base64 で送るなどの作り直しが必要です。",
+          "whyNot": {
+            "B": "プロンプトキャッシュは対応している機能に含まれています。",
+            "C": "ツール使用は対応しています（自作ツールのやり取りはそのまま動きます）。",
+            "E": "ストリーミングは対応しており、:streamRawPredict のエンドポイントを使います（SDK が切り替えます）。"
+          },
+          "example": "移行の前に、使っている機能を公式の「Features not supported」と突き合わせる。",
+          "explanation": "Amazon Bedrock でも Message Batches API と URL の画像ソース・Files API は使えません。",
+          "sources": [
+            {
+              "title": "Claude Models on Google Cloud (Google managed)",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed"
+            },
+            {
+              "title": "Vision",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u5-3-a",
+      "label": "単元5-3 セットA",
+      "focus": "5-3",
+      "lecture": {
+        "unit": "5-3",
+        "terms": [
+          {
+            "name": "モデルの階層（model tiers: Opus / Sonnet / Haiku）",
+            "meaning": "Opus は複雑なエージェント作業向け、Sonnet は速さと賢さの両立、Haiku は最速・最安で大量処理向け。",
+            "analogy": "引っ越しのトラックの大・中・小。荷物の量と道の狭さで選び、いつも大型が正解とは限らない。",
+            "exam": "分類・抽出・ルーティングなど大量で遅延に厳しい処理は Haiku、長時間の自律コーディングや複雑な推論は Opus、日常のコーディングや分析は Sonnet。「常に最上位」は誤答の定番。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Models overview",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+              },
+              {
+                "title": "Choosing the right model",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+              }
+            ]
+          },
+          {
+            "name": "効率優先と能力優先（efficiency-first / capability-first）",
+            "meaning": "速く安いモデルから始めて足りなければ上げるか、最も強いモデルから始めて後で効率化するか、の2つの始め方。",
+            "analogy": "服を買うとき、まず手頃な物で試して不満なら買い替えるか、最初に良い物を買って後で普段着を探すか。",
+            "exam": "効率優先はプロトタイプ・厳しい遅延要件・コスト重視・大量で単純なタスク向け。能力優先は複雑な推論・科学や数学・精度がコストより大事な場面向け。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Choosing the right model",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+              }
+            ]
+          },
+          {
+            "name": "評価セットによるモデル比較（benchmark tests / evals）",
+            "meaning": "自分のユースケースのプロンプトとデータで作ったテストで、モデルの精度・品質・エッジケースとコストを比べること。",
+            "analogy": "車を選ぶとき、カタログの燃費ではなく、自分の通勤路を実際に試乗して比べる。",
+            "exam": "モデルを替えるかどうかの判断で最も重要なのは良い評価セット。公開ランキングや「最新だから」は根拠にならない。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Choosing the right model",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+              }
+            ]
+          },
+          {
+            "name": "複数モデルの組み合わせ（executor/advisor・orchestrator/worker）",
+            "meaning": "安いモデルが作業を回して難所だけ上位モデルに相談する形と、上位モデルが計画し大量の作業を安いモデルに配る形。",
+            "analogy": "新人が仕事を進めて迷ったときだけ上司に聞く形と、上司が段取りを組んで作業を部下に割り振る形。",
+            "exam": "数か所だけ難しい一連の作業は executor/advisor。互いに独立した大量の作業や1つのコンテキストに入らない作業は orchestrator/worker。どちらも単一モデルを低い effort で使う場合と比べて決める。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Optimizing for cost and intelligence",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "「effort を下げる」と「モデルを替える」",
+          "text": "effort は同じモデルのまま、賢さと遅延・費用を引き換える調整つまみ。\nモデルを替えるのは能力そのものを変える大きな判断。\n公式は「effort の調整のほうが、モデルを替えるより良いレバーであることが多い」としている。\nまず effort を評価で試し、それでも足りないときにモデルを替える。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "Haiku / Opus（大量で遅延に厳しい分類）",
+          "question": "問い合わせを毎秒大量に受け、内容を分類して担当部署へ振り分けるサービスを作ります。応答は速く、1件あたりの費用は低く抑えたいです。最初に試すモデルとして最も適切なのはどれですか？",
+          "choices": [
+            "A. 最上位の Opus を最大の effort で使う",
+            "B. Haiku を使う",
+            "C. Opus を使い max_tokens を小さくする",
+            "D. Sonnet を max の effort で使う"
+          ],
+          "correct": "B",
+          "why": "Haiku は分類・抽出・ルーティングのような大量で遅延に厳しい処理向けで、遅延が最も短く価格も最も安い階層です。",
+          "whyNot": {
+            "A": "最上位かつ最大の effort は遅く高価で、単純な分類には過剰です。",
+            "C": "max_tokens を絞っても1トークンの単価や考える速さは変わらず、出力が途中で切れる恐れもあります。",
+            "D": "max の effort はトークンを多く使い遅延と費用が増えるため、要件と逆向きです。"
+          },
+          "example": "チケットの振り分けやスパム判定など、件数が多く判断が単純な処理。",
+          "explanation": "公式の比較表で Haiku は「For high-volume, latency-sensitive tasks such as classification, extraction, and routing」と説明されています。",
+          "sources": [
+            {
+              "title": "Models overview",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "能力優先 / 効率優先（複雑な推論）",
+          "question": "研究所向けに、数式を含む複雑な多段の推論を行うアシスタントを作ります。誤りの損失が大きく、費用より精度を重視します。モデル選びの始め方として最も適切なのはどれですか？",
+          "choices": [
+            "A. Haiku で始め、問題が出るまで替えない",
+            "B. Sonnet を最小の effort で固定して使う",
+            "C. 価格表で最も安いモデルを選ぶ",
+            "D. Opus で始め、評価後に効率化を検討する"
+          ],
+          "correct": "D",
+          "why": "複雑な推論や精度がコストより大事な場面は「能力優先」で、最も強いモデルで始めて評価し、余裕があれば effort を下げたりモデルを下げたりして効率化します。",
+          "whyNot": {
+            "A": "効率優先は単純で大量のタスク向けで、誤りの損失が大きい複雑な推論の出発点には向きません。",
+            "B": "最小の effort は単純なタスク向けで、深い推論が要る場面では精度が落ちます。",
+            "C": "価格だけで決めると精度の要件を確かめないまま選ぶことになります。"
+          },
+          "example": "科学・数学の応用や、ニュアンスの理解が要る高精度の業務。",
+          "explanation": "Choosing a model の Option 2（Start capability-first）は、Complex reasoning tasks や Applications where accuracy outweighs cost considerations に向くとされています。",
+          "sources": [
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "評価セット / 公開ランキング・最新モデル",
+          "question": "社内 FAQ ボットのモデルを新しいものへ替えるか迷っています。判断のために最も重要な最初の一歩はどれですか？",
+          "choices": [
+            "A. 自社の質問とデータで評価セットを作る",
+            "B. 公開ベンチマークの順位が高い方を選ぶ",
+            "C. 新しいモデルなら必ず良いので替える",
+            "D. 料金が下がる方を選ぶ"
+          ],
+          "correct": "A",
+          "why": "公式は、自分のユースケースに合わせたベンチマークテスト（評価セット）を作ることを最も重要な手順としています。実際のプロンプトとデータで精度・品質・エッジケースを比べ、そのうえで費用と比べます。",
+          "whyNot": {
+            "B": "公開ベンチマークは自社の質問の傾向や形式を反映しておらず、判断の根拠として不十分です。",
+            "C": "新しいモデルでも、自分のタスクで良くなるとは限らず、壊れる変更もあります。",
+            "D": "費用だけで決めると、品質が要件を満たすかを確かめていません。"
+          },
+          "example": "モデル更新の案内が来たとき、まず手元の評価セットで新旧を並べて比べる。",
+          "explanation": "Decide whether to upgrade or change models の1番目が「Create benchmark tests specific to your use case. Having a good evaluation set is the most important step in the process.」です。",
+          "sources": [
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "effort を下げる / モデルを替える・temperature",
+          "question": "Opus で動くレポート作成機能が予算を超えています。品質は要件をやや上回っています。最初に試すべき調整として最も適切なのはどれですか？",
+          "choices": [
+            "A. temperature を下げて出力を短くする",
+            "B. すぐに Haiku へ切り替える",
+            "C. effort を下げて評価で品質を確かめる",
+            "D. max_tokens を大幅に減らす"
+          ],
+          "correct": "C",
+          "why": "effort は同じモデルのまま賢さと遅延・費用を引き換えるつまみで、公式は effort の調整がモデルの切り替えより良いレバーであることが多いとしています。下げたら評価で品質を確かめます。",
+          "whyNot": {
+            "A": "temperature は出力のばらつきの調整で、長さや費用を下げる手段ではありません。新しいモデルでは指定自体が受け付けられない場合もあります。",
+            "B": "品質の余裕がわずかなのにいきなり2段下げると、要件を割る恐れが大きいです。まず小さな調整から試します。",
+            "D": "max_tokens は出力の上限で、減らしすぎると応答が途中で切れるだけで品質の保証になりません。"
+          },
+          "example": "費用を下げたいとき、モデルは変えずに effort を high から medium に下げて評価し直す。",
+          "explanation": "「Tuning effort is often a better lever than switching models.」（Choosing a model の Effort の項）。",
+          "sources": [
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            },
+            {
+              "title": "Effort",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "executor/advisor / orchestrator/worker",
+          "question": "コーディングエージェントを作ります。作業の大半は定型のファイル編集で、ときどき設計上の難しい判断が出てきます。費用を抑えつつ難所の質を上げたいです。最も合う構成はどれですか？",
+          "choices": [
+            "A. 上位モデルが計画し、作業を下位に配る",
+            "B. 小さいモデルが回し、難所だけ上位に相談",
+            "C. すべての手順を最上位モデルで実行する",
+            "D. 判断を固定ルールにして全部小さいモデル"
+          ],
+          "correct": "B",
+          "why": "一連の作業のうち数か所だけが難しい場合は executor/advisor が合います。小さいモデル（executor）がループを回し、必要なときだけ上位モデル（advisor）に計画や修正を相談するので、多くのトークンが安い単価で済みます。",
+          "whyNot": {
+            "A": "orchestrator/worker は、互いに独立した大量の作業や1つのコンテキストに入らない作業を配るときの形です。",
+            "C": "定型作業まで最上位モデルで行うと、費用を抑える要件に反します。",
+            "D": "難しい判断を固定ルールに置き換えると、難所の質を上げる要件を満たせません。"
+          },
+          "example": "多くのターンの間に少数の本当の判断があるエージェント。",
+          "explanation": "advisor は executor が相談したときしか役に立たないため、相談の頻度で費用と効果が決まります。単一モデルを低い effort で使う場合とも比べて決めます。",
+          "sources": [
+            {
+              "title": "Optimizing for cost and intelligence",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "orchestrator/worker / effort を下げる",
+          "question": "数千件の契約書をそれぞれ調べ、結果を1つの報告にまとめます。契約書どうしは互いに独立で、全部を1つのコンテキストには入れられません。最も合う方法はどれですか？",
+          "choices": [
+            "A. 上位モデルが分担を決め、下位に配って統合",
+            "B. 1つのリクエストに全件を詰めて送る",
+            "C. 単一モデルの effort を下げて1回で処理",
+            "D. 小さいモデルが回し、難所だけ上位に相談"
+          ],
+          "correct": "A",
+          "why": "1つのコンテキストを超える量の独立した作業は orchestrator/worker が合います。上位モデルが計画・振り分け・統合を担い、大量の読み込みは安いワーカーが行います。",
+          "whyNot": {
+            "B": "コンテキストに入らない量なので、1回に詰めることはできません。",
+            "C": "費用の大半は読む量そのもので、effort を下げても読む量は減らず、コンテキストの上限も変わりません。",
+            "D": "executor/advisor は一連の作業の中に少数の難所がある場合の形で、独立した大量の作業の分担には向きません。"
+          },
+          "example": "多数の文書・ファイル・案件に独立して広がる作業。",
+          "explanation": "公式は、作業が1本の依存した鎖である場合や1つのコンテキストに収まる場合は、orchestrator のモデル単体を低い effort で使う方が良かったとしています。",
+          "sources": [
+            {
+              "title": "Optimizing for cost and intelligence",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "遅延を下げるレバー / Batch API・effort max",
+          "question": "チャット画面の応答が遅いという苦情が来ました。品質は少し下がってもよいので、遅延を下げたいです。効果が見込める対策はどれですか？",
+          "choices": [
+            "A. Message Batches API に切り替える",
+            "B. より速い階層のモデルに替える",
+            "C. effort を max に上げる",
+            "D. effort を下げる",
+            "E. 毎回1Mトークン近くまで文脈を詰める"
+          ],
+          "correct": "BD",
+          "why": "速い階層（Sonnet や Haiku）へ替えると応答が速くなり、effort を下げると使うトークンとツール呼び出しが減るので遅延が下がります。",
+          "whyNot": {
+            "A": "Batch API は費用が半額になる代わりに非同期でまとめて処理するもので、チャットの即時応答には使えず遅延は増えます。",
+            "C": "max は最も多くトークンを使う設定で、遅延は増えます。",
+            "E": "入力が長いほど処理に時間がかかり、遅延は増えます。"
+          },
+          "example": "対話型の画面で「速さ優先」に寄せたいとき。",
+          "explanation": "公式は、実際の遅延はプロンプトの長さ・出力の長さ・思考の effort に左右されるとしています。",
+          "sources": [
+            {
+              "title": "Models overview",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+            },
+            {
+              "title": "Effort",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "遅延と費用の引き換え（Batch API）/ ストリーミング・fast mode",
+          "question": "毎晩、前日の通話記録を数万件要約します。結果は翌朝までにそろえばよく、費用をできるだけ下げたいです。品質・遅延・費用の引き換えとして最も適切な選択はどれですか？",
+          "choices": [
+            "A. fast mode で速く出力させる",
+            "B. ストリーミングで1件ずつ呼ぶ",
+            "C. Message Batches API でまとめて送る",
+            "D. 最上位モデルを max の effort で使う"
+          ],
+          "correct": "C",
+          "why": "遅延を許せる処理は、Batch API で非同期に送ると費用が50%割り引かれます。遅延を差し出して費用を下げる引き換えです。",
+          "whyNot": {
+            "A": "fast mode は出力を速くする代わりに割増料金で、費用を下げる目的と逆です。Batch API とも併用できません。",
+            "B": "ストリーミングは表示の待ち時間を短く感じさせる仕組みで、費用は下がりません。",
+            "D": "最上位モデルと max の effort は品質寄りで、費用が大きく増えます。"
+          },
+          "example": "夜間の一括要約・分類・評価の実行。",
+          "explanation": "Pricing の Batch processing と Fast mode pricing の項を参照。",
+          "sources": [
+            {
+              "title": "Pricing",
+              "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "効率優先が向く場面 / 能力優先が向く場面",
+          "question": "「速く安いモデルで始め、評価して足りないときだけ上位へ替える」始め方が向いている場面はどれですか？",
+          "choices": [
+            "A. 初期のプロトタイプ作り",
+            "B. 科学計算の正しさを問う推論",
+            "C. 大量で単純なタスク",
+            "D. 精度が費用より大事な業務",
+            "E. 高い自律性のコーディング"
+          ],
+          "correct": "AC",
+          "why": "効率優先（efficiency-first）は、初期のプロトタイプ、厳しい遅延要件、コスト重視、大量で単純なタスクに向くとされています。",
+          "whyNot": {
+            "B": "科学・数学の応用は能力優先（capability-first）が向く場面です。",
+            "D": "精度が費用より大事な場面は能力優先が向きます。",
+            "E": "高度なコーディングや自律性の高いエージェント作業は能力優先が向きます。"
+          },
+          "example": "まず Haiku で作って試し、足りない能力が見つかったときだけ上げる。",
+          "explanation": "Choosing a model の Option 1 と Option 2 の「This approach is best for」の一覧を参照。",
+          "sources": [
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "Sonnet / Haiku・Opus（日常のコーディングと分析）",
+          "question": "社内向けに、コード生成やデータ分析をその場で手伝うアシスタントを作ります。待たせすぎず、それでいて十分な賢さが欲しいです。最初に試すモデルとして最も適切なのはどれですか？",
+          "choices": [
+            "A. Sonnet を使う",
+            "B. Haiku を最小の effort で使う",
+            "C. Opus を max の effort で使う",
+            "D. 用途ごとに毎回ランダムに選ぶ"
+          ],
+          "correct": "A",
+          "why": "Sonnet は速さと賢さの組み合わせが最も良い階層で、コード生成・データ分析・エージェントのツール利用など日常の作業に向きます。",
+          "whyNot": {
+            "B": "Haiku の最小 effort は最速・最安ですが、その場のコード生成や分析には賢さが不足しやすいです。",
+            "C": "max の effort の Opus は待ち時間と費用が大きく、「待たせすぎない」要件に合いません。",
+            "D": "ランダムに選ぶと品質や費用が安定せず、評価もできません。"
+          },
+          "example": "対話しながらコードを書いたり表を分析したりする社内ツール。",
+          "explanation": "Model selection matrix で Sonnet は「Speed and capability for everyday coding, agent, and enterprise workloads」とされています。",
+          "sources": [
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            },
+            {
+              "title": "Models overview",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    },
+    {
+      "id": "u5-3-b",
+      "label": "単元5-3 セットB",
+      "focus": "5-3",
+      "lecture": {
+        "unit": "5-3",
+        "terms": [
+          {
+            "name": "固定スナップショットのモデル ID（pinned snapshot / dateless ID）",
+            "meaning": "モデル ID は1つの固定された版を指し、その ID の重みや設定は更新されない。4.6 世代からは日付なしの ID（例 claude-sonnet-4-6）自体がスナップショット。",
+            "analogy": "本の「第2版」。中身は書き換わらず、改訂するときは「第3版」として別に出る。",
+            "exam": "日付のない ID を「常に最新を指す」と考えるのはよくある誤解。更新版は新しい ID で出る。重みが同じでも、配信の仕組み（ルーターや分類器など）の更新で挙動がわずかに変わることはある。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Model IDs and versioning",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+              }
+            ]
+          },
+          {
+            "name": "モデルのエイリアス（alias）",
+            "meaning": "4.6 世代より前のモデルで、Claude API が受け付ける短い名前（例 claude-sonnet-4-5）。そのマイナーバージョンの最新の日付付きスナップショットを指す。",
+            "analogy": "「いつもの店」という呼び名。指す店は変わりうるが、住所（日付付き ID）は変わらない。",
+            "exam": "固定の保証は ID にあり、エイリアスにはない。本番で版を固定したいなら日付付き ID（例 claude-sonnet-4-5-20250929）を使う。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Model IDs and versioning",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+              },
+              {
+                "title": "Models overview",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+              }
+            ]
+          },
+          {
+            "name": "壊れる変更（breaking changes）と移行ガイド（migration guide）",
+            "meaning": "モデルを替えると、前は通ったリクエストが 400 エラーになる変更。例: Opus 4.7 以降で thinking の type:\"enabled\" と budget_tokens が 400 になり、temperature・top_p・top_k も外す必要がある。",
+            "analogy": "新しい型の車に乗り換えたら、前の車の鍵の差し方が使えない。取扱説明書（移行ガイド）の「変更点」を先に読む。",
+            "exam": "ID を替えるだけで済むとは限らない。移行ガイドで、出発点のモデルごとの変更点とチェックリストを確かめる。assistant の prefill は Opus 4.6 以降で 400。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Migration guides",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/migration-guide"
+              },
+              {
+                "title": "Claude Opus 5.5 migration guide",
+                "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+              }
+            ]
+          },
+          {
+            "name": "モデルごとの思考設定の対応（thinking support by model）",
+            "meaning": "thinking のどの値を受け付けるかはモデルごとに違う。Haiku 4.5 などは手動の拡張思考だけで adaptive は 400、Opus 4.7 以降は adaptive だけで手動の予算は 400。",
+            "analogy": "家電ごとに対応する電池の形が違う。全部に同じ電池を入れようとすると合わないものが出る。",
+            "exam": "複数モデルを切り替える仕組みでは、モデルごとに thinking の設定を分ける。受け付けるかどうかは Models API の capabilities でも確かめられる。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Thinking",
+                "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+              },
+              {
+                "title": "Models overview",
+                "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+              }
+            ]
+          },
+          {
+            "name": "トークナイザーの変更（tokenizer change）",
+            "meaning": "Opus 4.7 で新しいトークナイザーが入り、同じ文章でも 4.7 より前のモデルに比べておよそ1〜1.35倍のトークンを使うことがある。",
+            "analogy": "同じ荷物でも、箱のサイズが変わると箱の数が変わる。送料の見積もりはやり直しになる。",
+            "exam": "文字数からの固定比率での見積もりや max_tokens・コンパクションの閾値を見直し、トークン数を数える API で測り直して、費用と遅延を再計測する。",
+            "verified": true,
+            "sources": [
+              {
+                "title": "Claude Opus 5.5 migration guide",
+                "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+              }
+            ]
+          }
+        ],
+        "distinguish": {
+          "title": "壊れる変更（breaking change）と振る舞いの変化（behavior change）",
+          "text": "壊れる変更は、API がリクエストを拒む（400 エラーになる）変更で、コードを直さないと動かない。\n例: type:\"enabled\" の拡張思考、prefill、temperature の指定。\n振る舞いの変化は、リクエストは通るが出力の傾向が変わるもの。\n例: エージェントの途中経過を自分から報告する、思考の中身が既定で空になる。評価セットで確かめて気づく。"
+        }
+      },
+      "questions": [
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "type:enabled の 400 / adaptive + effort へ移行",
+          "question": "Opus 4.6 で thinking に type:\"enabled\" と budget_tokens を指定して動かしていました。モデル ID を Opus 4.7 に替えたところ 400 エラーになりました。最も適切な直し方はどれですか？",
+          "choices": [
+            "A. budget_tokens の値を小さくする",
+            "B. 思考のベータヘッダーを付け直す",
+            "C. max_tokens を大きくして再送する",
+            "D. type を adaptive にし effort で深さを調整"
+          ],
+          "correct": "D",
+          "why": "Opus 4.7 以降は手動の思考予算（type:\"enabled\" と budget_tokens）を受け付けず 400 を返します。適応型思考（type:\"adaptive\"）に替え、思考の深さは effort で調整します。",
+          "whyNot": {
+            "A": "予算の大きさではなく、type:\"enabled\" という指定方法そのものが受け付けられません。",
+            "B": "ベータヘッダーでは手動の予算は復活しません。interleaved-thinking のヘッダーはむしろ外す対象です。",
+            "C": "max_tokens は出力の上限で、type:\"enabled\" が拒まれる原因とは関係ありません。"
+          },
+          "example": "古い拡張思考のコードを 4.7 以降に移すとき。",
+          "explanation": "budget_tokens の値を effort に機械的に換算せず、自分の評価で effort を振って決めるよう公式は勧めています。",
+          "sources": [
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            },
+            {
+              "title": "Thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "エイリアス / 日付付き ID の固定",
+          "question": "本番で Sonnet 4.5 を使っています。知らないうちに中身のモデルが替わるのを避け、版を固定したいです。リクエストの model に指定するものとして最も適切なのはどれですか？",
+          "choices": [
+            "A. claude-sonnet-4-5",
+            "B. claude-sonnet-4-5-20250929",
+            "C. claude-sonnet-latest",
+            "D. claude-sonnet"
+          ],
+          "correct": "B",
+          "why": "4.6 世代より前のモデルは日付付きの ID が固定されたスナップショットです。版を固定したい本番では日付付き ID を指定します。",
+          "whyNot": {
+            "A": "claude-sonnet-4-5 は 4.5 の最新の日付付きスナップショットを指すエイリアスで、固定の保証は ID にしかありません。",
+            "C": "「最新を指す」ことを狙った名前は、固定とは逆の考え方です（公式の ID の形式にもありません）。",
+            "D": "モデル名とバージョンを含まない名前は公式の ID の形式ではありません。"
+          },
+          "example": "評価で合格した版のまま本番を動かし、更新は自分で評価してから切り替える。",
+          "explanation": "Model IDs and versioning の「Before the 4.6 generation」を参照。",
+          "sources": [
+            {
+              "title": "Model IDs and versioning",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "日付なし ID はスナップショット / 常に最新を指すという誤解",
+          "question": "チームの一人が「claude-sonnet-4-6 は日付がないので、性能の良い新しい版が出たら自動でそちらに切り替わる」と言いました。正しい説明はどれですか？",
+          "choices": [
+            "A. その通りで、数か月ごとに重みが更新される",
+            "B. 4.5 と同じく最新の日付版を指すエイリアス",
+            "C. 日付なし ID 自体が固定スナップショット",
+            "D. 日付なし ID には廃止の予定が設けられない"
+          ],
+          "correct": "C",
+          "why": "4.6 世代以降は日付なしの ID がそのリリースの正式な ID で、1つの固定されたスナップショットを指します。既存の ID の重みや設定は更新されず、更新版は新しい ID で出ます。",
+          "whyNot": {
+            "A": "公式は、既存のモデル ID の重みや設定を更新しないと明記しています。",
+            "B": "エイリアスは 4.6 より前のモデルの仕組みで、claude-sonnet-4-6 はエイリアスではなくスナップショットそのものです。",
+            "D": "日付付きでも日付なしでも、ID ごとに廃止と提供終了の予定があります。"
+          },
+          "example": "「日付がない = 最新に追従」と思い込んで、評価せずに放置しない。",
+          "explanation": "公式は「A common misconception is that dateless model IDs ... behave as evergreen pointers」と注意しています。",
+          "sources": [
+            {
+              "title": "Model IDs and versioning",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "配信の仕組みの更新 / 重みの更新・エイリアス",
+          "question": "同じモデル ID を使い続けているのに、ある日から出力の傾向がわずかに変わったように見えます。プロンプトも設定も変えていません。原因として公式が最も可能性が高いとするものはどれですか？",
+          "choices": [
+            "A. 配信の仕組み（ルーターなど）の更新",
+            "B. その ID の重みが黙って更新された",
+            "C. ID がエイリアスとして新モデルを指した",
+            "D. プロンプトキャッシュが壊れた"
+          ],
+          "correct": "A",
+          "why": "ID ごとの重みは固定ですが、リクエストのルーター・安全分類器・サンプリングの処理など、モデルの周りの配信の仕組みは変わることがあり、観察できる挙動にわずかな差が出ることがあります。",
+          "whyNot": {
+            "B": "既存のモデル ID の重みは更新されません。",
+            "C": "ID は固定の版を指します。エイリアスは 4.6 より前のモデルの短い名前の話で、ID そのものは付け替わりません。",
+            "D": "キャッシュは同じ入力の再利用で、出力の傾向を変える原因として公式は挙げていません。"
+          },
+          "example": "評価セットを定期的に回し、わずかな変化を数字で捉える。",
+          "explanation": "Model IDs and versioning の「Model weights versus serving infrastructure」を参照。",
+          "sources": [
+            {
+              "title": "Model IDs and versioning",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "Opus 4.6 → 4.7 以降で外す設定 / 受け付けられる設定",
+          "question": "Opus 4.6 から Opus 4.7 以降へ移行します。リクエストから外すか書き換える必要がある設定はどれですか？",
+          "choices": [
+            "A. thinking の type:\"adaptive\"",
+            "B. temperature や top_p の指定",
+            "C. tool_choice の type:\"auto\"",
+            "D. type:\"enabled\" と budget_tokens",
+            "E. effort の指定"
+          ],
+          "correct": "BD",
+          "why": "Opus 4.7 で入った壊れる変更として、手動の思考予算（type:\"enabled\" と budget_tokens）は 400 になり、サンプリングのパラメータ（temperature・top_p・top_k）も外すよう移行ガイドに書かれています。",
+          "whyNot": {
+            "A": "adaptive は Opus 4.7 以降で思考を使うための正しい指定です。",
+            "C": "tool_choice の auto は既定値で、そのまま使えます。",
+            "E": "effort は思考の深さを調整する正しい手段で、外す必要はありません。"
+          },
+          "example": "移行ガイドのチェックリストで、出発点のモデル（Opus 4.6 以前）の項目を順に潰す。",
+          "explanation": "temperature = 0 も、以前のモデルで同じ出力を保証していたわけではないと公式は補足しています。",
+          "sources": [
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "prefill の 400 / structured outputs",
+          "question": "Opus 4.5 で、assistant メッセージの冒頭に「{」を入れて（prefill）JSON で答えさせていました。新しい Opus に替えたら 400 になりました。最も適切な代わりの方法はどれですか？",
+          "choices": [
+            "A. prefill の文字を「[」に変える",
+            "B. structured outputs を使う",
+            "C. temperature を 0 にする",
+            "D. prefill の前に空の user を足す"
+          ],
+          "correct": "B",
+          "why": "assistant の prefill は Opus 4.6 以降で 400 になります。出力の形をそろえたいときは structured outputs（またはシステムプロンプトでの指示）を使います。",
+          "whyNot": {
+            "A": "文字を変えても、assistant の prefill で終わるリクエストそのものが拒まれます。",
+            "C": "temperature は新しいモデルでは外す対象で、形式の保証にもなりません。",
+            "D": "メッセージを足しても最後が prefill の assistant なら同じく拒まれます。"
+          },
+          "example": "JSON の形を必ず守らせたい抽出処理を新しいモデルへ移すとき。",
+          "explanation": "Opus 4.6 以降で prefill が 400 になるため、4.5 以前から移る場合だけの変更です。",
+          "sources": [
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "トークナイザーの変更 / 固定比率の見積もり",
+          "question": "Opus 4.6 から Opus 4.7 以降へ移行します。費用の見積もりは「文字数 ÷ 一定の比率」でトークン数を出していました。移行時の対応として最も適切なのはどれですか？",
+          "choices": [
+            "A. 単価が同じなら見積もりはそのまま使う",
+            "B. プロンプトキャッシュを止めて数を合わせる",
+            "C. トークン数を測り直し、上限と費用を見直す",
+            "D. 比率は同じなので max_tokens だけ下げる"
+          ],
+          "correct": "C",
+          "why": "Opus 4.7 で新しいトークナイザーが入り、同じ文章でもおよそ1〜1.35倍のトークンを使うことがあります。トークン数を数える API で測り直し、max_tokens やコンパクションの閾値、費用と遅延の見積もりを見直します。",
+          "whyNot": {
+            "A": "単価が同じでもトークン数が増えれば費用は増えるため、見積もりがずれます。",
+            "B": "キャッシュを止めても数え方は変わらず、費用が増えるだけです。",
+            "D": "比率は変わっており、max_tokens はむしろ余裕を増やす方向で見直します。"
+          },
+          "example": "移行前後で同じ入力のトークン数を比べ、予算とアラートの閾値を更新する。",
+          "explanation": "移行ガイドは、固定のトークンと文字の比率を前提にしたコードを再テストするよう求めています。",
+          "sources": [
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "モデルごとの思考設定 / 全モデルに同じ設定",
+          "question": "簡単な依頼は Haiku 4.5、難しい依頼は Opus 4.7 に振り分けるルーターを作ります。どちらでも思考を使いたいです。thinking の設定として最も適切なのはどれですか？",
+          "choices": [
+            "A. 両方に type:\"adaptive\" を送る",
+            "B. 両方に type:\"enabled\" と予算を送る",
+            "C. モデルごとに受け付ける設定を分けて送る",
+            "D. 両方とも thinking を省略する"
+          ],
+          "correct": "C",
+          "why": "Haiku 4.5 は手動の拡張思考（type:\"enabled\" と budget_tokens）だけを受け付け adaptive は 400、Opus 4.7 は adaptive だけを受け付け手動の予算は 400 です。モデルごとに設定を分けます。",
+          "whyNot": {
+            "A": "Haiku 4.5 は adaptive を受け付けず 400 になります。",
+            "B": "Opus 4.7 は type:\"enabled\" を受け付けず 400 になります。",
+            "D": "どちらも thinking を省略すると思考なしで動くため、「思考を使いたい」要件を満たしません。"
+          },
+          "example": "モデルの対応は Models API の capabilities や Thinking のページの表で確かめる。",
+          "explanation": "Thinking のページに、モデルごとに各 thinking の値をどう扱うかの表があります。",
+          "sources": [
+            {
+              "title": "Thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+            },
+            {
+              "title": "Models overview",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "思考の表示の既定（display: omitted）/ 思考が無効になった",
+          "question": "Opus 4.6 では画面に思考の要約を出していました。Opus 4.7 以降に替えたら、エラーは出ないのに思考の欄が空になりました。最も適切な対応はどれですか？",
+          "choices": [
+            "A. thinking に display:\"summarized\" を付ける",
+            "B. 思考が無効になったので有効化の設定をやり直す",
+            "C. effort を max に上げる",
+            "D. ストリーミングをやめて一括で受け取る"
+          ],
+          "correct": "A",
+          "why": "Opus 4.7 以降は思考ブロック自体は返りますが、既定で中身が空（display:\"omitted\"）です。画面に出すなら display:\"summarized\" を明示して要約を受け取ります。",
+          "whyNot": {
+            "B": "思考は動いており、思考ブロックも返っています。空なのは表示の既定が変わったためです。",
+            "C": "effort は思考の深さの調整で、表示されるかどうかは変わりません。",
+            "D": "受け取り方を変えても、omitted の既定では中身は空のままです。"
+          },
+          "example": "思考の要約を UI に出しているアプリを新しいモデルへ移すとき。",
+          "explanation": "エラーにならない「黙った変更」なので、壊れる変更のチェックだけでは見落としやすい点です。",
+          "sources": [
+            {
+              "title": "Thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+            },
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            }
+          ]
+        },
+        {
+          "kind": "new",
+          "unit": "5-3",
+          "topic": "安全なモデル移行 / 機械的な換算・自動追従",
+          "question": "本番のモデルを新しい世代へ移行します。安全に進めるやり方として適切なものはどれですか？",
+          "choices": [
+            "A. budget_tokens を同じ割合の effort に換算",
+            "B. 自分の評価セットで effort を振って決める",
+            "C. エイリアスに任せて自動で新版へ移す",
+            "D. 旧 ID を固定したまま新モデルを検証する",
+            "E. temperature 0 で新旧の出力を一致させる"
+          ],
+          "correct": "BD",
+          "why": "本番は固定した ID のまま動かし、新モデルは自分の評価セットで別に確かめます。effort は以前の設定を持ち込まず、評価で振り直して決めるよう公式は勧めています。",
+          "whyNot": {
+            "A": "公式は budget_tokens の値を換算せず、自分の評価で effort を振って決めるよう勧めています。",
+            "C": "評価なしで新版へ切り替わると、壊れる変更や振る舞いの変化に本番で初めて気づくことになります。",
+            "E": "新しいモデルでは temperature を外す必要があり、temperature 0 も同じ出力を保証していませんでした。"
+          },
+          "example": "評価で合格してから ID を切り替え、費用と遅延も選んだ effort で測り直す。",
+          "explanation": "移行ガイドには「Run a fresh effort sweep on your own evals」「Re-baseline cost and latency at your chosen effort level」とあります。",
+          "sources": [
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            },
+            {
+              "title": "Model IDs and versioning",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-29"
+    }
+  ]
 }
