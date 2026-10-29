@@ -123,6 +123,80 @@
             }
           ],
           "addedAt": "2026-10-29"
+        },
+        {
+          "name": "思考ブロックの引き継ぎ（thinking block preservation）",
+          "meaning": "前のターンの思考ブロックを、次のリクエストの文脈に残すかどうか。モデルによって既定が違う",
+          "analogy": "前回の打ち合わせのメモを次回も机に置いておくか、片付けるか",
+          "exam": "Opus 4.5 以降・Sonnet 4.6 以降・Haiku 5.5 などは既定で残し、入力トークンとして数えて課金する。Haiku 4.5 までと古い Opus・Sonnet は API が自動で取り除く。思考トークンは生成時に出力として1回課金される",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-29"
+        },
+        {
+          "name": "ツール使用と思考ブロック・署名（signature）",
+          "meaning": "思考ありでツールを使うとき、tool_result を返すリクエストには、その呼び出しに付いていた思考ブロックを改変せずに含める",
+          "analogy": "封印つきの手紙。中身を書き換えると封印が合わず、受け取りを断られる",
+          "exam": "思考ブロックを返さなければならないのはこの場面だけ。署名で真正性を確かめるので、改変すると API がエラーを返す",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-29"
+        },
+        {
+          "name": "インターリーブ思考（interleaved thinking）",
+          "meaning": "1つのターンの中で、ツールを呼ぶ合間にも考える機能。ツールの結果を見てから次の行動を決められる",
+          "analogy": "調べものの途中で、1件見るたびに立ち止まって次に何を調べるか考える",
+          "exam": "適応型思考のモデルでは自動で有効。古いモデルの手動モードではベータヘッダーが要る",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            },
+            {
+              "title": "Extended thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+            }
+          ],
+          "addedAt": "2026-10-29"
+        },
+        {
+          "name": "ウィンドウの大きさと1回の出力の上限",
+          "meaning": "現行の多くのモデルはコンテキストウィンドウが 1M トークンで、1回のリクエストで生成できる出力は最大 128k トークン",
+          "analogy": "机は広いが、1回に書ける原稿の枚数は別に決まっている",
+          "exam": "ウィンドウが広くても、1回の出力は max_tokens の上限まで。入力と max_tokens の合計がウィンドウを超えても Claude 4.5 以降は受け付け、生成中に一杯になると model_context_window_exceeded で止まる",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-29"
+        },
+        {
+          "name": "コンテキストアウェアネス（context awareness）とタスク予算（task budgets）",
+          "meaning": "残りのトークン量をモデルに知らせる仕組み。一部のモデルは API が自動で残量のタグを差し込み、Opus 4.7 以降などはタスク予算（ベータ）で明示的に渡す",
+          "analogy": "燃料計が最初から付いている車と、自分で残量メモを渡す必要がある車",
+          "exam": "Sonnet 5・Sonnet 4.6・Haiku 4.5 などは自動。Opus 4.7 以降・Sonnet 5.5・Haiku 5.5 などには届かないので task budgets を使う。タグは自分では送らない",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-29"
         }
       ],
       "distinctions": [
@@ -134,6 +208,11 @@
         {
           "title": "stop_reason の max_tokens と model_context_window_exceeded",
           "text": "max_tokens は、自分で決めた出力の上限に届いて止まった。\nmodel_context_window_exceeded は、入力と出力の合計がモデルのウィンドウを満たして止まった。\nどちらも応答は途中で切れているので、続きを取るか上限や入力を見直す。",
+          "addedAt": "2026-10-29"
+        },
+        {
+          "title": "思考ブロックを「必ず返す」場面と「自動で外れる・残る」場面",
+          "text": "ツール使用の途中（tool_result を返すとき）は、その思考ブロックを改変せずに必ず返す。\n新しい user ターンに入ったあとの過去の思考ブロックは、古いモデルでは API が自動で外し、新しいモデルでは既定で残して入力として課金する。",
           "addedAt": "2026-10-29"
         }
       ]

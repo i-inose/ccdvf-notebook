@@ -65,6 +65,20 @@
           10
         ]
       }
+    },
+    {
+      "order": 3,
+      "date": "2026-10-29",
+      "label": "単元5-1 第3回",
+      "focus": "5-1",
+      "total": 10,
+      "correct": 7,
+      "byUnit": {
+        "5-1": [
+          7,
+          10
+        ]
+      }
     }
   ],
   "notes": [
@@ -502,6 +516,176 @@
       "unit": "5-1",
       "result": "wrong",
       "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "tool_result と一緒に返す思考ブロック（署名ごと・改変なし）",
+      "question": "思考ありでツールを使っています。Claude がツールを呼んだので、結果（tool_result）を返します。その呼び出しに付いていた思考ブロックはどう扱いますか？",
+      "choices": [
+        "A. トークン節約のため削って送る",
+        "B. 要約して短くしてから送る",
+        "C. 改変せず署名ごと一緒に返す",
+        "D. 署名だけ消して中身を返す"
+      ],
+      "myAnswer": "D",
+      "correct": "C",
+      "why": "tool_result を返すときは、その呼び出しの思考ブロックを署名も含めて改変せずに返す。思考ブロックを必ず返すのはこの場面だけ。",
+      "whyNot": {
+        "A": "この場面では必ず返す。外せるのはツールの往復が終わって次の user ターンに入ってから",
+        "B": "書き換えに当たり署名が合わずエラーになる",
+        "D": "署名で真正性を確かめるので、消すとエラーになる"
+      },
+      "example": "エージェントのループで、tool_use を含む assistant の内容は思考ブロックごとそのまま履歴に入れる。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 14,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "思考ブロックの改変 → エラー",
+      "question": "ログに残すため、返ってきた思考ブロックの文章を整えてから、tool_result と一緒に送り返しました。どうなりますか？",
+      "choices": [
+        "A. API がエラーを返す",
+        "B. 整えた文章のまま処理を続ける",
+        "C. API が思考を自動で作り直す",
+        "D. 思考を無視して結果だけで答える"
+      ],
+      "myAnswer": "A",
+      "correct": "A",
+      "why": "API は暗号の署名で思考ブロックの真正性を確かめるので、改変するとエラーになる。",
+      "whyNot": {
+        "B": "改変した思考ブロックは受け付けない",
+        "C": "API はそういう補い方をしない",
+        "D": "黙って無視せずエラーになる"
+      },
+      "example": "ログ用に整えるときは別にコピーを取り、API には受け取ったままのブロックを返す。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 15,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "1回の出力上限 128k / ウィンドウ 1M",
+      "question": "1M トークンのウィンドウを持つモデルで、約 300k トークンの報告書を1回の応答で書かせたいです。どう考えますか？",
+      "choices": [
+        "A. max_tokens を 300k にすれば書ける",
+        "B. ウィンドウが 1M なので何もしなくてよい",
+        "C. 1回の出力は最大 128k なので分ける",
+        "D. temperature を 0 にして短くさせる"
+      ],
+      "myAnswer": "B",
+      "correct": "C",
+      "why": "ウィンドウ（1M）は入力と出力を合わせた作業机の広さで、1回のリクエストの出力は別に最大 128k トークン。",
+      "whyNot": {
+        "A": "1回の出力の上限（128k）を超える値は指定できない",
+        "B": "ウィンドウの広さと1回に出せる量は別の上限",
+        "D": "temperature で長さは決まらず、目的は書き切ること"
+      },
+      "example": "長い文書は章ごとに分けて生成し、つなぎ合わせる。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 16,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "task budgets / context awareness（自動の残量タグ）",
+      "question": "Claude Opus 5.5 で長いタスクを動かすエージェントに、使えるトークンの予算を意識させて作業を配分させたいです。どうしますか？",
+      "choices": [
+        "A. 何もしなくても残量が自動で届く",
+        "B. budget のタグを自分で書いて送る",
+        "C. max_tokens を小さくする",
+        "D. タスク予算（task budgets）を使う"
+      ],
+      "myAnswer": "D",
+      "correct": "D",
+      "why": "Opus 4.7 以降の Opus や Opus 5.5 には残量のタグが自動では届かないので、タスク予算（ベータ）で明示的に渡す。",
+      "whyNot": {
+        "A": "自動で届くのは Sonnet 5・Sonnet 4.6・Haiku 4.5 などのコンテキストアウェアネス",
+        "B": "タグは API が差し込むもので自分では送らない",
+        "C": "1回の出力が短くなるだけでタスク全体の予算にはならない"
+      },
+      "example": "長時間のエージェントで、残りの予算に合わせて作業を配分させたいときに使う。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 17,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "入力＋max_tokens 超過（4.5以降は受け付け）/ 自動で削る誤解",
+      "question": "Claude Opus 5.5 に、入力はウィンドウに収まるが、入力と max_tokens の合計はウィンドウを超えるリクエストを送りました。どうなりますか？",
+      "choices": [
+        "A. 送った時点で必ず 400 エラーになる",
+        "B. 入力の先頭が自動で削られる",
+        "C. 受け付け、一杯ならそこで止まる",
+        "D. max_tokens 分を必ず最後まで生成する"
+      ],
+      "myAnswer": "B",
+      "correct": "C",
+      "why": "Claude 4.5 以降は受け付け、生成中にウィンドウが一杯になると stop_reason: model_context_window_exceeded で止まる。",
+      "whyNot": {
+        "A": "400 になるのは入力だけで超えたときと、4.5 より前のモデル",
+        "B": "API は入力を自動で削らない（古い順に流すのはチャット画面）。ノート No.4 と同じ取り違え",
+        "D": "ウィンドウが一杯なら max_tokens 前でも止まる"
+      },
+      "example": "model_context_window_exceeded を受けたら、切れていると扱って続きを取るか入力を減らす。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "explanation": "",
+      "no": 18,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
