@@ -77,6 +77,52 @@
             }
           ],
           "addedAt": "2026-10-28"
+        },
+        {
+          "name": "max_tokens と停止理由（stop_reason）",
+          "meaning": "max_tokens は1回の応答で生成するトークンの上限。stop_reason は応答がなぜ止まったかを示す値",
+          "analogy": "原稿用紙の枚数制限と、書き終えた理由のメモ（書き終えた・紙が尽きた・質問しに行った）",
+          "exam": "end_turn は自然に終了、max_tokens は上限で打ち切り（途中で切れている）、tool_use はツールを実行して tool_result を返す番、stop_sequence は指定文字列で停止、refusal は拒否、model_context_window_exceeded はウィンドウが一杯で打ち切り",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Handling stop reasons",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+            }
+          ],
+          "addedAt": "2026-10-29"
+        },
+        {
+          "name": "トークナイザー（tokenizer）とトークン計数（token counting）",
+          "meaning": "テキストをトークンに切る仕組みがトークナイザー。モデルによって違うので、同じ文章でもトークン数が変わる。送る前の正確な数はトークン計数 API で数える",
+          "analogy": "同じ文章でも、はさみ（トークナイザー）が違えばピースの数が変わる",
+          "exam": "Claude 4.7 以降は新しいトークナイザーで、同じ文章が約30%多いトークンになる。モデルを替えたら数え直す",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            },
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-29"
+        },
+        {
+          "name": "コンテキストの劣化（context rot）と compaction",
+          "meaning": "トークンが増えるほど精度や想起が落ちる現象が context rot。会話の古い部分をサーバー側で要約して縮めるのが compaction",
+          "analogy": "机に資料を積みすぎると、必要な1枚が見つからなくなる。古い資料は要約メモにまとめて片付ける",
+          "exam": "ウィンドウに収まっても詰め込みは逆効果。長い会話やエージェントは compaction、古いツール結果はクリア（context editing）で減らす。prompt caching は料金が変わるだけで、ウィンドウの消費は減らない",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Context windows",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+            }
+          ],
+          "addedAt": "2026-10-29"
         }
       ],
       "distinctions": [
@@ -84,6 +130,11 @@
           "title": "拡張思考（extended thinking）と適応型思考（adaptive thinking）",
           "text": "拡張思考は budget_tokens（最低 1,024、max_tokens 未満）で思考量を手で決め、毎回考える。\n適応型思考は Claude が思考量を決め、深さは effort で調整する。\nClaude 4.7 以降のモデルは拡張思考（type: \"enabled\"）を受け付けず 400 エラーになる。",
           "addedAt": "2026-10-28"
+        },
+        {
+          "title": "stop_reason の max_tokens と model_context_window_exceeded",
+          "text": "max_tokens は、自分で決めた出力の上限に届いて止まった。\nmodel_context_window_exceeded は、入力と出力の合計がモデルのウィンドウを満たして止まった。\nどちらも応答は途中で切れているので、続きを取るか上限や入力を見直す。",
+          "addedAt": "2026-10-29"
         }
       ]
     }

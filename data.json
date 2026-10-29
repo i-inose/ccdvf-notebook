@@ -51,6 +51,20 @@
           10
         ]
       }
+    },
+    {
+      "order": 2,
+      "date": "2026-10-29",
+      "label": "単元5-1 第2回",
+      "focus": "5-1",
+      "total": 10,
+      "correct": 9,
+      "byUnit": {
+        "5-1": [
+          9,
+          10
+        ]
+      }
     }
   ],
   "notes": [
@@ -289,6 +303,209 @@
       "streak": 0,
       "addedAt": "2026-10-28",
       "nextReview": "2026-10-30"
+    },
+    {
+      "topic": "stop_reason max_tokens の対処 / temperature・stop_sequences",
+      "question": "長い報告書の要約が文の途中で終わっていて、stop_reason は \"max_tokens\" でした。どう対応しますか？",
+      "choices": [
+        "A. temperature を下げて再送する",
+        "B. max_tokens を上げるか、続きを別に取る",
+        "C. モデルを Haiku に替える",
+        "D. stop_sequences を追加する"
+      ],
+      "myAnswer": "B",
+      "correct": "B",
+      "why": "max_tokens は出力の上限に届いて打ち切られた合図。上限を上げるか、続きを別のリクエストで取る。",
+      "whyNot": {
+        "A": "ランダムさの設定で長さの上限とは無関係",
+        "C": "上限が同じなら別モデルでも同じように切れる",
+        "D": "止める条件を増やすだけで切れる問題は悪化する"
+      },
+      "example": "要約や長文生成で stop_reason を確かめ、max_tokens なら続きを取る処理を入れる。",
+      "sources": [
+        {
+          "title": "Handling stop reasons",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ],
+      "explanation": "",
+      "no": 8,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "stop_reason tool_use / end_turn",
+      "question": "ツールを渡して API を呼ぶと、応答の stop_reason が \"tool_use\" でした。アプリ側は次に何をしますか？",
+      "choices": [
+        "A. 応答をそのまま利用者に見せて終える",
+        "B. max_tokens を上げて同じ内容を再送する",
+        "C. 同じリクエストをもう一度送る",
+        "D. ツールを実行し tool_result を返す"
+      ],
+      "myAnswer": "D",
+      "correct": "D",
+      "why": "tool_use は Claude がツールを呼ぶ合図。アプリがツールを実行し、tool_result ブロックを user メッセージで余計なテキストなしに返す。",
+      "whyNot": {
+        "A": "それは end_turn の扱いで、ツール結果を使った最終回答が得られない",
+        "B": "打ち切りではないので上限は関係ない",
+        "C": "同じツール呼び出しが返るだけ"
+      },
+      "example": "エージェントのループ（モデル呼び出し → ツール実行 → 結果を返す）の入り口。",
+      "sources": [
+        {
+          "title": "Handling stop reasons",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ],
+      "explanation": "",
+      "no": 9,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "途中で切れた stop_reason / end_turn・stop_sequence",
+      "question": "（2つ選択）応答が途中で切れている（打ち切られた）と扱うべき stop_reason はどれですか？",
+      "choices": [
+        "A. max_tokens",
+        "B. end_turn",
+        "C. model_context_window_exceeded",
+        "D. stop_sequence"
+      ],
+      "myAnswer": "AC",
+      "correct": "AC",
+      "why": "max_tokens は自分で決めた出力の上限、model_context_window_exceeded はモデルのウィンドウの上限で止まり、どちらも途中で切れている。",
+      "whyNot": {
+        "B": "自然に書き終えた",
+        "D": "指定した文字列で止まった狙いどおりの停止"
+      },
+      "example": "stop_reason を「自然に終わった／切れた／こちらの番」に分けて処理する。",
+      "sources": [
+        {
+          "title": "Handling stop reasons",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ],
+      "explanation": "",
+      "no": 10,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "モデル変更でトークン数が変わる（トークナイザー）",
+      "question": "同じプロンプトでも、古いモデルから Claude Opus 5.5 に替えたら入力のトークン数が増えました。理由として最も適切なものはどれですか？",
+      "choices": [
+        "A. temperature の既定値が変わったから",
+        "B. トークナイザーが変わったから",
+        "C. 日本語は常に1文字1トークンになるから",
+        "D. 事前学習のデータ量が増えたから"
+      ],
+      "myAnswer": "B",
+      "correct": "B",
+      "why": "Claude 4.7 以降は新しいトークナイザーで、同じ文章が約30%多いトークンになる。",
+      "whyNot": {
+        "A": "出力のランダムさの設定で入力のトークン数とは無関係",
+        "C": "1トークンの文字数はモデルと言語で変わり「常に」が誤り",
+        "D": "学習量と入力の切り方（トークナイザー）は別"
+      },
+      "example": "モデルを替えたら費用とウィンドウの見積もりをトークン計数 API で数え直す。",
+      "sources": [
+        {
+          "title": "Glossary",
+          "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+        }
+      ],
+      "explanation": "",
+      "no": 11,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "stop_sequences / システムプロンプトでのお願い",
+      "question": "応答に \"###END\" という文字列が出たら、そこで確実に生成を止めたいです。どの方法を選びますか？",
+      "choices": [
+        "A. max_tokens を小さくする",
+        "B. temperature を 0 にする",
+        "C. stop_sequences に \"###END\" を指定",
+        "D. システムプロンプトで止めるよう頼む"
+      ],
+      "myAnswer": "C",
+      "correct": "C",
+      "why": "stop_sequences に指定した文字列が出ると API が生成を止め、stop_reason は stop_sequence になる。",
+      "whyNot": {
+        "A": "長さで止まるだけで文字列の位置では止まらない",
+        "B": "ランダムさの設定で止める位置とは無関係",
+        "D": "モデルへのお願いなので確実には止まらない"
+      },
+      "example": "区切り文字で出力を切り出す処理に使う。",
+      "sources": [
+        {
+          "title": "Handling stop reasons",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ],
+      "explanation": "",
+      "no": 12,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "stop_reason refusal / tool_use",
+      "question": "あるリクエストの応答で stop_reason が \"refusal\" でした。アプリ側の対応として最も適切なものはどれですか？",
+      "choices": [
+        "A. max_tokens を上げて再送する",
+        "B. 理由を確かめ、言い換えか別モデルで",
+        "C. tool_result を返して続けさせる",
+        "D. 同じ内容を通るまで何度も再送する"
+      ],
+      "myAnswer": "C",
+      "correct": "B",
+      "why": "refusal は Claude が応答を断った合図。stop_details で理由を確かめ、言い換えるか代わりのモデルで送り直す。",
+      "whyNot": {
+        "A": "断られた理由は長さではない",
+        "C": "tool_result を返すのは tool_use のときで、refusal ではツールは呼ばれていない",
+        "D": "理由を見ずに同じ内容を送っても解決しない"
+      },
+      "example": "stop_reason ごとに処理を分け、refusal のときの利用者への伝え方も決めておく。",
+      "sources": [
+        {
+          "title": "Handling stop reasons",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ],
+      "explanation": "",
+      "no": 13,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-10-29",
+      "nextReview": "2026-10-31"
     }
   ]
 }
