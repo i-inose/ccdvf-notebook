@@ -1,0 +1,3380 @@
+{
+ "updatedAt": "2026-11-01",
+ "scope": "スマホ用の問題セット12個（120問）と間違いノート18問",
+ "categories": [
+  {
+   "id": "web",
+   "tab": "Web・API の基本",
+   "label": "Web と API の基本",
+   "lead": "Claude API を呼ぶ前提になる、Web の通信と API の用語。"
+  },
+  {
+   "id": "dev",
+   "tab": "Git・Claude Code",
+   "label": "開発の進め方（Git・GitHub・Claude Code）",
+   "lead": "コードの変更を記録・共有・レビューする仕組みと、Claude Code の機能。"
+  },
+  {
+   "id": "api",
+   "tab": "Claude API",
+   "label": "Claude API の基本（リクエスト・エラー・制限・SDK）",
+   "lead": "Messages API の呼び方、ヘッダー、エラーとレート制限、Python SDK。"
+  },
+  {
+   "id": "feature",
+   "tab": "API の機能",
+   "label": "Claude API の機能（バッチ・ファイル・ツール・キャッシュ・クラウド）",
+   "lead": "Batch・Files・ツール使用・プロンプトキャッシュなどの機能と、AWS・Google Cloud から使う方法。"
+  },
+  {
+   "id": "model",
+   "tab": "モデルと設定",
+   "label": "モデルと生成の設定",
+   "lead": "モデルの選び方と、出力の長さ・ランダムさ・思考・速さを決める設定。"
+  }
+ ],
+ "terms": [
+  {
+   "id": "api",
+   "cat": "web",
+   "name": "API（application programming interface）",
+   "yomi": "エーピーアイ",
+   "short": "ソフトウェア同士が頼み事をするための窓口と決まりごと",
+   "detail": "API は、あるプログラムが別のプログラムに仕事を頼むための窓口と、その頼み方の決まりのこと。人間が画面を操作する代わりに、プログラムが決まった形式でリクエスト（依頼）を送り、結果を受け取る。Claude API では、プログラムから Claude に文章を送り、返事を受け取るために使う。",
+   "analogy": "レストランの注文窓口のように、決まった書き方で頼めば料理（結果）が出てくる。",
+   "exam": "問題文の「Claude API」「Messages API」「Models API」は、Claude を呼び出すための API のこと。直接 HTTP で呼ぶ方法と、公式 SDK を通して呼ぶ方法があり、SDK なら認証などのヘッダーを自動で付ける。",
+   "keywords": [
+    "Claude API",
+    "Messages API",
+    "Models API"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2"
+   ],
+   "count": 21,
+   "verified": true,
+   "sources": [
+    {
+     "title": "API（用語集）- MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Glossary/API"
+    },
+    {
+     "title": "API overview - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    }
+   ]
+  },
+  {
+   "id": "rest-api",
+   "cat": "web",
+   "name": "REST API",
+   "yomi": "レストエーピーアイ",
+   "short": "HTTP で呼び出す、標準的な作りの Web API",
+   "detail": "REST API は、HTTP という Web の通信の決まりを使って呼び出す API のこと。URL で操作の対象（資源）を示し、GET や POST などの HTTP メソッド（操作の種類）で何をするかを伝える。厳密には REST に細かい条件があるが、初心者はまず「標準的な Web のツールで呼べる HTTP の API」と考えてよい。Claude API も公式に RESTful な API と説明されている。",
+   "analogy": "役所の窓口で、決まった様式の申請書を出すと、決まった様式の書類が返ってくる仕組み。",
+   "exam": "問題文に「REST」という語は出ず、POST /v1/messages や GET /v1/models のように「HTTP メソッド + パス」の形で Claude API を呼ぶ場面として登場する。curl で直接呼べるのは REST API だからで、SDK はそれを包んで使いやすくした道具。",
+   "keywords": [
+    "POST /v1/messages",
+    "GET /v1/models"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "REST（用語集）- MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Glossary/REST"
+    },
+    {
+     "title": "API overview - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "What is RESTful API? - AWS",
+     "url": "https://aws.amazon.com/what-is/restful-api/"
+    }
+   ]
+  },
+  {
+   "id": "endpoint",
+   "cat": "web",
+   "name": "エンドポイント（endpoint）",
+   "yomi": "",
+   "short": "API を呼び出すときに宛先とする URL",
+   "detail": "エンドポイントは、API に頼み事をするときの宛先になる URL（Web 上の住所）のこと。同じサービスでも、機能ごとに別のエンドポイントが用意される。Claude API では、https://api.anthropic.com に続く /v1/messages（文章の生成）や /v1/models（モデルの一覧）などがそれにあたる。",
+   "analogy": "同じ会社でも、問い合わせ・注文・返品で受付の電話番号が分かれているようなもの。",
+   "exam": "どのエンドポイントを選ぶかは「何をしたいか」で決まる。文章を作るなら POST /v1/messages、使えるモデルを調べるなら GET /v1/models、送る前に入力トークン数を数えるなら POST /v1/messages/count_tokens（トークン計数エンドポイント）。",
+   "keywords": [
+    "エンドポイント",
+    "/v1/messages/count_tokens",
+    "/v1/models",
+    "/v1/messages"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-2"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "API overview - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "AWS service endpoints - AWS General Reference",
+     "url": "https://docs.aws.amazon.com/general/latest/gr/rande.html"
+    }
+   ]
+  },
+  {
+   "id": "request-response",
+   "cat": "web",
+   "name": "リクエストとレスポンス（request / response）",
+   "yomi": "",
+   "short": "依頼を送るのがリクエスト、返事がレスポンス",
+   "detail": "Web の通信は、クライアント（頼む側）が送るリクエストと、サーバー（受ける側）が返すレスポンスの1往復でできている。リクエストにはメソッド・宛先の URL・ヘッダー・本文が、レスポンスにはステータスコード（結果の番号）・ヘッダー・本文が入る。HTTP は前のやり取りを覚えないステートレスな仕組みで、Claude の Messages API も会話の履歴を覚えない。",
+   "analogy": "手紙を出して、返事の手紙を受け取る往復と同じ。",
+   "exam": "会話の続きを聞くときは、毎回それまでの user と assistant の発言をすべてリクエストに入れて送る。1回目の応答の id を付けても、同じ API キーで呼んでも、前の内容は伝わらない。",
+   "keywords": [
+    "リクエスト",
+    "レスポンス",
+    "ステートレス"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 51,
+   "verified": true,
+   "sources": [
+    {
+     "title": "HTTP の概要 - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/HTTP/Overview"
+    },
+    {
+     "title": "Using the Messages API - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+    }
+   ]
+  },
+  {
+   "id": "http-method",
+   "cat": "web",
+   "name": "HTTP メソッド（GET・POST）",
+   "yomi": "ゲット・ポスト",
+   "short": "リクエストで「何をするか」を示す動詞。GET は取得、POST は送信",
+   "detail": "HTTP メソッドは、リクエストの中で「何をしたいか」を示す動詞のこと。GET は指定した資源（URL が指すデータ）を取得するだけで、送るデータの本文は持たせない。POST は指定した宛先にデータを送るメソッドで、サーバー側の状態が変わることがよくある。",
+   "analogy": "窓口で「見せてください」と言うのが GET、「これを預かってください」と書類を渡すのが POST。",
+   "exam": "文章を生成する Messages API は POST /v1/messages、モデル一覧を取る Models API は GET /v1/models。JSON の本文を送って処理させる呼び出しは POST、情報を取るだけなら GET と覚える。",
+   "keywords": [
+    "POST /v1/messages",
+    "GET /v1/models"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "HTTP リクエストメソッド - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Methods"
+    },
+    {
+     "title": "API overview - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    }
+   ]
+  },
+  {
+   "id": "http-status",
+   "cat": "web",
+   "name": "HTTP ステータスコード（200・400・401・403・404・413・429・500・529）",
+   "yomi": "",
+   "short": "レスポンスに付く、結果を表す3桁の番号",
+   "detail": "HTTP ステータスコードは、サーバーがレスポンスに付ける3桁の番号で、2xx は成功、4xx は送った側に原因があるエラー、5xx はサーバー側に原因があるエラーを表す。代表は 200（成功）、400（形式や中身の不正）、401（API キーなど認証の問題）、403（権限がない）、404（対象が見つからない）。さらに 413（リクエストが大きすぎる。Claude API の Messages API の上限は 128 MB）、429（短時間に送りすぎ）、500（サーバー内部の想定外のエラー）がある。529 は標準の一覧（IANA の登録簿）にない番号で、Claude API が一時的な過負荷（アクセスの集中）を知らせるために使う。",
+   "analogy": "荷物の配達結果（届いた・宛先不明・受取拒否・配送センターが混雑中）を伝える通知のようなもの。",
+   "exam": "400・401 は、リクエストの中身や API キーを直さない限り同じ結果になるので、送り直しでは直らない。429・500・529 は一時的なことが多く、retry-after に従うか指数バックオフで間を空けて再試行する。ただし 429 でも retry-after がなく enforced_spend_limit_reached なら月の支出上限なので、待つか上限を上げるしかない。",
+   "keywords": [
+    "400 invalid_request_error",
+    "401 authentication_error",
+    "429 rate_limit_error",
+    "500 api_error",
+    "529 overloaded_error",
+    "HTTP 200",
+    "HTTP 500",
+    "HTTP 529"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2"
+   ],
+   "count": 12,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude API errors - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    },
+    {
+     "title": "HTTP レスポンスステータスコード - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Status"
+    },
+    {
+     "title": "Hypertext Transfer Protocol (HTTP) Status Code Registry - IANA",
+     "url": "https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml"
+    }
+   ]
+  },
+  {
+   "id": "http-header",
+   "cat": "web",
+   "name": "ヘッダー（HTTP header）と content-type",
+   "yomi": "コンテントタイプ",
+   "short": "リクエスト・レスポンスに添える付加情報の欄",
+   "detail": "HTTP ヘッダーは、リクエストやレスポンスに添える追加情報の欄で、「名前: 値」の形で書く。content-type は、本文がどんな種類のデータかを示すヘッダーで、JSON を送るなら application/json と書く。Claude API を直接呼ぶときは、認証の x-api-key（または Authorization）、API の版を示す anthropic-version、content-type を付ける。",
+   "analogy": "封筒の表に書く「宛名・差出人・速達」のように、中身とは別に付ける情報。",
+   "exam": "curl で Messages API を直接呼ぶと anthropic-version は必須で、SDK を使えば認証・anthropic-version・content-type を自動で付けてくれる。応答側には、問い合わせ用の request-id と、再試行まで待つ秒数を示す retry-after が付き、ベータ機能を使うときは anthropic-beta（複数ならカンマ区切り）を送る。最新の公式では認証は Authorization: Bearer が基本で、x-api-key は従来型として引き続き使える。",
+   "keywords": [
+    "ヘッダー",
+    "content-type",
+    "anthropic-version",
+    "x-api-key",
+    "request-id",
+    "retry-after",
+    "anthropic-beta",
+    "Authorization: Basic"
+   ],
+   "units": [
+    "2-4",
+    "5-2",
+    "5-3"
+   ],
+   "count": 25,
+   "verified": true,
+   "sources": [
+    {
+     "title": "HTTP ヘッダー - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Headers"
+    },
+    {
+     "title": "API overview - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "Content-Type - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Headers/Content-Type"
+    }
+   ]
+  },
+  {
+   "id": "json",
+   "cat": "web",
+   "name": "JSON",
+   "yomi": "ジェイソン",
+   "short": "データを文字だけで表す、共通の書式",
+   "detail": "JSON は、データを文字（テキスト）だけで表す書式のこと。{ } で囲んだ「名前: 値」の組（オブジェクト）や、[ ] で囲んだ値の並び（配列）で、文字列・数・真偽・null を表す。特定のプログラミング言語に縛られないため、Web API でのデータのやり取りに広く使われる。Claude API のリクエストの本文もレスポンスも JSON で、content-type は application/json になる。",
+   "analogy": "項目名と値を書いた表をそのまま文章にした、誰でも読める連絡票のようなもの。",
+   "exam": "Claude API の応答 JSON は、同じ API バージョンの中でも出力に値が増えることがあるので、必要なキーだけ読み、知らないキーは無視する書き方が安全。",
+   "keywords": [
+    "JSON",
+    "output_config.format"
+   ],
+   "units": [
+    "2-4",
+    "5-3"
+   ],
+   "count": 7,
+   "verified": true,
+   "sources": [
+    {
+     "title": "RFC 8259 - The JavaScript Object Notation (JSON) Data Interchange Format",
+     "url": "https://www.rfc-editor.org/rfc/rfc8259"
+    },
+    {
+     "title": "JSON を扱う - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/JSON"
+    },
+    {
+     "title": "Versions - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/versioning"
+    }
+   ]
+  },
+  {
+   "id": "json-schema",
+   "cat": "web",
+   "name": "JSON Schema（スキーマ）と additionalProperties",
+   "yomi": "ジェイソンスキーマ、アディショナルプロパティーズ",
+   "short": "JSON の形のルールを書き表す仕組み",
+   "detail": "JSON Schema は、JSON データがどんな形であるべきか（どんな項目があり、各項目が文字列か数か）を書き表すルールブックのこと。additionalProperties は、スキーマに書いていない余分な項目を認めるかを決める設定で、false なら余分な項目を禁止する。JSON Schema の既定では、余分な項目は許される。Claude の構造化出力（output_config.format）は、このスキーマに合う JSON を返させる機能。",
+   "analogy": "申込書の記入欄の見本のように、書いてよい欄だけを決め、欄の外の書き込みを禁止できる。",
+   "exam": "構造化出力では、オブジェクトの additionalProperties は false にしなければならず、true など false 以外を指定すると 400 エラーになる。スキーマを YAML で書かなければならない決まりはなく、JSON スキーマの形で渡す。",
+   "keywords": [
+    "JSON スキーマ",
+    "additionalProperties"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Structured outputs - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+    },
+    {
+     "title": "object - Understanding JSON Schema",
+     "url": "https://json-schema.org/understanding-json-schema/reference/object"
+    },
+    {
+     "title": "What is JSON Schema? - JSON Schema",
+     "url": "https://json-schema.org/overview/what-is-jsonschema"
+    }
+   ]
+  },
+  {
+   "id": "yaml",
+   "cat": "web",
+   "name": "YAML",
+   "yomi": "ヤムル",
+   "short": "インデントで書く、人が読みやすいデータ書式",
+   "detail": "YAML は、データや設定を、行頭の字下げ（インデント）で階層を表して書く書式のこと。人間が読み書きしやすいことを狙って作られ、JSON と同じ種類のデータを表せる（YAML 1.2 は JSON の上位互換になるよう設計された）。GitHub Actions のワークフロー（自動実行の手順）の設定ファイルも YAML で書く。",
+   "analogy": "箇条書きのメモのように、字下げだけで「この項目はこの下にぶら下がる」を示す書き方。",
+   "exam": "問題では、GitHub Actions のワークフローが YAML で書かれる点と、構造化出力のスキーマを YAML で書く必要はない点が出る。ワークフローの YAML には API キーを直接書かず、GitHub の Secrets に入れて参照する。",
+   "keywords": [
+    "YAML"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "YAML Ain't Markup Language (YAML) revision 1.2.2",
+     "url": "https://yaml.org/spec/1.2.2/"
+    },
+    {
+     "title": "The Official YAML Web Site",
+     "url": "https://yaml.org/"
+    },
+    {
+     "title": "Claude Code GitHub Actions - Claude Code Docs",
+     "url": "https://code.claude.com/docs/en/github-actions"
+    }
+   ]
+  },
+  {
+   "id": "curl",
+   "cat": "web",
+   "name": "curl",
+   "yomi": "カール",
+   "short": "コマンドで HTTP リクエストを送る道具",
+   "detail": "curl は、ターミナル（文字で命令を打つ画面）から、URL を指定してデータを送ったり受け取ったりするコマンドのこと。-H でヘッダーを足し、-d で送るデータ（本文）を指定する。HTTP で -d を使うと、POST メソッドで送られる。API の動作をプログラムを書かずに試すのによく使われ、Claude API の公式の例も curl で書かれている。",
+   "analogy": "電話で直接注文を伝えるように、画面なしで API に直接話しかける道具。",
+   "exam": "SDK を使わず curl で Messages API（POST /v1/messages）を直接呼ぶときは、content-type に加えて認証（x-api-key）と anthropic-version のヘッダーを自分で付ける。curl でストリーミングすると、SSE のイベントがそのまま表示され、完成したメッセージにまとめる機能はない。",
+   "keywords": [
+    "curl"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "curl - manpage",
+     "url": "https://curl.se/docs/manpage.html"
+    },
+    {
+     "title": "API overview - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "Claude API errors - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "base64",
+   "cat": "web",
+   "name": "base64",
+   "yomi": "ベースシックスティーフォー",
+   "short": "バイナリを英数字の文字列に置き換える方式",
+   "detail": "base64 は、画像のようなバイナリデータ（0と1の並び）を、英数字と記号だけの文字列に置き換える方式のこと。3バイトを4文字に変えるので、データの大きさはおよそ3分の1増える。元に戻せる書き換えで、秘密にするための暗号化ではない。JSON のようなテキストの中に、画像などのファイルをそのまま入れられる。",
+   "analogy": "絵や写真を、文字しか送れない電報で送れるように、文字だけに書き換えること。",
+   "exam": "Claude API では、画像を base64 でリクエストの本文に埋め込むか、url や Files API の file_id で参照させる。base64 で送ると、会話が続くたびに画像の中身が毎回リクエストに入り、大きくなる。何度も使う画像は Files API に一度上げて file_id で参照するとリクエストが小さく済み、Bedrock や Claude Models on Google Cloud（Google managed）では base64 の画像しか使えない。",
+   "keywords": [
+    "base64"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "RFC 4648 - The Base16, Base32, and Base64 Data Encodings",
+     "url": "https://www.rfc-editor.org/rfc/rfc4648"
+    },
+    {
+     "title": "Base64（用語集）- MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Glossary/Base64"
+    },
+    {
+     "title": "Vision - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+    }
+   ]
+  },
+  {
+   "id": "sdk",
+   "cat": "web",
+   "name": "SDK（software development kit）",
+   "yomi": "エスディーケー",
+   "short": "API を使いやすくした開発者向けの部品一式",
+   "detail": "SDK は、あるサービスや環境向けのプログラムを作るための道具一式のこと。Claude の公式 SDK（Python や TypeScript など）を使うと、HTTP リクエストの組み立てを自分で書かずに、関数を呼ぶだけで API を使える。認証・anthropic-version・content-type のヘッダーの自動付与、ストリーミング、エラー処理、自動リトライ（再試行）、タイムアウトの設定などを備える。",
+   "analogy": "家具の組み立てキットのように、必要な部品と工具が最初から揃っている。",
+   "exam": "SDK が自動でやってくれるのは、ヘッダーの付与と、接続エラー・429・5xx の既定2回の自動リトライなど。レート制限の上限は SDK ではなく組織の利用ティアで決まり、会話の履歴も API 側には保存されない。AWS の認証情報で使うなら、SDK の Bedrock 用クライアント（AnthropicBedrock など）を選ぶ。",
+   "keywords": [
+    "SDK",
+    "Python SDK"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-2"
+   ],
+   "count": 25,
+   "verified": true,
+   "sources": [
+    {
+     "title": "API overview - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "SDKs, CLI, and libraries - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/overview"
+    },
+    {
+     "title": "What is SDK? - AWS",
+     "url": "https://aws.amazon.com/what-is/sdk/"
+    }
+   ]
+  },
+  {
+   "id": "client-server",
+   "cat": "web",
+   "name": "クライアントとサーバー",
+   "yomi": "",
+   "short": "頼む側がクライアント、応える側がサーバー",
+   "detail": "クライアントは、リクエストを送って何かを頼む側のプログラム（ブラウザやアプリ）のこと。サーバーは、そのリクエストを受けて処理し、レスポンスを返す側のこと。Web アプリでは、利用者のブラウザがクライアント、運営側のコンピューター（バックエンド）がサーバーになる。",
+   "analogy": "客が注文し、厨房が料理を出す関係。",
+   "exam": "API キーのような秘密は、利用者の手元で動くブラウザの JavaScript ではなく、サーバー側で読み込んで使う。公式の TypeScript SDK は、キーが漏れないようブラウザでの利用を既定で無効にしている（dangerouslyAllowBrowser）。問題文の「クライアント」は、SDK で API を呼ぶ部品（Anthropic() や AsyncAnthropic()）を指すこともある。",
+   "keywords": [
+    "クライアント",
+    "サーバー",
+    "サーバー側",
+    "ブラウザ"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-2"
+   ],
+   "count": 15,
+   "verified": true,
+   "sources": [
+    {
+     "title": "HTTP の概要 - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/HTTP/Overview"
+    },
+    {
+     "title": "TypeScript SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/typescript"
+    }
+   ]
+  },
+  {
+   "id": "streaming",
+   "cat": "web",
+   "name": "ストリーミング（streaming）",
+   "yomi": "",
+   "short": "応答を完成まで待たず、できた分から受け取る",
+   "detail": "ストリーミングは、応答がすべて出来上がるのを待たず、できた部分から順に受け取る方式のこと。Claude API ではリクエストに stream: true を付けると有効になる。長い回答でも、画面に文字が出始めるまでの待ち時間（TTFT）が短くなり、体感の速さが上がる。",
+   "analogy": "料理が全部できるまで待たず、できた皿から順に運んでもらうようなもの。",
+   "exam": "完成した全文と usage も欲しいなら Python の stream() の get_final_message()、イベントを転送するだけでメモリを抑えたいなら create(stream=True) を選ぶ。大きな max_tokens の通常の呼び出しは、約10分を超えそうだと SDK が止めるので、ストリーミングで受け取る。",
+   "keywords": [
+    "ストリーミング",
+    "stream: true",
+    ".stream()",
+    "text_stream"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 21,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Streaming messages - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+    },
+    {
+     "title": "Reducing latency - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+    },
+    {
+     "title": "Python SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    }
+   ]
+  },
+  {
+   "id": "sse",
+   "cat": "web",
+   "name": "SSE（Server-Sent Events）",
+   "yomi": "エスエスイー",
+   "short": "サーバーから一方向にイベントを送り続ける仕組み",
+   "detail": "SSE は、サーバーがクライアントへ、1本の HTTP 接続（Web の通信路）を保ったまま、テキストのイベントを次々に送る仕組みのこと。通信の向きはサーバーからクライアントへの一方向で、クライアントから同じ接続で送り返すことはできない。1つのイベントは、event: の名前の行と data: の本文の行（多くは JSON）でできている。Claude API では stream: true にすると、応答が SSE のイベントとして少しずつ届く。",
+   "analogy": "ラジオ放送のように、放送局（サーバー）から聴き手へ一方的に流れてくる。",
+   "exam": "文字の断片は content_block_delta の delta（type が text_delta）に入って届き、ping が混ざることもある。知らない種別のイベントは読み飛ばし、message_delta の usage は累積値なので足さずに最後の値を使う。HTTP 200 の後でも event: error（overloaded_error など）が届きうるので、その処理も入れる。",
+   "keywords": [
+    "SSE",
+    "content_block_delta",
+    "message_delta",
+    "event: error"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 7,
+   "verified": true,
+   "sources": [
+    {
+     "title": "サーバー送信イベントの使用 - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/API/Server-sent_events/Using_server-sent_events"
+    },
+    {
+     "title": "Server-sent events - HTML Living Standard (WHATWG)",
+     "url": "https://html.spec.whatwg.org/multipage/server-sent-events.html"
+    },
+    {
+     "title": "Streaming messages - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+    }
+   ]
+  },
+  {
+   "id": "websocket",
+   "cat": "web",
+   "name": "WebSocket（SSE との違い：片方向か双方向か）",
+   "yomi": "ウェブソケット",
+   "short": "1本の接続で双方向に送り合える通信方式",
+   "detail": "WebSocket は、ブラウザとサーバーが1本の接続を開いたままにして、どちらからでもいつでもメッセージを送れる（双方向の）通信方式のこと。普通の HTTP のように「頼んだら返す」を繰り返さなくても、サーバーから先に知らせられる。SSE との違いは通信の向きで、SSE はサーバーからクライアントへの一方向だけ、WebSocket は双方向。",
+   "analogy": "SSE は一方的に聞くラジオ、WebSocket はお互いに話せる電話。",
+   "exam": "利用者が作業中にも追加の指示を送り、同時に進み具合も受け取りたいなら、双方向の WebSocket が向く。公式の Agent SDK の常駐構成でも、コンテナは HTTP か WebSocket のエンドポイントを公開するとされている。Claude API の SSE は応答を受け取る一方向なので、追加の指示を同じ接続で送る用途には向かない。",
+   "keywords": [
+    "WebSocket"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "RFC 6455 - The WebSocket Protocol",
+     "url": "https://www.rfc-editor.org/rfc/rfc6455"
+    },
+    {
+     "title": "サーバー送信イベントの使用 - MDN Web Docs",
+     "url": "https://developer.mozilla.org/ja/docs/Web/API/Server-sent_events/Using_server-sent_events"
+    },
+    {
+     "title": "Hosting the Agent SDK - Claude Code Docs",
+     "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+    }
+   ]
+  },
+  {
+   "id": "timeout",
+   "cat": "web",
+   "name": "タイムアウト（timeout）",
+   "yomi": "",
+   "short": "応答を待つ時間の上限。超えたら待つのをやめる",
+   "detail": "タイムアウトは、応答が返ってくるまで待つ時間の上限のこと。上限を超えると、クライアントは待つのをやめて失敗として扱う。上限がないと、返事の来ない相手を待ち続けて、ほかの処理まで止まりうる。Python の公式 SDK の既定は10分で、timeout で変えられる。",
+   "analogy": "電話をかけて、30秒鳴らして出なければ切ると決めておくこと。",
+   "exam": "Python SDK では、タイムアウトしたリクエストも既定で2回リトライされる。timeout=5 なら 1回目と再試行2回で計3回送られ、API にも同じリクエストが3回届いて、短い待ちを挟みつつ合計およそ15秒かかる。ある呼び出しだけ変えたいときは client.with_options(timeout=5.0) を使い、max_retries も同じ方法で変えられる。",
+   "keywords": [
+    "タイムアウト",
+    "timeout",
+    "with_options"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 5,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Python SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Timeouts, retries, and backoff with jitter - Amazon Builders' Library",
+     "url": "https://builder.aws.com/content/3EumjoZascWd1oZiEgL8ORlv3qE/timeouts-retries-and-backoff-with-jitter"
+    }
+   ]
+  },
+  {
+   "id": "retry-backoff",
+   "cat": "web",
+   "name": "リトライと指数バックオフ（retry / exponential backoff）",
+   "yomi": "",
+   "short": "失敗したら、待ち時間を倍々に延ばして再試行",
+   "detail": "リトライは、失敗した処理をもう一度やり直すこと。指数バックオフは、やり直すたびに待ち時間を1秒、2秒、4秒のように倍々に延ばす方法で、混み合っているサーバーにさらに負荷をかけないための工夫。回数や待ち時間の上限も決めておく。同じ内容では直らない失敗（400 など）は、再試行しても意味がない。",
+   "analogy": "混んでいる店に何度も押しかけず、間隔を空けて出直すようなもの。",
+   "exam": "公式 SDK は、接続エラー・408・409・429・5xx を既定で2回、短い指数バックオフで自動リトライし、retry-after があればそれに従う（max_retries で変更や無効化ができる）。400 や 401 は直さない限り直らず、リトライの対象ではない。429 でも retry-after がなく enforced_spend_limit_reached なら、月の支出上限なので何度試しても通らない。",
+   "keywords": [
+    "リトライ",
+    "指数バックオフ",
+    "max_retries",
+    "retry-after"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 19,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Retry with backoff pattern - AWS Prescriptive Guidance",
+     "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/retry-backoff.html"
+    },
+    {
+     "title": "Python SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Claude API errors - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "async",
+   "cat": "web",
+   "name": "非同期処理（async / await、asyncio）",
+   "yomi": "アシンク、アウェイト、アシンクアイオー",
+   "short": "待ち時間に止まらず、別の仕事を進める書き方",
+   "detail": "非同期処理は、返事を待っている間に止まらず、ほかの仕事を進める書き方のこと。Python では async def で非同期の関数（コルーチン）を作り、await で結果を待つ間にほかの処理へ順番を譲る。asyncio は、この書き方で複数の処理を同時に進めるための標準ライブラリで、asyncio.gather で複数の呼び出しを並行して実行できる。",
+   "analogy": "お湯を沸かしている間に野菜を切るように、待ち時間に別の作業を進める。",
+   "exam": "AsyncAnthropic を await して並行に呼ぶと、10件の呼び出しでも待ち時間はほぼ最も遅い1件ぶんで済み、同期クライアントを for ループで回すと待ち時間が足し算になる。ただし並行数を増やしすぎると 429 になるので、同時に送る数を絞り、429 は retry-after や指数バックオフで待って再試行する。Message Batches API の「非同期」は「あとで結果を取りに行く」という意味で、Python の async とは別の話。",
+   "keywords": [
+    "AsyncAnthropic",
+    "asyncio",
+    "await",
+    "非同期"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 11,
+   "verified": true,
+   "sources": [
+    {
+     "title": "asyncio - Asynchronous I/O - Python documentation",
+     "url": "https://docs.python.org/3/library/asyncio.html"
+    },
+    {
+     "title": "Coroutines and Tasks - Python documentation",
+     "url": "https://docs.python.org/3/library/asyncio-task.html"
+    },
+    {
+     "title": "Python SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    }
+   ]
+  },
+  {
+   "id": "env-var",
+   "cat": "web",
+   "name": "環境変数（environment variable）",
+   "yomi": "",
+   "short": "プログラムの外から渡す、名前付きの設定値",
+   "detail": "環境変数は、OS がプログラムに渡す「名前と値」の設定のこと。パスワードや API キーのような秘密を、ソースコードに書かずに外から渡すのに使う。Python では os.environ で読め、Claude の公式 SDK は api_key の引数を省くと ANTHROPIC_API_KEY を読む。",
+   "analogy": "コードを書き換えずに、貼り替えるだけで設定が変わる付箋のようなもの。",
+   "exam": "SDK が読む環境変数は、認証キーの ANTHROPIC_API_KEY、接続先を変える ANTHROPIC_BASE_URL（テスト用サーバーへの切り替えなど）、debug か info でログを出す ANTHROPIC_LOG。anthropic-version は環境変数ではなくリクエストヘッダーで、SDK が自動で付ける。",
+   "keywords": [
+    "環境変数",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_BASE_URL",
+    "ANTHROPIC_LOG"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "os - Miscellaneous operating system interfaces (os.environ) - Python documentation",
+     "url": "https://docs.python.org/3/library/os.html"
+    },
+    {
+     "title": "Python SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Authentication - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+    }
+   ]
+  },
+  {
+   "id": "latency",
+   "cat": "web",
+   "name": "レイテンシ（latency）",
+   "yomi": "",
+   "short": "依頼してから結果が返るまでの遅れ（時間）",
+   "detail": "レイテンシは、依頼を出してから結果が返ってくるまでにかかる時間のこと。大きいほど遅く、小さいほど速い。生成 AI では、プロンプトを送ってから出力が返るまでの遅れを指し、最初の1語（トークン）が出るまでの時間を TTFT（time to first token）と呼ぶ。",
+   "analogy": "注文してから料理が席に届くまでの待ち時間。",
+   "exam": "公式が挙げる遅延の下げ方は、速いモデルを選ぶ（Haiku 5.5 など）、入力と出力のトークンを減らす、ストリーミングで返す、の3つ。出力を減らすには、短い回答を頼む、max_tokens で上限を付ける、「ちょうど50語」より「2文で」のように文の数で頼む。ストリーミングは、できた分から表示して体感の速さを上げるので、最初の文字が出るまでの TTFT が効く指標になる。",
+   "keywords": [
+    "レイテンシ",
+    "TTFT",
+    "遅延"
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 11,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Reducing latency - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+    },
+    {
+     "title": "Glossary - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+    }
+   ]
+  },
+  {
+   "id": "secrets",
+   "cat": "web",
+   "name": "シークレットとシークレットマネージャー（secret / secrets manager）",
+   "yomi": "",
+   "short": "秘密の値を安全に保管し、必要なときだけ渡す仕組み",
+   "detail": "シークレットは、API キー・パスワード・トークンのように、他人に知られてはいけない値のこと。シークレットマネージャーは、それを暗号化して保管し、アプリが必要なときに取り出せるようにするサービス（AWS Secrets Manager など）。ソースコードや設定ファイルに直接書くと、Git に入れた時点で漏れるおそれがあるため、コードの外に置く。",
+   "analogy": "貸金庫に大事な鍵を預け、必要なときだけ受付を通して取り出すようなもの。",
+   "exam": "Claude の API キーは、サーバー側でシークレットマネージャーから読み、ANTHROPIC_API_KEY として SDK に渡す。ブラウザの JavaScript、Git にコミットする設定ファイル、ワークフローの YAML への直書きは不適切で、GitHub Actions では GitHub の Secrets に入れて参照する。キーが漏れた疑いがあれば Console で無効化または削除し、新しいキーに差し替える。",
+   "keywords": [
+    "シークレットマネージャー",
+    "シークレット管理",
+    "Secrets"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "What is AWS Secrets Manager? - AWS Secrets Manager User Guide",
+     "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"
+    },
+    {
+     "title": "Authentication - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+    },
+    {
+     "title": "Claude Code GitHub Actions - Claude Code Docs",
+     "url": "https://code.claude.com/docs/en/github-actions"
+    }
+   ]
+  },
+  {
+   "id": "git",
+   "cat": "dev",
+   "name": "Git",
+   "yomi": "ギット",
+   "short": "ファイルの変更履歴を記録・管理する仕組み",
+   "detail": "ファイルの変更の履歴を残し、前の状態に戻したり、複数人で同じファイルを編集したりできるようにするバージョン管理の仕組み。変更を差分ではなく、そのときのプロジェクト全体の写し（スナップショット）として保存する。ほとんどの操作は自分のパソコンの中で完結し、ネットワークにつながなくてもコミットできる。",
+   "analogy": "文書の「保存した版」を何世代も残し、好きな版に戻せる仕組み。",
+   "exam": "Claude Code の /rewind で戻せないファイルを戻す手段として「Git で戻す」と出る。逆に、API キーの入った設定ファイルを Git にコミットするのは誤りの選択肢。",
+   "keywords": [
+    "Git"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-2"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Pro Git 日本語版: Git の基本",
+     "url": "https://git-scm.com/book/ja/v2/%e4%bd%bf%e3%81%84%e5%a7%8b%e3%82%81%e3%82%8b-Git%e3%81%ae%e5%9f%ba%e6%9c%ac"
+    },
+    {
+     "title": "Pro Git 日本語版: Git リポジトリの取得",
+     "url": "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E5%9F%BA%E6%9C%AC-Git-%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E5%8F%96%E5%BE%97"
+    }
+   ]
+  },
+  {
+   "id": "repository",
+   "cat": "dev",
+   "name": "リポジトリ（repository）",
+   "yomi": "",
+   "short": "ファイルと変更履歴をまとめて保管する場所",
+   "detail": "プロジェクトのファイルと、その変更履歴のすべてを保管する場所。Git では、作業フォルダの中の .git というフォルダに履歴が入る。手元のコピー（ローカル）と GitHub 上のコピー（リモート）があり、GitHub では公開（誰でも閲覧可）か非公開かを選べる。",
+   "analogy": "プロジェクトの資料と、その修正の記録をまるごとしまっておく書庫。",
+   "exam": "API キーを含むファイルを公開リポジトリに push したら、キーを無効化し、新しいキーに差し替える。Claude Code GitHub Actions では、キーをリポジトリに直接書かず Secrets に入れる。",
+   "keywords": [
+    "リポジトリ",
+    "公開リポジトリ"
+   ],
+   "units": [
+    "2-4",
+    "5-1",
+    "5-2"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "GitHub Docs: リポジトリについて",
+     "url": "https://docs.github.com/ja/repositories/creating-and-managing-repositories/about-repositories"
+    },
+    {
+     "title": "Pro Git 日本語版: Git リポジトリの取得",
+     "url": "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E5%9F%BA%E6%9C%AC-Git-%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E5%8F%96%E5%BE%97"
+    }
+   ]
+  },
+  {
+   "id": "commit",
+   "cat": "dev",
+   "name": "コミット（commit）",
+   "yomi": "",
+   "short": "変更をひとまとまりにして履歴へ記録すること",
+   "detail": "ここまでの変更を、説明のメッセージを添えて Git の履歴に記録すること。また、その記録 1 件のこと。記録したい変更を先に「ステージ」（次のコミットに入れる変更の置き場）へ載せてから、コミットする。コミットした内容は、あとから見返したり取り消したりできる。",
+   "analogy": "ゲームのセーブのように、作業のある時点に名前を付けて残す操作。",
+   "exam": "API キーを設定ファイルに書いて Git にコミットするのは誤り。キーはシークレットマネージャーや GitHub の Secrets に置く。Claude Code の Code Review は、不具合を直すコミットを push しない。",
+   "keywords": [
+    "コミット"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Pro Git 日本語版: 変更内容のリポジトリへの記録",
+     "url": "https://git-scm.com/book/ja/v2/Git-%e3%81%ae%e5%9f%ba%e6%9c%ac-%e5%a4%89%e6%9b%b4%e5%86%85%e5%ae%b9%e3%81%ae%e3%83%aa%e3%83%9d%e3%82%b8%e3%83%88%e3%83%aa%e3%81%b8%e3%81%ae%e8%a8%98%e9%8c%b2"
+    },
+    {
+     "title": "Pro Git 日本語版: Git の基本",
+     "url": "https://git-scm.com/book/ja/v2/%e4%bd%bf%e3%81%84%e5%a7%8b%e3%82%81%e3%82%8b-Git%e3%81%ae%e5%9f%ba%e6%9c%ac"
+    }
+   ]
+  },
+  {
+   "id": "branch-checkout",
+   "cat": "dev",
+   "name": "ブランチ（branch）とチェックアウト（checkout）",
+   "yomi": "",
+   "short": "履歴の枝分かれと、作業する枝の切り替え",
+   "detail": "ブランチは、同じリポジトリの中で本流とは別に作業を進めるための枝分かれのこと。機能追加とバグ修正のように別々の作業を、互いの変更に影響されずに進められる。チェックアウトは、作業するブランチに切り替えて、フォルダのファイルをそのブランチの状態に合わせること。「別のチェックアウト」と言うときは、ファイルを取り出した別の作業用フォルダのことを指す。",
+   "analogy": "原稿のコピーを別に作って好きに書き換え、よければ本物へ取り込む進め方。",
+   "exam": "worktree は「別ブランチの別チェックアウト」なので、2 つのセッションの編集が同じファイルでぶつからない。",
+   "keywords": [
+    "ブランチ",
+    "チェックアウト"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Pro Git 日本語版: ブランチとマージの基本",
+     "url": "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E6%A9%9F%E8%83%BD-%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E3%81%A8%E3%83%9E%E3%83%BC%E3%82%B8%E3%81%AE%E5%9F%BA%E6%9C%AC"
+    },
+    {
+     "title": "GitHub Docs: ブランチについて",
+     "url": "https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches"
+    },
+    {
+     "title": "Claude Code Docs: Common workflows（worktree は別のチェックアウト）",
+     "url": "https://code.claude.com/docs/en/common-workflows"
+    }
+   ]
+  },
+  {
+   "id": "merge",
+   "cat": "dev",
+   "name": "マージ（merge）",
+   "yomi": "",
+   "short": "別ブランチの変更を取り込んで一つにすること",
+   "detail": "別のブランチで行った変更を、今のブランチに取り込んで一つにすること。同じ場所を両方で変えると「コンフリクト（衝突）」が起き、人が直してから完成させる。GitHub では、PR の変更を元のブランチへ取り込む操作がマージにあたる。",
+   "analogy": "別々に直した 2 つの原稿を、1 つにまとめる作業。",
+   "exam": "Code Review は PR を承認もブロックもせず、マージの判断はチームに残る。Claude Code GitHub Actions では、マージ前に人が Claude の変更を確認する。Claude に main へ直接マージする権限を与えるのは誤り。",
+   "keywords": [
+    "マージ",
+    "マージ判断",
+    "マージ前"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Pro Git 日本語版: ブランチとマージの基本",
+     "url": "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E6%A9%9F%E8%83%BD-%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E3%81%A8%E3%83%9E%E3%83%BC%E3%82%B8%E3%81%AE%E5%9F%BA%E6%9C%AC"
+    },
+    {
+     "title": "GitHub Docs: プルリクエストのマージについて",
+     "url": "https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges"
+    }
+   ]
+  },
+  {
+   "id": "pull-request",
+   "cat": "dev",
+   "name": "プルリクエスト（PR / pull request）",
+   "yomi": "ピーアール",
+   "short": "変更を取り込んでよいか確認を求める提案",
+   "detail": "自分のブランチの変更を、本流のブランチに取り込んでほしいと提案すること。変更の差分を見ながら議論したり、自動テストの結果を確認したりでき、問題がなければマージする。最初はドラフト（下書き）として作ることもできる。",
+   "analogy": "原稿を提出し、チェックを受けてから本に載せてもらう流れ。",
+   "exam": "/batch は作業を単位に分け、単位ごとに PR を作るので、レビューしやすい大きさに保てる。Code Review は PR にコメントとチェックランを残すだけで、承認もブロックもしない。",
+   "keywords": [
+    "PR"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "GitHub Docs: プルリクエストについて",
+     "url": "https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests"
+    },
+    {
+     "title": "GitHub Docs: プルリクエストのマージについて",
+     "url": "https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges"
+    }
+   ]
+  },
+  {
+   "id": "code-review",
+   "cat": "dev",
+   "name": "コードレビュー（code review）",
+   "yomi": "",
+   "short": "他の人がコードを読み、問題点を指摘すること",
+   "detail": "書いたコードをマージする前に、他の人（または AI）が読んで、不具合や改善点を指摘すること。GitHub では PR の上で行い、行ごとのコメントのほか、承認（Approve）・変更の要求（Request changes）・コメントのみ、の 3 種類の結論を出せる。問題を探すよう頼まれたレビュー役は必ず何かを見つけるので、AI に頼むときは正しさに関わる点に絞る。",
+   "analogy": "提出前の作文を、別の人に読んで赤ペンを入れてもらう作業。",
+   "exam": "AI の指摘をすべて直して不要な抽象化が増えたら、「正しさに関わる指摘に絞り、スタイルは除く」と頼む。長い会話で実装したコードは、会話を見ていない新しいサブエージェントでレビューすると、思い込みに引きずられにくい。",
+   "keywords": [
+    "レビュー"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "GitHub Docs: プルリクエストのレビューについて",
+     "url": "https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews"
+    },
+    {
+     "title": "Claude Code Docs: Best practices（Give Claude a check to run / Review against your spec）",
+     "url": "https://code.claude.com/docs/en/best-practices"
+    }
+   ]
+  },
+  {
+   "id": "claude-code-code-review",
+   "cat": "dev",
+   "name": "Claude Code の Code Review",
+   "yomi": "クロード コード コードレビュー",
+   "short": "PR を自動でレビューし、コメントで知らせる機能",
+   "detail": "GitHub の PR を Claude が自動でレビューする機能で、Team・Enterprise プラン向け。複数のエージェントが差分と周辺のコードを読み、見つけた問題を、該当行へのインラインコメント（行ごとのコメント）と、PR に付く「チェックラン」（自動チェックの結果表示）で知らせる。リポジトリへのアクセスは読み取り専用で、コードを push せず、PR を承認もブロックもしない。マージするかどうかはチームが決める。",
+   "analogy": "校正係が指摘だけを紙に貼っていき、合否の判子は押さない。",
+   "exam": "運用の説明では「承認もブロックもせず、マージ判断はチームが行う」が正解。「自動でマージされる」「重大な指摘で PR が自動ブロックされる」「不具合を直すコミットも push する」は誤り。自分のセッションで動かす /code-review とは別の仕組み。",
+   "keywords": [
+    "Code Review",
+    "インラインコメント",
+    "チェックラン"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Code Review",
+     "url": "https://code.claude.com/docs/en/code-review"
+    },
+    {
+     "title": "Claude Code Docs: Review locally with /code-review",
+     "url": "https://code.claude.com/docs/en/code-review-local"
+    },
+    {
+     "title": "GitHub Docs: ステータスチェックについて（チェックランの説明）",
+     "url": "https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks"
+    }
+   ]
+  },
+  {
+   "id": "ci",
+   "cat": "dev",
+   "name": "CI（継続的インテグレーション）",
+   "yomi": "シーアイ",
+   "short": "変更のたびにビルドとテストを自動で行う手法",
+   "detail": "コードの変更を頻繁に共有のリポジトリへ集め、そのたびにビルド（動く形に組み立てること）とテストを自動で実行して、問題を早く見つける開発のやり方。GitHub Actions のような仕組みで、プッシュや PR をきっかけに動かす。結果は PR ごとに表示され、すべて成功すればレビューやマージに進める。",
+   "analogy": "部品を足すたびに、自動の検査機に通す工場のライン。",
+   "exam": "「CI のスクリプトで claude -p を実行し、結果をプログラムで読む」という場面で出る。-p は成功すると終了コード 0、失敗すると 0 以外で終わるので、スクリプトが成否で分岐できる。",
+   "keywords": [
+    "CI"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "GitHub Docs: 継続的インテグレーション",
+     "url": "https://docs.github.com/ja/actions/get-started/continuous-integration"
+    },
+    {
+     "title": "Claude Code Docs: Run Claude Code programmatically",
+     "url": "https://code.claude.com/docs/en/headless"
+    }
+   ]
+  },
+  {
+   "id": "github-actions",
+   "cat": "dev",
+   "name": "GitHub Actions と Claude Code GitHub Actions",
+   "yomi": "ギットハブ アクションズ",
+   "short": "GitHub 上の自動処理と、そこで動く Claude",
+   "detail": "GitHub Actions は、PR の作成やプッシュなどをきっかけに、ビルドやテストなどを自動で動かす GitHub の仕組み。手順は .github/workflows の YAML ファイルに書く。Claude Code GitHub Actions は、その中で Claude Code を動かす公式のアクションで、PR やイシューに「@claude」と書くと、Claude が質問に答えたり変更を作ったりする。API キーは GitHub の Secrets に入れて参照する。",
+   "analogy": "「この出来事が起きたら、この作業をする」と書いておく自動の留守番係。",
+   "exam": "安全な運用は「キーは Secrets に入れて参照する」「必要な権限だけ与え、マージ前に人が変更を見る」の 2 つ。キーを YAML に直接書く、main へ直接マージする権限を与える、公開リポジトリで誰の @claude にも反応させる、は誤り。自分の CI で動かす方式で、Anthropic 側が動かす Code Review とは別物。",
+   "keywords": [
+    "Claude Code GitHub Actions",
+    "@claude"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Claude Code GitHub Actions",
+     "url": "https://code.claude.com/docs/en/github-actions"
+    },
+    {
+     "title": "GitHub Docs: GitHub Actions を理解する",
+     "url": "https://docs.github.com/ja/actions/get-started/understand-github-actions"
+    },
+    {
+     "title": "GitHub: anthropics/claude-code-action",
+     "url": "https://github.com/anthropics/claude-code-action"
+    }
+   ]
+  },
+  {
+   "id": "github-secrets",
+   "cat": "dev",
+   "name": "GitHub の Secrets（シークレット）",
+   "yomi": "シークレッツ",
+   "short": "API キーなどを安全にしまう GitHub の保管庫",
+   "detail": "パスワードや API キーのような秘密の値を、リポジトリ・環境・組織の設定の中に、暗号化して保管する GitHub の機能。ワークフローの中では ${{ secrets.名前 }} と書いて参照するので、値そのものはコードに書かない。ログに出た値は自動で伏せ字になるが、完全な保証はない。",
+   "analogy": "合鍵を玄関に貼らず、鍵付きの金庫にしまって必要なときだけ取り出す。",
+   "exam": "Claude Code GitHub Actions では、API キーを YAML に直接書かず、Secrets に入れて参照する。Web アプリのサーバー側では、同じ考え方でシークレットマネージャー（秘密の値の保管サービス）から読む。",
+   "keywords": [
+    "Secrets"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "GitHub Docs: シークレット（GitHub Actions）",
+     "url": "https://docs.github.com/ja/actions/concepts/security/secrets"
+    },
+    {
+     "title": "Claude Code Docs: Claude Code GitHub Actions（Protect your credentials）",
+     "url": "https://code.claude.com/docs/en/github-actions"
+    }
+   ]
+  },
+  {
+   "id": "refactoring",
+   "cat": "dev",
+   "name": "リファクタリング（refactoring）",
+   "yomi": "",
+   "short": "動作を変えずにコードの作りを整えること",
+   "detail": "古い書き方を新しい書き方に置き換えるなど、同じ動作のままコードの作りを整えること。機能を足したり、動きを変えたりするのは含まない。動きが変わっていないことは、テストを実行して確かめる。Claude Code に頼むときは、「同じ振る舞いを保つ」と伝え、小さくテストできる単位で進める。",
+   "analogy": "部屋の中身は同じまま、棚の並びを整えて探しやすくする作業。",
+   "exam": "安全な頼み方は「振る舞いを保つよう伝え、小さく変えてテストする」。テストを消す、機能追加も同じ変更に混ぜる、全ファイルを一度に書き換える、は誤り。200 個のような大量の機械的な置き換えは /batch。",
+   "keywords": [
+    "リファクタリング"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Common workflows（Refactor code）",
+     "url": "https://code.claude.com/docs/en/common-workflows"
+    }
+   ]
+  },
+  {
+   "id": "test-testcase",
+   "cat": "dev",
+   "name": "テストとテストケース",
+   "yomi": "",
+   "short": "プログラムが期待どおり動くか確かめる仕組み",
+   "detail": "テストは、プログラムが期待どおりに動くかを、コードを実行して確かめる仕組み。テストケースはその一つ一つで、「この入力を与えたら、この結果になるはず」という確かめたい場面を 1 つ決めたもの。境界の値やエラーになる入力のような、見落としやすい端のケースも入れておく。Claude Code には、テストを実行させて、失敗を直させる使い方がある。",
+   "analogy": "料理の味見のように、できたものが狙いどおりかを決まった手順で確かめる。",
+   "exam": "リファクタリングでは、テストで振る舞いが変わっていないことを確かめる。テストが 1 本もない古い関数は、整理の前に、今の動作を確かめるテストを先に書かせる。「毎週末に 2 万件のテストケースで回答品質を採点」は、すぐの返事が要らない大量処理なので Message Batches API が向く。",
+   "keywords": [
+    "テスト",
+    "テストケース"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-2",
+    "5-3"
+   ],
+   "count": 6,
+   "verified": false,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Common workflows（Work with tests）",
+     "url": "https://code.claude.com/docs/en/common-workflows"
+    },
+    {
+     "title": "GitHub Docs: 継続的インテグレーション",
+     "url": "https://docs.github.com/ja/actions/get-started/continuous-integration"
+    }
+   ]
+  },
+  {
+   "id": "bash-shell",
+   "cat": "dev",
+   "name": "Bash とシェルコマンド",
+   "yomi": "バッシュ",
+   "short": "文字で打つ命令（Bash など）と、その実行",
+   "detail": "シェルコマンドは、ターミナル（文字で操作する画面）に文字で打ち込んで実行する命令のこと。Bash は、その命令を受け取るシェルの種類の一つ。sed は文字列の置換などに使うコマンドで、書き込みに使えるオプションを付けると、ファイルを直接書き換えられる。Claude Code は Bash ツールで、こうしたコマンドを実行する。",
+   "analogy": "ボタンを押す代わりに、文字で機械へ指示を出す窓口。",
+   "exam": "Claude Code が Bash の sed で書き換えたファイルは、/rewind では戻らず、Git で戻す、という形で出る。ただし公式は、Claude が先にファイル編集ツールで変えたファイルなら、その後の Bash による変更も /rewind で戻ると書いている。",
+   "keywords": [
+    "Bash",
+    "sed"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Tools reference（Bash tool）",
+     "url": "https://code.claude.com/docs/en/tools-reference"
+    },
+    {
+     "title": "Claude Code Docs: Permission modes（acceptEdits が自動承認する sed など）",
+     "url": "https://code.claude.com/docs/en/permission-modes"
+    },
+    {
+     "title": "Claude Code Docs: Checkpointing（Bash command changes not tracked）",
+     "url": "https://code.claude.com/docs/en/checkpointing"
+    }
+   ]
+  },
+  {
+   "id": "claude-code",
+   "cat": "dev",
+   "name": "Claude Code",
+   "yomi": "クロード コード",
+   "short": "コードを読み、直し、実行する AI 開発ツール",
+   "detail": "Anthropic が提供する、コードを読み、ファイルを編集し、コマンドを実行しながら開発を進める AI のコーディングツール。ターミナル、IDE、デスクトップアプリ、ブラウザで使える。Git のコミットの作成や PR を開くことも任せられる。対話せずに動かす claude -p や、GitHub Actions からも使える。",
+   "analogy": "指示を出すと、自分でファイルを開いて直し、確認までしてくれる開発の助手。",
+   "exam": "単元2-4の問題は「Claude Code でこの作業をどう進めるか」の形が多い。大量の機械的変更は /batch、並行作業は worktree、戻すなら /rewind と Git、レビューは /code-review か Code Review、と作業ごとに道具を選ぶ。",
+   "keywords": [
+    "Claude Code"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 7,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Overview",
+     "url": "https://code.claude.com/docs/en/overview"
+    },
+    {
+     "title": "Claude Code Docs: Glossary（Agentic coding）",
+     "url": "https://code.claude.com/docs/en/glossary"
+    }
+   ]
+  },
+  {
+   "id": "claude-md",
+   "cat": "dev",
+   "name": "CLAUDE.md",
+   "yomi": "クロード エムディー",
+   "short": "Claude Code に毎回読ませる指示書ファイル",
+   "detail": "プロジェクトの決まりごと（コードの書き方、使うコマンド、設計の方針など）を書いておくテキストファイルで、Claude Code がセッションの始めに毎回読み込む。プロジェクトの直下や、自分のホームフォルダなどに置け、/init で下書きを作れる。あくまで文脈として読ませる指示で、守らせることを強制する設定ではない。",
+   "analogy": "新しく入った人に最初に渡す、職場のルールブック。",
+   "exam": "同時作業の編集衝突を避けるために「作業ごとに CLAUDE.md を書き換える」のは誤り。衝突を避けるのは worktree。",
+   "keywords": [
+    "CLAUDE.md"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: How Claude remembers your project",
+     "url": "https://code.claude.com/docs/en/memory"
+    },
+    {
+     "title": "Claude Code Docs: Glossary（CLAUDE.md）",
+     "url": "https://code.claude.com/docs/en/glossary"
+    }
+   ]
+  },
+  {
+   "id": "slash-command",
+   "cat": "dev",
+   "name": "スラッシュコマンド（slash command）",
+   "yomi": "",
+   "short": "「/」で始めて入力する Claude Code への命令",
+   "detail": "入力欄に「/名前」と打って呼び出す、Claude Code の決まった操作や手順のこと。/clear や /rewind のように Claude Code 自体を操作するものと、/batch や /code-review のように Claude に手順を渡して動かすもの（同梱スキル）がある。現在の公式ドキュメントでは、単に「コマンド（commands）」と呼ぶ。",
+   "analogy": "入力欄から呼び出せる、ショートカットのボタン。",
+   "exam": "問題文には /batch、/rewind、/code-review の形で出る。どれも Claude Code の中で打つ命令で、API のリクエスト設定ではない。claude -p の中でも、スキルのコマンドは使えるが、/login のような端末専用のものは使えない。",
+   "keywords": [
+    "/batch",
+    "/rewind",
+    "/code-review"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Commands",
+     "url": "https://code.claude.com/docs/en/commands"
+    },
+    {
+     "title": "Claude Code Docs: Glossary（Command / Bundled skills / 改称された用語）",
+     "url": "https://code.claude.com/docs/en/glossary"
+    }
+   ]
+  },
+  {
+   "id": "plan-mode",
+   "cat": "dev",
+   "name": "plan mode（プランモード）",
+   "yomi": "プランモード",
+   "short": "編集せず、調べて計画だけを出させるモード",
+   "detail": "Claude が調査と計画づくりだけを行い、ソースコードの編集は承認されるまで行わない権限モード。ファイルを読み、調べるためのコマンドを実行して、計画を出す。人が計画を承認すると、編集に進める。Shift+Tab、/plan、claude --permission-mode plan で入る。",
+   "analogy": "工事を始める前に、設計図だけを見せてもらう段階。",
+   "exam": "「大きな変更の前に、編集せず計画を見たい」場面で選ぶ。同時作業の編集衝突を防ぐ手段ではなく、「片方が終わるまでもう片方は plan mode にする」は誤り。衝突を避けるのは worktree。",
+   "keywords": [
+    "plan mode"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Permission modes（plan mode）",
+     "url": "https://code.claude.com/docs/en/permission-modes"
+    },
+    {
+     "title": "Claude Code Docs: Glossary（Plan mode）",
+     "url": "https://code.claude.com/docs/en/glossary"
+    },
+    {
+     "title": "Claude Code Docs: Common workflows（Plan before editing）",
+     "url": "https://code.claude.com/docs/en/common-workflows"
+    }
+   ]
+  },
+  {
+   "id": "worktree",
+   "cat": "dev",
+   "name": "worktree（ワークツリー）",
+   "yomi": "ワークツリー",
+   "short": "別ブランチ用に作る、もう一つの作業フォルダ",
+   "detail": "同じリポジトリの履歴を共有したまま、別のフォルダに別のブランチを同時に取り出せる Git の仕組み（git worktree）。claude --worktree 名前 と実行すると、Claude Code が専用の作業フォルダと新しいブランチを作り、その中でセッションを始める。2 つのセッションが別々のファイルを編集するので、編集がぶつからない。",
+   "analogy": "同じ設計図を共有しながら、机を 2 つ用意して別々の作業を並行する。",
+   "exam": "機能追加とバグ修正を同じリポジトリで同時に進めたいときの正解。同じフォルダで 2 つのセッション、plan mode、CLAUDE.md の書き換えでは、衝突は防げない。/batch も単位ごとに worktree を使う。",
+   "keywords": [
+    "worktree",
+    "ワークツリー"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Run parallel sessions with worktrees",
+     "url": "https://code.claude.com/docs/en/worktrees"
+    },
+    {
+     "title": "Git Documentation: git-worktree",
+     "url": "https://git-scm.com/docs/git-worktree"
+    }
+   ]
+  },
+  {
+   "id": "rewind-checkpoint",
+   "cat": "dev",
+   "name": "/rewind とチェックポイント（checkpoint）",
+   "yomi": "リワインド",
+   "short": "Claude の編集と会話を前の時点へ戻す機能",
+   "detail": "チェックポイントは、ターンを始めるプロンプトを送るたびに自動で作られる、ファイルの復元点。/rewind（別名 /checkpoint、/undo。Esc 2 回でも開く）で、コードと会話の両方、会話だけ、コードだけを選んで戻せる。戻せるのは、Claude がファイル編集ツールで変えたファイル。Bash コマンドだけで変えたファイルや、外部での手動変更は追跡されないので、Git などのバージョン管理で戻す。",
+   "analogy": "ゲームのオートセーブに戻る機能だが、セーブの対象外のデータは戻らない。",
+   "exam": "「Claude が Bash の sed で書き換えた設定ファイルは /rewind で戻るか」の答えは「戻らない。Bash の変更は対象外なので Git で戻す」。「/rewind は会話しか戻せない」も、「Git の履歴も消える」も誤り。ただし公式は、Claude が先にファイル編集ツールで編集したファイルなら、その後の Bash による変更も戻ると書いている。",
+   "keywords": [
+    "/rewind",
+    "チェックポイント"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code ドキュメント: チェックポイント",
+     "url": "https://code.claude.com/docs/ja/checkpointing"
+    },
+    {
+     "title": "Claude Code Docs: Glossary（Checkpoint）",
+     "url": "https://code.claude.com/docs/en/glossary"
+    },
+    {
+     "title": "Claude Code Docs: Commands（/rewind）",
+     "url": "https://code.claude.com/docs/en/commands"
+    }
+   ]
+  },
+  {
+   "id": "batch-command",
+   "cat": "dev",
+   "name": "/batch",
+   "yomi": "バッチ",
+   "short": "大きな機械的変更を分割して並列に進める機能",
+   "detail": "コードベース全体にまたがる大きな変更を、Claude が調べて 5〜30 個の独立した単位に分け、計画を見せてくれる同梱スキル（Claude Code に最初から入っている手順書型の機能）。承認すると、単位ごとにバックグラウンドのサブエージェント（作業を任された別の Claude）が専用の worktree で実装し、テストを実行して、変更を公開する。公開は、通常は PR を開く形で行われる。Git リポジトリ（または worktree を作るフック）が必要。",
+   "analogy": "大きな引っ越しを部屋ごとの担当に分け、全員が同時に荷造りして、各自が報告書（PR）を出す。",
+   "exam": "200 個のハンドラを共通ヘルパーに機械的に置き換える、のような大量・機械的・互いに独立した変更で選ぶ。1 つの会話で 200 ファイルを順に直すより、レビューしやすい大きさの PR に分かれる。",
+   "keywords": [
+    "/batch"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Commands（/batch）",
+     "url": "https://code.claude.com/docs/en/commands"
+    },
+    {
+     "title": "Claude Code Docs: Run parallel sessions with worktrees（Non-git version control の /batch の記述）",
+     "url": "https://code.claude.com/docs/en/worktrees"
+    }
+   ]
+  },
+  {
+   "id": "headless-output-format",
+   "cat": "dev",
+   "name": "ヘッドレスモード（claude -p）と --output-format",
+   "yomi": "ヘッドレスモード",
+   "short": "対話せず一度だけ実行し、結果を出力する方式",
+   "detail": "claude -p 「指示」 と実行すると、対話画面を開かず 1 つの指示を実行して終了する。CI やスクリプトから Claude Code を呼ぶためのやり方で、公式ドキュメントでは「非対話モード」と呼び、以前の呼び名がヘッドレスモード。--output-format で出力の形を、text（ふつうの文章）・json（本文は result 欄に入る）・stream-json（1 行ずつ流れる JSON）から選ぶ。json と --json-schema（JSON の形の定義）を併用すると、定義どおりの結果が structured_output 欄に入る。",
+   "analogy": "ボタンを押すと画面を見せずに作業し、結果の紙だけ出てくる機械。",
+   "exam": "「CI で claude -p を使い、結果をプログラムで読む」問題の正解は、「--output-format json で本文は result 欄」と「--json-schema の結果は structured_output 欄」。誤りは、-p は必ず対話で許可を求める、失敗しても終了コードは常に 0、JSON は stream-json でしか得られない。実際は、失敗すると 0 以外で終わり、json でも得られる。",
+   "keywords": [
+    "claude -p",
+    "--output-format",
+    "--json-schema",
+    "structured_output",
+    "stream-json"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Run Claude Code programmatically",
+     "url": "https://code.claude.com/docs/en/headless"
+    },
+    {
+     "title": "Claude Code Docs: Glossary（Non-interactive mode / 改称された用語）",
+     "url": "https://code.claude.com/docs/en/glossary"
+    },
+    {
+     "title": "Claude Code Docs: CLI reference",
+     "url": "https://code.claude.com/docs/en/cli-reference"
+    }
+   ]
+  },
+  {
+   "id": "claude-api-messages-api",
+   "cat": "api",
+   "name": "Claude API と Messages API（POST /v1/messages）",
+   "yomi": "メッセージズ エーピーアイ",
+   "short": "Claude を呼ぶ Anthropic 公式の Web API",
+   "detail": "Claude API は、プログラムから Claude を使うための Anthropic の Web API（インターネット越しに機能を呼ぶ窓口）のこと。場所は https://api.anthropic.com。Messages API はその中心で、POST /v1/messages にモデル名・max_tokens・messages を JSON で送ると、Claude の返事が JSON で返る。一括処理の Message Batches API（POST /v1/messages/batches）など、ほかの窓口も同じ API の仲間。",
+   "analogy": "決まった書式の注文書（JSON）を窓口に出して、返事をもらうイメージ。",
+   "exam": "curl で直接呼ぶ問題では、content-type のほかに認証用のヘッダーと anthropic-version が要る。SDK を使うと、認証・anthropic-version・content-type は自動で付く。",
+   "keywords": [
+    "Messages API",
+    "POST /v1/messages",
+    "Claude API"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2"
+   ],
+   "count": 20,
+   "verified": true,
+   "sources": [
+    {
+     "title": "API overview",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "Using the Messages API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+    }
+   ]
+  },
+  {
+   "id": "messages-role-turn",
+   "cat": "api",
+   "name": "messages と role（user / assistant）、ターン（turn）",
+   "yomi": "ロール、ターン",
+   "short": "会話の履歴の配列と、発言者を示す role",
+   "detail": "messages は、会話の履歴を並べた配列（リスト）のこと。1要素が1回の発言で、role で発言者を示す。user は人・アプリ側、assistant は Claude 側。user と assistant が交互に並ぶ発言の1つ1つを「ターン」と呼び、同じ role が続くとまとめて1ターンとして扱われる。Messages API はステートレス（前のやり取りを覚えない）なので、続きを聞くときは、それまでの user と assistant の発言を毎回すべて送る。",
+   "analogy": "記憶のない相談窓口に、毎回、過去のやり取りの記録を全部添えて渡すイメージ。",
+   "exam": "「2回目の呼び出しで前の内容を知らない」問題の直し方は、履歴を全部 messages に入れて送ること。応答の id を付ける、同じ API キーで呼ぶ、stream: true にする、では直らない。role: system を messages の先頭に置くのは誤りで、最初から効かせる指示は最上位の system に書く。",
+   "keywords": [
+    "messages",
+    "user と assistant",
+    "role が system",
+    "ステートレス",
+    "会話のターン数",
+    "多ターン"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-2"
+   ],
+   "count": 13,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Using the Messages API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+    },
+    {
+     "title": "Messages API リファレンス（Create a Message）",
+     "url": "https://platform.claude.com/docs/en/api/messages/create"
+    }
+   ]
+  },
+  {
+   "id": "system-prompt",
+   "cat": "api",
+   "name": "システムプロンプト（system パラメータ）",
+   "yomi": "",
+   "short": "Claude に最初に渡す役割・ルールの指示",
+   "detail": "システムプロンプトは、Claude に役割・口調・守るルールなどを最初に伝える指示のこと。messages とは別に、リクエスト最上位の system パラメータへ書く（文字列、または text ブロックの配列）。Claude Opus 5.5 などの一部のモデルでは、会話の途中に role が system のメッセージを足せるが、messages の最初の1件にはできない。",
+   "analogy": "仕事を始める前に渡す、業務マニュアルのようなもの。",
+   "exam": "会話の最初から効かせたい指示は、最上位の system に書く。messages 先頭の role: system、tools の description、最初の assistant メッセージに書くのは不適切。",
+   "keywords": [
+    "システムプロンプト",
+    "system パラメータ",
+    "最上位の system"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Messages API リファレンス（Create a Message）",
+     "url": "https://platform.claude.com/docs/en/api/messages/create"
+    },
+    {
+     "title": "Using the Messages API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+    }
+   ]
+  },
+  {
+   "id": "api-key-x-api-key",
+   "cat": "api",
+   "name": "API キーと x-api-key ヘッダー",
+   "yomi": "エックス エーピーアイ キー",
+   "short": "API を使う権限を示す秘密の文字列と送り方",
+   "detail": "API キーは、Console で作る sk-ant- で始まる秘密の文字列で、誰の API 利用かを Anthropic に伝える合言葉の役目をする。直接 HTTP で呼ぶとき、公式の表は Authorization: Bearer <キー> を基本とし、x-api-key: <キー> は従来からの方法として今も使えるとしている。Authorization: Basic は使わない。キーは作成時に1回しか表示されないので、シークレットマネージャーに保管し、漏れた疑いがあれば Console で無効化（Disable、元に戻せる）か削除（Delete、元に戻せない）して、新しいキーに差し替える。",
+   "analogy": "建物に入る社員証のようなもの。落としたらすぐ無効にして、新しいものを作る。",
+   "exam": "curl の問題では x-api-key と anthropic-version が正解に挙がるが、公式の最新の表では Authorization: Bearer でも送れる。Authorization: Basic、request-id、retry-after は認証ヘッダーではない。401 authentication_error は、キーの不正・失効・期限切れのときに返る。キーはコードや Git に書かず、シークレットマネージャーなどで管理する。",
+   "keywords": [
+    "x-api-key",
+    "Authorization: Basic",
+    "API キー",
+    "シークレットマネージャー"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-2"
+   ],
+   "count": 20,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Authentication",
+     "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+    },
+    {
+     "title": "API overview",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "Get your Claude API key",
+     "url": "https://platform.claude.com/docs/en/get-api-key"
+    }
+   ]
+  },
+  {
+   "id": "anthropic-version-header",
+   "cat": "api",
+   "name": "anthropic-version ヘッダー",
+   "yomi": "アンスロピック バージョン",
+   "short": "使う API の版を日付で指定する必須ヘッダー",
+   "detail": "anthropic-version は、使う API の版を日付で指定する、必須のリクエストヘッダー（HTTP で一緒に送る付加情報）のこと。例は 2023-06-01 や、公式の版履歴にある最新の 2026-10-21。SDK を使うと自動で付き、SDK のメジャーバージョンごとに既定の版が決まっている。同じ版の中でも、Anthropic は出力に値を足したり、ストリーミングのイベント種別のような列挙型の値を増やしたりすることがある。",
+   "analogy": "取扱説明書の版を指定する欄のようなもの。",
+   "exam": "curl で直接呼ぶときは必須。ベータ機能を使うための anthropic-beta とは別物。応答に知らないキーやイベント種別が増えても壊れないよう、知らないものは無視して読む。",
+   "keywords": [
+    "anthropic-version",
+    "2023-06-01",
+    "2026-10-21"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 12,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Versions",
+     "url": "https://platform.claude.com/docs/en/api/versioning"
+    },
+    {
+     "title": "API overview",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    }
+   ]
+  },
+  {
+   "id": "anthropic-beta-header",
+   "cat": "api",
+   "name": "anthropic-beta ヘッダー（ベータ機能）と client.beta.messages.create / betas",
+   "yomi": "アンスロピック ベータ",
+   "short": "ベータ機能を使うために名前を送るヘッダー",
+   "detail": "ベータ機能は、正式公開の前に試せる実験的な機能のこと。使うときは、機能ごとのベータ名（例 context-management-2025-06-27）を anthropic-beta ヘッダーで送る。複数使うときは、feature-a,feature-b のようにカンマ区切りで並べる（Claude API ではヘッダーを2回に分けて送ってもよい）。Python SDK では client.beta.messages.create(..., betas=[ベータ名]) と書くと、SDK が anthropic-beta ヘッダーを付けて送る。",
+   "analogy": "試作品の利用券を、注文のたびに窓口へ見せるイメージ。",
+   "exam": "ベータ名は anthropic-beta に入れる。anthropic-version には入れず、model 名の末尾に -beta を付けることも、ベータ専用の API キーも要らない。無効なベータ名や、組織が使えないベータ名を送ると 400 になり、ベータ機能は仕様変更や廃止もありうる。",
+   "keywords": [
+    "anthropic-beta",
+    "client.beta.messages.create",
+    "betas"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 9,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Beta headers",
+     "url": "https://platform.claude.com/docs/en/api/beta-headers"
+    },
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    }
+   ]
+  },
+  {
+   "id": "request-id",
+   "cat": "api",
+   "name": "request-id（リクエスト ID）",
+   "yomi": "リクエスト アイディー",
+   "short": "応答ごとの一意の ID。問い合わせに添える",
+   "detail": "request-id は、API の応答のすべてに付く、そのリクエスト固有の ID（例 req_018EeWyXxfu5pfWkrYcMdjWG）のこと。応答ヘッダーの request-id に入り、エラー本文では request_id という項目にも入る。Python SDK では、応答オブジェクトの _request_id で読める。Anthropic のサポートに問い合わせるときに添えると、そのリクエストをすぐ特定してもらえる。",
+   "analogy": "宅配便の問い合わせ番号のようなもの。",
+   "exam": "特定の呼び出しの不具合を問い合わせるときに添えるのは request-id。リクエストに付けて送るヘッダーではなく、応答に付いて返ってくる値。API キーそのものを渡してはいけない。",
+   "keywords": [
+    "request-id",
+    "request_id"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    },
+    {
+     "title": "API overview",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    }
+   ]
+  },
+  {
+   "id": "console-workspace",
+   "cat": "api",
+   "name": "Console とワークスペース（workspace）",
+   "yomi": "コンソール、ワークスペース",
+   "short": "Console は管理画面、ワークスペースは利用の区画",
+   "detail": "Console は、Anthropic の Web 管理画面（platform.claude.com）のこと。API キーの作成、利用量やレート制限の確認、請求や支出上限の設定をここで行う。ワークスペースは、組織の中でプロジェクト・環境・チームごとに API の利用を分ける区画で、どの組織にもデフォルトのワークスペースがある。ワークスペースごとにキーやメンバーを割り当て、レート制限や支出上限を（デフォルトのワークスペースの支出上限を除き）別々に設定できる。",
+   "analogy": "会社の中の部署ごとに、予算と鍵を分けるイメージ。",
+   "exam": "Files API のファイルは、同じワークスペースのキーなら誰でも参照できる。会社ごとにデータを隔離するなら、ワークスペースを分け、file_id は利用者から受け取らずサーバー側で対応を持つ。1つのワークスペース専用でないキーは、anthropic-workspace-id ヘッダーでワークスペースを指定する必要がある。",
+   "keywords": [
+    "Console",
+    "ワークスペース"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Workspaces",
+     "url": "https://platform.claude.com/docs/en/manage-claude/workspaces"
+    },
+    {
+     "title": "Files API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/files"
+    },
+    {
+     "title": "Authentication",
+     "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+    }
+   ]
+  },
+  {
+   "id": "usage-tokens",
+   "cat": "api",
+   "name": "usage（input_tokens / output_tokens）",
+   "yomi": "ユーセージ",
+   "short": "応答に入る、使ったトークン数の記録",
+   "detail": "usage は、応答に入っている、そのリクエストで使ったトークン数の記録のこと。トークンは、AI が文章を数える単位。input_tokens が入力の数、output_tokens が出力の数で、料金とレート制限の計算に使われる。プロンプトキャッシュを使うと、cache_creation_input_tokens（キャッシュへの書き込み）と cache_read_input_tokens（キャッシュからの読み出し）も入り、input_tokens は最後のキャッシュ境界より後ろの分だけを表す。",
+   "analogy": "電気やガスの使用量を示す明細のようなもの。",
+   "exam": "入力の合計は、cache_read_input_tokens と cache_creation_input_tokens と input_tokens の合計。ストリーミングでは、message_delta の usage が累積値なので、足し合わせずに最後の message_delta の値を使う。",
+   "keywords": [
+    "usage",
+    "input_tokens",
+    "output_tokens",
+    "cache_read_input_tokens"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-2"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Rate limits",
+     "url": "https://platform.claude.com/docs/en/api/rate-limits"
+    },
+    {
+     "title": "Using the Messages API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+    },
+    {
+     "title": "Streaming messages",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+    }
+   ]
+  },
+  {
+   "id": "streaming-events",
+   "cat": "api",
+   "name": "ストリーミングのイベント（message_start / content_block_delta / message_delta / message_stop / ping / error）",
+   "yomi": "メッセージ スタート、コンテンツ ブロック デルタ、ピング",
+   "short": "stream: true の応答を構成するイベントの種類",
+   "detail": "stream: true を付けると、応答が SSE（サーバーから少しずつ届くイベントの流れ）で届く。流れは、message_start（中身が空の Message）、コンテンツブロックごとの content_block_start・content_block_delta（1回以上）・content_block_stop、message_delta（stop_reason など最上位の変化と累積の usage）、最後に message_stop の順。ping は途中に何回でも混ざりうる合図で、error は混雑時の overloaded_error などを知らせるイベント。",
+   "analogy": "荷物が小包に分かれて少しずつ届き、最後に「以上です」の連絡が来るイメージ。",
+   "exam": "文字の断片を画面に追記するのは content_block_delta（delta の type が text_delta）。HTTP 200 が返った後でも error イベントが届きうるので、処理して再試行などを行う。今後イベントの種別が増えうるため、知らない種別は無視して続ける。",
+   "keywords": [
+    "message_start",
+    "content_block_delta",
+    "message_delta",
+    "message_stop",
+    "ping イベント",
+    "error イベント",
+    "event: error"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 5,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Streaming messages",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+    },
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "error-types-retry",
+   "cat": "api",
+   "name": "エラーの種類（400 / 401 / 403 / 404 / 413 / 429 / 500 / 529）と再試行の要否",
+   "yomi": "",
+   "short": "HTTP エラー番号と type、再試行の要否",
+   "detail": "エラーは JSON で返り、type と message、request_id が入る。400 invalid_request_error はリクエストの形式や中身の誤り、401 authentication_error は API キーの問題、403 permission_error はそのキーに権限がないこと、404 not_found_error は資源が見つからないこと、413 request_too_large はリクエストが大きすぎること（Messages API は 128 MB まで）。429 rate_limit_error はレート制限か月の支出上限、500 api_error は Anthropic 側の想定外の内部エラー、529 overloaded_error は API が一時的に混雑していること。このほか 402 billing_error、504 timeout_error などもある。",
+   "analogy": "",
+   "exam": "待てば直る 429（retry-after に従う）・500・529 は、待ち時間を伸ばす指数バックオフで再試行する。400・401・403・404・413 は同じ内容を送り直しても直らないので、リクエストやキーを直す。429 でも、retry-after がなく enforced_spend_limit_reached なら、待っても直らない。",
+   "keywords": [
+    "invalid_request_error",
+    "400 invalid_request_error",
+    "401 authentication_error",
+    "authentication_error",
+    "429 rate_limit_error",
+    "rate_limit_error",
+    "500 api_error",
+    "api_error",
+    "529 overloaded_error",
+    "overloaded_error"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2"
+   ],
+   "count": 11,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    },
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    }
+   ]
+  },
+  {
+   "id": "retry-after-header",
+   "cat": "api",
+   "name": "retry-after ヘッダー",
+   "yomi": "リトライ アフター",
+   "short": "429 のとき、再試行まで待つ秒数を示すヘッダー",
+   "detail": "retry-after は、429 の応答に付くことがあるヘッダーで、再試行できるまで待つ秒数を表す。それより早く送り直しても失敗する。すべての 429 に付くわけではなく、月の支出上限に達した 429 には付かない。Python SDK は、retry-after があればその値に従って自動リトライする。",
+   "analogy": "窓口で言われる「あと20秒したらもう一度来てください」の指示のようなもの。",
+   "exam": "retry-after: 20 なら、20秒待ってから送り直す。リクエストに付けるヘッダーではなく、応答に付いて返ってくる値。retry-after がなく error_code が enforced_spend_limit_reached なら、待ってもリトライしても直らない。",
+   "keywords": [
+    "retry-after"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 7,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Rate limits",
+     "url": "https://platform.claude.com/docs/en/api/rate-limits"
+    },
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "rate-limit-rpm-itpm-otpm",
+   "cat": "api",
+   "name": "レート制限（RPM / ITPM / OTPM）とトークンバケット方式",
+   "yomi": "アールピーエム、アイティーピーエム、オーティーピーエム",
+   "short": "RPM・ITPM・OTPM の上限と補充の仕組み",
+   "detail": "Messages API のレート制限（短時間に使える量の上限）は、モデルの種類ごとに RPM（1分あたりのリクエスト数）、ITPM（1分あたりの入力トークン数）、OTPM（1分あたりの出力トークン数）で測られ、どれかを超えると 429 になる。トークンバケット方式なので、枠は決まった時刻に一気に戻るのではなく、上限まで少しずつ連続して補充される。そのため、たとえば 60 RPM が1秒に1件のように短い間隔で効くことがあり、短い間に一斉に送ると超えうる。ITPM に数えるのは、ほとんどのモデルで input_tokens と cache_creation_input_tokens だけで、cache_read_input_tokens（キャッシュから読んだ入力）は数えない（廃止済みの Claude Haiku 3.5 だけは数える）。",
+   "analogy": "バケツに水が少しずつ溜まり、使うと減る。一度に汲みすぎると空になる。",
+   "exam": "同じ長い部分をプロンプトキャッシュにすると、ITPM を消費せずに処理量を増やせる。max_tokens を小さくしても OTPM は減らず、上限は組織単位なので API キーを分けても増えない。429 対策は、送信を均等にならし、同時に送る数を絞ること。",
+   "keywords": [
+    "RPM",
+    "ITPM",
+    "OTPM",
+    "トークンバケット",
+    "cache_read_input_tokens"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-2"
+   ],
+   "count": 9,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Rate limits",
+     "url": "https://platform.claude.com/docs/en/api/rate-limits"
+    }
+   ]
+  },
+  {
+   "id": "usage-tier-spend-limit",
+   "cat": "api",
+   "name": "利用ティア（usage tier）と支出上限（spend limit）、enforced_spend_limit_reached",
+   "yomi": "ユーセージ ティア、スペンド リミット",
+   "short": "組織の利用段階と月の支出上限",
+   "detail": "利用ティアは、組織の利用実績で自動的に決まる段階のこと（Start・Build・Scale、さらに上が Custom。実績が少ない組織は Evaluation から始まることがある）。各ティアにレート制限と、1か月に使える金額の上限（支出上限）がある。上限に達すると、翌月1日の 00:00 UTC まで API が止まり、HTTP 429 rate_limit_error が返る。このとき error.details.error_code は enforced_spend_limit_reached で、retry-after ヘッダーはなく、SDK の自動リトライでも直らないので、ティアの引き上げ（Console の Request tier increase）を申請するか、待つ。",
+   "analogy": "携帯の月間通信量の上限のように、使い切ると翌月まで止まる。",
+   "exam": "429 で retry-after がなく enforced_spend_limit_reached なら、月の支出上限に達している。1分待つ、max_retries を増やす、529 と同じように再試行する、は誤り。自分で決めた支出上限（ティアの上限より低く設定できる）に達したときは、429 ではなく 400 invalid_request_error になる。",
+   "keywords": [
+    "利用ティア",
+    "支出上限",
+    "enforced_spend_limit_reached"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 5,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Rate limits",
+     "url": "https://platform.claude.com/docs/en/api/rate-limits"
+    },
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "sdk-clients",
+   "cat": "api",
+   "name": "Python SDK のクライアント（Anthropic / AsyncAnthropic）",
+   "yomi": "アシンク アンスロピック",
+   "short": "同期の Anthropic と非同期の AsyncAnthropic",
+   "detail": "Python SDK（pip install anthropic）には、同期の Anthropic と非同期の AsyncAnthropic がある。同期は、1つの呼び出しが終わるまで待つ。非同期は、await で待つ間に、ほかの処理を進められる。使い方はほぼ同じで、AsyncAnthropic では await client.messages.create(...) と書く。SDK は、認証と anthropic-version のヘッダー付与、自動リトライ、タイムアウト、ストリーミングも面倒を見る。",
+   "analogy": "同期は電話を1本ずつかけて待つやり方、非同期は何本もかけて返事を待つやり方。",
+   "exam": "asyncio の Web サーバーや、独立した複数件を並行して呼びたい場面では、AsyncAnthropic と await を選ぶ。同期クライアントだと、待っている間にほかの利用者の処理まで止まる。引数なしの Anthropic() は、環境変数 ANTHROPIC_API_KEY を読む。",
+   "keywords": [
+    "AsyncAnthropic",
+    "同期クライアント",
+    "Anthropic()"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "API overview",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    }
+   ]
+  },
+  {
+   "id": "sdk-max-retries",
+   "cat": "api",
+   "name": "max_retries（SDK の自動リトライ）",
+   "yomi": "マックス リトライズ",
+   "short": "SDK が一時的な失敗を自動で出し直す回数",
+   "detail": "SDK は、一時的に起きる失敗を自分で出し直す。出し直す回数の上限が max_retries で、既定は2回（最初の送信と合わせて最大3回送る）。待ち時間は短い指数バックオフ（失敗のたびに少しずつ伸ばす方式）で、retry-after があればそれに従う。対象は接続エラー、408、409、429、500 以上のエラー。Anthropic(max_retries=0) で無効にでき、client.with_options(max_retries=5) で呼び出しごとにも変えられる。",
+   "analogy": "電話が話し中のとき、少し間を空けて自動でかけ直す機能のようなもの。",
+   "exam": "「既定は2回」「retry-after に従う」「回数は設定で変えられる」が正しい。成功するまで上限なしに再試行する、という説明は誤り。400 は直さない限り同じ結果なので出し直しても直らず、支出上限の 429 も直らない。",
+   "keywords": [
+    "max_retries",
+    "指数バックオフ",
+    "自動リトライ"
+   ],
+   "units": [
+    "2-4",
+    "5-2"
+   ],
+   "count": 16,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "sdk-timeout-with-options",
+   "cat": "api",
+   "name": "SDK の timeout と client.with_options",
+   "yomi": "タイムアウト、ウィズ オプションズ",
+   "short": "SDK の待ち時間の既定値と、呼び出しごとの上書き",
+   "detail": "Python SDK の既定のタイムアウト（待つ上限）は10分で、timeout に秒数を渡して変える。Anthropic(timeout=20.0) ならクライアント全体、client.with_options(timeout=5.0).messages.create(...) ならその呼び出しだけ設定を上書きする（max_retries も同じ書き方）。タイムアウトすると APITimeoutError になるが、タイムアウトした呼び出しも既定で2回リトライされるので、timeout=5 なら API には最大3回届く。非ストリーミングで大きな max_tokens を指定し、約10分を超えそうだと、SDK は送る前に ValueError で止める。",
+   "analogy": "",
+   "exam": "短い補完だけ5秒で打ち切り、長いレポートは既定のままにしたいなら、補完の呼び出しだけ with_options(timeout=5.0) を使う。「10分を超えそう」と止められたときの公式の勧めはストリーミング（messages.stream と get_final_message）で、max_retries を増やしても直らない。stream=True にするか timeout を明示的に上書きすると、このエラーは出なくなる。",
+   "keywords": [
+    "with_options",
+    "timeout",
+    "10分"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 5,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "sdk-exceptions",
+   "cat": "api",
+   "name": "SDK の例外クラス（APIError / APIStatusError / APIConnectionError / RateLimitError ほか）",
+   "yomi": "エーピーアイ エラー",
+   "short": "SDK が投げる例外クラスの親子関係",
+   "detail": "Python SDK は、API につながらないとき、または 4xx・5xx が返ったとき、APIError の子クラスを投げる。APIConnectionError は、接続できず HTTP の応答がないとき（元の例外は e.__cause__ に入る）。APIStatusError は、HTTP の応答があったときの親クラスで、status_code と response を持つ。その子に、BadRequestError（400）、AuthenticationError（401）、PermissionDeniedError（403）、NotFoundError（404）、RateLimitError（429）、InternalServerError（500 以上）などがある。",
+   "analogy": "",
+   "exam": "except は上から順に調べ、最初に当てはまるものだけが動く。RateLimitError は APIStatusError の子なので、細かい種類を先に、広い親を後に書く。サーバーにまったくつながらないときは APIConnectionError。",
+   "keywords": [
+    "APIError",
+    "APIStatusError",
+    "APIConnectionError",
+    "RateLimitError",
+    "AuthenticationError",
+    "BadRequestError"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "anthropic-sdk-python（公式リポジトリ）_exceptions.py",
+     "url": "https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/_exceptions.py"
+    },
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "sdk-env-vars",
+   "cat": "api",
+   "name": "環境変数 ANTHROPIC_API_KEY / ANTHROPIC_BASE_URL / ANTHROPIC_LOG",
+   "yomi": "",
+   "short": "SDK が読む環境変数 3 つ",
+   "detail": "ANTHROPIC_API_KEY は、api_key を省略したときに SDK が API キーを読む環境変数で、Anthropic() と引数なしで作れる。ANTHROPIC_BASE_URL は、接続先の URL（base_url の代わり）で、社内の検証用サーバーに向けるなど、コードを変えずに送り先を切り替えられる。ANTHROPIC_LOG は、debug か info を入れると、SDK が標準の logging でログを出すようになる。",
+   "analogy": "",
+   "exam": "キーは ANTHROPIC_API_KEY、接続先の切り替えは ANTHROPIC_BASE_URL、SDK のログは ANTHROPIC_LOG（debug か info）。ANTHROPIC_LOG に秒数は入れない。タイムアウトは timeout で指定する。",
+   "keywords": [
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_BASE_URL",
+    "ANTHROPIC_LOG"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 5,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Get your Claude API key",
+     "url": "https://platform.claude.com/docs/en/get-api-key"
+    }
+   ]
+  },
+  {
+   "id": "sdk-stream-helpers",
+   "cat": "api",
+   "name": "SDK のストリーミング補助（messages.stream / text_stream / get_final_message）",
+   "yomi": "テキスト ストリーム、ゲット ファイナル メッセージ",
+   "short": "SDK の stream() が返す補助の使い分け",
+   "detail": "Python SDK の client.messages.stream(...) は、with 文で使うストリーミング用の補助。stream.text_stream は、届いた文字だけを順に返すので、画面に少しずつ表示するのに向く。stream.get_final_message() は、全イベントを組み上げた完成済みの Message（usage も入る）を返すので、イベントを自分で連結しなくてよい。一方 create(stream=True) は、イベントをそのまま順に返すだけで、最終メッセージを組み立てないので、メモリが少なくて済む。",
+   "analogy": "",
+   "exam": "表示しながら、最後に全文と usage も保存したいなら、stream() の text_stream と get_final_message。画面に出さず、長い生成の完成した応答だけ欲しいときも、.stream() と get_final_message（create と同じ Message が返る）。イベントを転送するだけなら create(stream=True)。",
+   "keywords": [
+    "messages.stream",
+    "text_stream",
+    "get_final_message",
+    "stream=True",
+    ".stream()"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Python SDK",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Streaming messages",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+    },
+    {
+     "title": "Claude API errors",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "message-batches-api",
+   "cat": "feature",
+   "name": "Message Batches API（メッセージ・バッチ API）",
+   "yomi": "メッセージ・バッチーズ・エーピーアイ",
+   "short": "大量の依頼をまとめて送り、半額で後から結果を受け取る API",
+   "detail": "たくさんのリクエストを1つの束（バッチ）にして送り、結果をあとで受け取る API。すぐの返事が要らない大量処理向けで、料金は通常の50パーセント引きになる。ほとんどは1時間以内に終わるが、24時間以内に処理されなかった分は期限切れ（expired）になる。進み具合は processing_status で見て、全部の処理が終わると ended になり、そこで結果を取り出す。",
+   "analogy": "荷物をまとめて預けて、翌日までに届く割安の配送便を使うようなもの。",
+   "exam": "数字は、割引50%、期限24時間、1バッチ10万件か256MBまで、結果の保管29日間で、終了の判定は processing_status が ended になること。結果は送った順とは限らないので、各リクエストに付けた一意の custom_id で元データと照合する。結果は succeeded・errored・canceled・expired の4種類で、成功以外は課金されず、stream: true と speed（高速モード）はバッチでは使えない。",
+   "keywords": [
+    "Message Batches API",
+    "custom_id",
+    "processing_status",
+    "Batch API"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 19,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Batch processing",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+    },
+    {
+     "title": "Pricing",
+     "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+    }
+   ]
+  },
+  {
+   "id": "files-api",
+   "cat": "feature",
+   "name": "Files API（ファイル API）",
+   "yomi": "ファイルズ・エーピーアイ",
+   "short": "ファイルを一度上げて file_id で使い回す API",
+   "detail": "ファイルを1回アップロードすると file_id という識別子がもらえ、以後のリクエストでは中身を送り直さず file_id で指定できる。PDF やテキストは document ブロック、画像は image ブロックに入れて使う。ファイルはワークスペース（API キーをまとめて管理する単位）の中で共有され、同じワークスペースのキーなら誰でも参照できる。1ファイル500MBまでで、アップロードや削除は無料、メッセージで使った中身は入力トークンとして課金される。",
+   "analogy": "荷物を預けて引換券（file_id）をもらい、次からは券だけ見せる手荷物預かりのようなもの。",
+   "exam": "file_id は利用者から受け取らず、サーバー側で利用者とファイルの対応を持ち、会社ごとにワークスペースを分けて隔離する。ベータヘッダーは現在不要（旧 files-api-2025-04-14 を付けたままでも動く）。Bedrock と Google Cloud（Google managed）では使えず、大量の画像や大きな PDF を送るときは、これでリクエストサイズを小さくする。",
+   "keywords": [
+    "Files API",
+    "file_id",
+    "ワークスペース"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Files API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/files"
+    }
+   ]
+  },
+  {
+   "id": "models-api",
+   "cat": "feature",
+   "name": "Models API（モデル一覧 API）",
+   "yomi": "モデルズ・エーピーアイ",
+   "short": "使えるモデルの一覧と対応機能を返す API",
+   "detail": "GET /v1/models で、いま API で使えるモデルの一覧を新しいものから順に取得できる。各モデルの id（モデル名）と display_name（表示名）のほか、capabilities（できることの一覧）も返る。capabilities には、画像を受け付けるかを示す image_input や、pdf_input、structured_outputs、batch などの対応状況が入る。アプリが新しいモデルに追随したり、送る前に対応状況を確かめたりするのに使う。",
+   "analogy": "お店の最新メニューと、各料理でできる注文（大盛りや辛口など）をその場で確かめるようなもの。",
+   "exam": "モデル名をコードや設定ファイルに固定せず、そのとき使えるモデルを取りたいときは Models API。画像入力に対応しているかは capabilities.image_input で確かめ、画像を付けて送ってエラーで判断する方法は選ばない。Bedrock と Google Cloud（Google managed）では Models API は使えない。",
+   "keywords": [
+    "Models API",
+    "GET /v1/models",
+    "capabilities.image_input"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "List Models",
+     "url": "https://platform.claude.com/docs/en/api/models/list"
+    },
+    {
+     "title": "Claude in Amazon Bedrock (Opus 4.7 and later)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock"
+    }
+   ]
+  },
+  {
+   "id": "token-counting",
+   "cat": "feature",
+   "name": "トークン計数（count_tokens）",
+   "yomi": "",
+   "short": "送る前に入力トークン数を数える無料の API",
+   "detail": "POST /v1/messages/count_tokens は、メッセージ作成と同じ形の入力（システムプロンプト、ツール、画像、PDF など）を受け取り、入力トークン数だけを返す。文章は生成しない。返る数は見積もりで、実際の課金とわずかに違うことがある。プロンプトキャッシュの効き具合は考慮せず、キャッシュを使った後の数ではない。",
+   "analogy": "荷物を送る前に重さだけ量って、送料の目安を知る秤のようなもの。",
+   "exam": "料金は無料で、RPM（1分あたりのリクエスト数）の上限（Start 5,000、Build 10,000、Scale 20,000）だけがあり、この上限はメッセージ作成とは別で互いに影響しない。返る数は実際の課金と必ず一致するわけではなく、キャッシュが効いた後の数でもない。url や file_id で渡した画像・文書は数えられないので、base64 で送る。",
+   "keywords": [
+    "トークン計数",
+    "トークン計数エンドポイント",
+    "count_tokens"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Token counting",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+    }
+   ]
+  },
+  {
+   "id": "vision",
+   "cat": "feature",
+   "name": "Vision（画像入力）",
+   "yomi": "ビジョン",
+   "short": "画像を Claude に見せて読み取らせる機能",
+   "detail": "画像を Claude に見せて、中身の説明や文字の読み取りをさせる機能。画像は image ブロックに入れ、中身の渡し方（source）は base64（画像データを文字列にして埋め込む）、url（Web 上の場所）、file（Files API の file_id）の3種類。Claude API では1リクエスト最大600枚（200k コンテキストのモデルは100枚）、1枚の寸法は8000×8000px まで。",
+   "analogy": "資料の写真を相手に見せて、ここに何と書いてあるか聞くようなもの。",
+   "exam": "画像は文章より前に置くと最もよく働くので、画像→指示の順にする。Bedrock と Google Cloud（Google managed）では base64 だけで、url と file（Files API）は使えない。大量の画像は枚数より先にリクエストサイズの上限（Claude API は128MB）に当たりやすく、Files API の file_id で小さくし、20枚を超えるときは各辺3,000px以下に縮小する。",
+   "keywords": [
+    "画像入力",
+    "base64",
+    "url を指定した画像"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Vision",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+    }
+   ]
+  },
+  {
+   "id": "pdf-support",
+   "cat": "feature",
+   "name": "PDF サポート（document ブロック）",
+   "yomi": "ピーディーエフ",
+   "short": "PDF の文章・表・図を読み取らせる機能",
+   "detail": "PDF を Claude に渡して、文章・表・図の内容について質問できる機能。PDF は document ブロックに入れ、渡し方は url、base64、Files API の file_id の3通り。各ページは「画像」と「抽出したテキスト」の両方に変換されて読まれるので、どちらのトークンも使う。",
+   "analogy": "紙の資料をそのまま相手に渡し、3ページ目の表を説明してと頼むようなもの。",
+   "exam": "上限は1リクエスト128MB（Claude API）、600ページ（コンテキスト1M未満は100ページ）。毎回大きな PDF を base64 で送り直さず、Files API で一度上げて document ブロックの file_id で参照する。Bedrock と Google Cloud（Google managed）は base64 のみで、PDF は質問文より前に置く。",
+   "keywords": [
+    "PDF",
+    "document ブロック"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "PDF support",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/pdf-support"
+    },
+    {
+     "title": "Files API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/files"
+    }
+   ]
+  },
+  {
+   "id": "tool-use",
+   "cat": "feature",
+   "name": "ツール使用（tool use）と tools・input_schema",
+   "yomi": "ツール・ユース",
+   "short": "Claude に自作の関数を呼ばせる仕組み",
+   "detail": "Claude が自分で処理を実行する代わりに、こちらが用意した関数（ツール）を呼びたいと依頼してくる仕組み。使えるツールはリクエストの tools に並べ、各ツールは name（名前）、description（説明）、input_schema（受け取る引数の形を JSON Schema で書いたもの）で定義する。Claude は説明を読んで、使うかどうか、どれを使うかを決める。実際の実行はアプリ側（クライアントツール）か Anthropic 側（サーバーツール）で行い、Claude 自身は何も実行しない。",
+   "analogy": "担当者（Claude）が依頼票を出し、実際に調べて動くのは自分（アプリ）という分担。",
+   "exam": "ツールの精度を一番左右するのは description の詳しさで、何をするか・いつ使うか（使わないか）・引数の意味を書く。複数サービスにまたがるツールには、github_ や slack_ のような接頭辞を名前に付けると選び間違いが減る。ツール定義（名前・説明・引数）を変えると、プロンプトキャッシュ全体が無効になる。",
+   "keywords": [
+    "tool_use",
+    "input_schema",
+    "ツール定義"
+   ],
+   "units": [
+    "2-3",
+    "5-1"
+   ],
+   "count": 10,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Define tools",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+    },
+    {
+     "title": "How tool use works",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works"
+    },
+    {
+     "title": "Tool use with Claude",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+    }
+   ]
+  },
+  {
+   "id": "tool-use-result-blocks",
+   "cat": "feature",
+   "name": "tool_use ブロックと tool_result ブロック",
+   "yomi": "ツールユース・ツールリザルト",
+   "short": "ツールを呼ぶ依頼と、その実行結果の返信",
+   "detail": "Claude がツールを呼ぶときは、応答に tool_use ブロック（id・name・input を持つ）が入り、stop_reason が tool_use になる。アプリはツールを実行し、次の user メッセージに tool_result ブロック（tool_use_id と content）を入れて返す。実行が失敗したときは、content にエラー内容を書いて is_error: true を付ける。stop_reason が tool_use の間、これをくり返すのがエージェントのループ。",
+   "analogy": "依頼票（tool_use）と作業報告書（tool_result）のやり取りで、報告書には依頼票の番号（tool_use_id）を書く。",
+   "exam": "tool_result は、ツールを呼んだ assistant メッセージの直後の user メッセージに入れ、content 配列の先頭に置く。文章を添えるなら tool_result の後ろで、前に置くと 400 エラーになる。ツールが失敗したときは、何も返さず再送するのではなく、tool_result に原因を書いて is_error: true で返す。",
+   "keywords": [
+    "tool_result",
+    "is_error",
+    "tool_use"
+   ],
+   "units": [
+    "2-3",
+    "5-1"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Handle tool calls",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+    },
+    {
+     "title": "How tool use works",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works"
+    }
+   ]
+  },
+  {
+   "id": "tool-choice",
+   "cat": "feature",
+   "name": "tool_choice（auto / any / tool / none）",
+   "yomi": "ツール・チョイス",
+   "short": "ツールを使うかどうかを指定する設定",
+   "detail": "tool_choice は、Claude がツールを使うかどうかを指定する設定。auto は使うかどうかを Claude に任せる（ツールを渡したときの既定）、any は必ずどれか1つを使わせる、tool は名前を指定してそのツールを必ず使わせる、none は使わせない。any や tool では、Claude はツールを呼ぶ前の前置きの文章を出さない。",
+   "analogy": "お任せ、どれか必ず1つ、この一品を必ず、注文なし、の中から注文方法を選ぶようなもの。",
+   "exam": "ツールを渡したときの既定は auto で、ツールを渡さないときの既定は none。Claude Opus 5.5 や Sonnet 5.5 などの新しいモデルでは any と tool が 400 エラーになるので、auto に strict tool use か structured outputs を組み合わせる。tool_choice を途中で変えると、キャッシュしたメッセージ部分は無効になる。",
+   "keywords": [
+    "tool_choice"
+   ],
+   "units": [
+    "2-3",
+    "5-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Define tools",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+    }
+   ]
+  },
+  {
+   "id": "structured-outputs",
+   "cat": "feature",
+   "name": "structured outputs（構造化出力）",
+   "yomi": "ストラクチャード・アウトプッツ",
+   "short": "回答を決めた JSON の形にそろえる機能",
+   "detail": "Claude の回答を、指定した JSON スキーマ（JSON の形の設計図）に合う形にそろえる機能。リクエストの output_config.format に type が json_schema の指定と schema を書くと、応答の text ブロックに、その形に合う JSON 文字列が返る。スキーマ内のオブジェクトには、additionalProperties: false（書いてある項目以外は入れない）を必ず付ける。ベータヘッダーは不要で、旧 output_format は output_config.format に移った。",
+   "analogy": "回答用紙に枠を印刷しておき、その枠に収まる字しか書けないようにするようなもの。",
+   "exam": "additionalProperties に false 以外（true など）を指定すると 400 エラーになる。stop_reason が max_tokens だと JSON が途中で切れてスキーマに合わないことがあるので、max_tokens を増やして同じ要求を送り直す。refusal のときも、断りの文が優先されてスキーマに合わないことがある。",
+   "keywords": [
+    "structured outputs",
+    "構造化出力",
+    "output_config.format",
+    "additionalProperties"
+   ],
+   "units": [
+    "2-4",
+    "5-3"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Structured outputs",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+    }
+   ]
+  },
+  {
+   "id": "prompt-caching",
+   "cat": "feature",
+   "name": "プロンプトキャッシュ（prompt caching）と cache_control",
+   "yomi": "",
+   "short": "同じ前半部分を使い回して安く速くする仕組み",
+   "detail": "毎回同じ長い入力（システムプロンプト、ツール定義、資料など）を、一度処理した結果を保存して使い回す仕組み。使い回せた部分（キャッシュヒット）は、通常の入力より安い料金で読み出される。どこまでを保存するかは、ブロックに付ける cache_control（type は ephemeral）で示す。モデルごとの最小の長さに満たない短い入力は、エラーにならずにキャッシュされない。",
+   "analogy": "毎回同じ前置きを読み上げるのをやめて、録音して再生するようなもの。",
+   "exam": "キャッシュは tools → system → messages の順に、cache_control を付けたブロックまでのプレフィックス（先頭から連なる部分）に効く。変わらない固定部分を前に、毎回変わる値は後ろに置く。cache_read_input_tokens は多くのモデルで ITPM に数えられないので、同じ長い部分をキャッシュすると、上限を変えずに処理量を増やせる。",
+   "keywords": [
+    "プロンプトキャッシュ",
+    "cache_control"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 9,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Prompt caching",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+    },
+    {
+     "title": "Rate limits",
+     "url": "https://platform.claude.com/docs/en/api/rate-limits"
+    }
+   ]
+  },
+  {
+   "id": "cache-breakpoint-prefix",
+   "cat": "feature",
+   "name": "キャッシュのブレークポイントとプレフィックス",
+   "yomi": "",
+   "short": "キャッシュの対象範囲を決める印と一致の条件",
+   "detail": "ブレークポイントは、cache_control を付けたブロックのこと。そのブロックまでの先頭からの部分（プレフィックス）が、保存済みの内容と一字一句同じとき、キャッシュヒットになる。ブレークポイントは1リクエストに最大4個まで置ける。一致を調べるときは、ブレークポイントから前へさかのぼって最大20ブロックまで探す。",
+   "analogy": "しおりを挟んだページまでが前回と同じなら、そこまでは読み直さずに済むようなもの。",
+   "exam": "プレフィックスは完全一致が条件で、先頭の近くに毎回変わる時刻などがあると、後ろの固定部分も一致せずヒットしない。変わる値はブレークポイントより後ろ（質問側）に移す。ツール定義を変えるとキャッシュ全体が、思考の設定を変えるとメッセージ部分のキャッシュが無効になる。",
+   "keywords": [
+    "ブレークポイント",
+    "プレフィックス"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Prompt caching",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+    }
+   ]
+  },
+  {
+   "id": "cache-ttl",
+   "cat": "feature",
+   "name": "キャッシュの TTL（5分・1時間）",
+   "yomi": "ティーティーエル",
+   "short": "キャッシュの保存期間。既定5分、長くて1時間",
+   "detail": "TTL は、キャッシュが残る時間のこと。既定は5分で、キャッシュを使うたびに追加料金なしで延長される。1時間にしたいときは、cache_control に ttl として 1h を指定する（追加料金あり）。5分と1時間を同じリクエストで混ぜるときは、長い TTL の指定を短い TTL より前に置く。",
+   "analogy": "冷蔵庫に入れた作り置きを、何時間まで取っておくかを決めるようなもの。",
+   "exam": "料金は基本の入力単価に対して、5分の書き込みが1.25倍、1時間の書き込みが2倍、読み出しが0.1倍（Opus 5.5 と Sonnet 5.5 は0.05倍、Fable 5.1 と Mythos 5.1 は0.025倍）。バッチは処理に5分以上かかることがあるので、共有する文脈には1時間の TTL が勧められるが、ヒットはベストエフォート（保証なし）。",
+   "keywords": [
+    "TTL",
+    "1時間"
+   ],
+   "units": [
+    "2-3",
+    "5-1"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Prompt caching",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+    },
+    {
+     "title": "Pricing",
+     "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+    }
+   ]
+  },
+  {
+   "id": "cache-usage-fields",
+   "cat": "feature",
+   "name": "cache_read_input_tokens と cache_creation_input_tokens",
+   "yomi": "",
+   "short": "キャッシュから読んだ量と書いた量の数字",
+   "detail": "どちらも応答の usage に入る数字。cache_read_input_tokens は今回キャッシュから読み出したトークン数、cache_creation_input_tokens は今回キャッシュに新しく書き込んだトークン数。input_tokens は、最後のブレークポイントより後ろの、キャッシュを使わなかった分だけを指す。全部の入力トークンは、この3つの合計になる。",
+   "analogy": "棚から取り出した分、新しく棚に置いた分、その場で持ち込んだ分の内訳を書いたレシートのようなもの。",
+   "exam": "cache_read_input_tokens が0のままなら、キャッシュが当たっていない（プレフィックスが一致していない）合図。読み出した分は料金が安く、多くのモデルでは ITPM（1分あたりの入力トークン数の上限）に数えられない。cache_creation_input_tokens は書き込み分で、通常より高い単価（5分なら1.25倍）になり、ITPM には数えられる。",
+   "keywords": [
+    "cache_read_input_tokens"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-2"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Prompt caching",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+    },
+    {
+     "title": "Rate limits",
+     "url": "https://platform.claude.com/docs/en/api/rate-limits"
+    }
+   ]
+  },
+  {
+   "id": "stop-sequences",
+   "cat": "feature",
+   "name": "stop_sequences",
+   "yomi": "ストップ・シーケンシズ",
+   "short": "出たら生成を止める文字列を指定する設定",
+   "detail": "stop_sequences は、モデルの出力にその文字列が出たら、そこで生成を止めさせる指定。文字列のリストで渡す。止まったときは、応答の stop_reason が stop_sequence になり、stop_sequence 欄に実際にひっかかった文字列が入る。指定がなければ、モデルは自然に話し終えたところで end_turn で止まる。",
+   "analogy": "合言葉を言った瞬間に録音が止まる、合言葉つきの録音ボタンのようなもの。",
+   "exam": "「###END」のような文字列が出たら確実に止めたいときは、プロンプトで頼むのではなく stop_sequences に指定する。max_tokens は出力の長さの上限で、途中で切れて stop_reason が max_tokens になる点が違う。stop_sequence は自分で指定した停止で、打ち切りとして扱うのは max_tokens と model_context_window_exceeded。",
+   "keywords": [
+    "stop_sequences",
+    "stop_sequence"
+   ],
+   "units": [
+    "5-1"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Messages API reference (create)",
+     "url": "https://platform.claude.com/docs/en/api/messages/create"
+    },
+    {
+     "title": "Handling stop reasons",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+    }
+   ]
+  },
+  {
+   "id": "bedrock-claude",
+   "cat": "feature",
+   "name": "Amazon Bedrock の Claude",
+   "yomi": "ベッドロック",
+   "short": "AWS 経由で Claude を使う方法",
+   "detail": "Claude を AWS の Amazon Bedrock 経由で使う方法で、請求も IAM（AWS の権限管理）も AWS にまとまる。SDK の Bedrock 用クライアント（AnthropicBedrock など）を、AWS の認証情報で使う。モデル ID は anthropic. で始まり（例は anthropic.claude-opus-5-5）、旧方式ではその前に推論プロファイルの接頭辞（global.、us.、jp. など）を付ける。global は世界中の空いた場所へ送るので安く、地域の推論プロファイル（jp. など）は、その地域の中で処理する。",
+   "analogy": "同じ料理（Claude）を、AWS という店の伝票（請求）と会員証（権限）で注文するようなもの。",
+   "exam": "地域の推論プロファイル（jp. など）は global より約10%高く、データを日本の地域内だけで処理したい金融機関などは、こちらを選ぶ。リクエストの大きさの上限は20MB（Claude API は128MB）で、トークン数が収まっていても先にこの上限に当たる。Message Batches API・Models API・Files API・画像や文書の URL 指定は使えない。",
+   "keywords": [
+    "Amazon Bedrock",
+    "Bedrock",
+    "推論プロファイル",
+    "jp.",
+    "20 MB",
+    "AnthropicBedrock"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude on Amazon Bedrock (Opus 4.6 and earlier)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy"
+    },
+    {
+     "title": "Claude in Amazon Bedrock (Opus 4.7 and later)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock"
+    },
+    {
+     "title": "Route model inference requests across AWS Regions with cross-Region inference",
+     "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html"
+    }
+   ]
+  },
+  {
+   "id": "vertex-claude",
+   "cat": "feature",
+   "name": "Google Cloud の Claude（Vertex AI・Google managed）",
+   "yomi": "バーテックス・エーアイ",
+   "short": "Google Cloud 経由で Claude を使う方法",
+   "detail": "Claude を Google Cloud（Vertex AI）経由で使う方法で、公式ドキュメントでは Claude Models on Google Cloud（Google managed）と呼ぶ。請求は Google Cloud にまとまり、SDK の AnthropicVertex を使い、モデルはエンドポイントの URL で指定する。エンドポイントは3種類で、global（空いた地域へ送る・推奨）、multi-region（us か eu の範囲）、regional（指定した1つの地域だけ）がある。multi-region と regional は global より10%高い。",
+   "analogy": "世界中の窓口のどこでもよいか（global）、指定した窓口だけを使うか（regional）を選ぶようなもの。",
+   "exam": "厳しいデータ所在地の要件には regional（単一地域）、広い範囲でよければ multi-region、可用性優先なら global を選ぶ。Message Batches API・Models API・Files API・画像や文書の URL 指定は使えず（画像は base64 で送る）、リクエストの上限は30MB。regional は Claude Sonnet 4.6 以前のモデル向けで、新しいモデルは global か multi-region を使う。",
+   "keywords": [
+    "Google Cloud",
+    "Claude Models on Google Cloud（Google managed）"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Models on Google Cloud (Google managed)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed"
+    },
+    {
+     "title": "Claude Models on Google Cloud",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/overview"
+    }
+   ]
+  },
+  {
+   "id": "agent-sdk",
+   "cat": "feature",
+   "name": "Claude Agent SDK",
+   "yomi": "クロード・エージェント・エスディーケー",
+   "short": "Claude Code の仕組みを自作アプリに組み込む部品",
+   "detail": "Claude Code と同じ道具（ファイルの読み書き、コマンド実行、Web 検索など）とエージェントのループ（考える、道具を使う、結果を見る、のくり返し）を、Python か TypeScript のライブラリとして使えるようにしたもの。SDK は裏で claude コマンド（CLI）のプロセスを起動し、それが作業用のシェルとフォルダを持つ。自分のプログラムの中でエージェントを動かすので、実行する場所（サーバーやコンテナ）は自分で用意する。",
+   "analogy": "完成した車（Claude Code）のエンジンを部品として取り出し、自分の車に積めるようにしたもの。",
+   "exam": "Client SDK は Claude API を直接呼ぶのでツールのループを自分で書くが、Agent SDK はループとビルトインツールが最初から入っている。エージェントの実行そのものを Anthropic に任せるなら Managed Agents で、Agent SDK は自分の環境で動かす。利用者との通信の窓口（HTTP や WebSocket）は、アプリ側で作る。",
+   "keywords": [
+    "Agent SDK"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Agent SDK overview",
+     "url": "https://code.claude.com/docs/en/agent-sdk/overview"
+    },
+    {
+     "title": "Hosting the Agent SDK",
+     "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+    }
+   ]
+  },
+  {
+   "id": "container",
+   "cat": "feature",
+   "name": "コンテナ（container）",
+   "yomi": "",
+   "short": "アプリと必要な部品を1つにまとめた実行用の箱",
+   "detail": "アプリのプログラムと、動かすのに必要な部品（ライブラリなど）を1つにまとめて、動かす場所が変わっても同じように動くようにしたもの。Agent SDK を自社で動かすときは、このコンテナの中で動かす構成が公式ドキュメントで示されている。コンテナは作業用のフォルダと隔離された実行環境を持ち、API キーなどは環境変数で渡す。",
+   "analogy": "引っ越しで家具と道具を箱にまとめ、どこで開けても同じ部屋が再現できるようにしたもの。",
+   "exam": "Agent SDK を常駐させる（長期セッションの）構成では、コンテナが HTTP か WebSocket の窓口（ポート）を公開し、アプリがそこで利用者の要求を受けて SDK を呼ぶ。作業中の追加指示と進み具合の通知を両方扱うなら、1本の接続で双方向にやり取りできる WebSocket を選び、Claude API の SSE をブラウザへ直接つなぐ構成にはしない。API キーは、シークレット管理の仕組みから環境変数 ANTHROPIC_API_KEY として渡す。",
+   "keywords": [
+    "コンテナ"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Hosting the Agent SDK",
+     "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+    },
+    {
+     "title": "What are Cloud Containers?",
+     "url": "https://aws.amazon.com/what-is/cloud-containers/"
+    }
+   ]
+  },
+  {
+   "id": "claude-models",
+   "cat": "model",
+   "name": "Claude のモデル（Opus・Sonnet・Haiku）",
+   "yomi": "オーパス・ソネット・ハイク",
+   "short": "能力・速さ・価格が違う3つの階層",
+   "detail": "Claude のモデルは Opus・Sonnet・Haiku の3つの階層（グループ）に分かれ、Opus 側ほど能力重視、Haiku 側ほど速さと安さ重視になる。Opus は長時間のコーディングや知的作業向け、Sonnet は速さと賢さの組み合わせが最良の日常用、Haiku は分類・抽出・振り分けのような大量で遅延（応答までの待ち時間）に厳しい処理向けで、遅延が最短・価格が最安になる。2026年10月時点の公式の比較表には、さらに上位の Fable もある。",
+   "analogy": "荷物の大きさに合わせて、大型トラック・乗用車・原付を選び分けるのに近い。",
+   "exam": "大量・低遅延・低価格が要る分類や振り分けは Haiku、コード生成やデータ分析など日常の作業は Sonnet、複雑な推論や精度優先なら Opus から始める。公式は「速く安いモデルから始める」と「強いモデルから始め、effort を下げるかモデルを下げて効率化する」の2通りを示す。モデルを替える前に、まず effort の調整を試すのが公式の勧め。",
+   "keywords": [
+    "Opus",
+    "Sonnet",
+    "Haiku",
+    "Opus 5.5",
+    "Haiku 5.5"
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 25,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Models overview",
+     "url": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+     "title": "Choosing the right model",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+    }
+   ]
+  },
+  {
+   "id": "model-id-alias-snapshot",
+   "cat": "model",
+   "name": "モデル ID・エイリアス・スナップショット",
+   "yomi": "エイリアス・スナップショット",
+   "short": "モデルの名前と、版を固定する仕組み",
+   "detail": "モデル ID は API の model に書く名前で、1つの ID は固定された版（スナップショット）を指し、重み（モデルの中身にあたる学習済みの数値）は変わらない。4.6 より前のモデルは claude-sonnet-4-5-20250929 のように日付入りの ID が固定版で、日付なしの claude-sonnet-4-5 は同じ 4.5 の中で最新の日付版を指す別名（エイリアス）になる。4.6 世代以降は claude-sonnet-4-6 のように日付なしの ID そのものが固定版で、最新へ自動で切り替わる指し先ではない。更新版は新しい ID で出て、ID ごとに廃止の日程も別々にある。",
+   "analogy": "商品の型番に近く、同じ型番なら中身は変わらず、改良品は新しい型番で出る。",
+   "exam": "本番で版を固定したいときは、4.6 より前のモデルなら日付付き ID（claude-sonnet-4-5-20250929 など）を指定する。「claude-sonnet-4-6 は日付がないので新版へ自動で切り替わる」は誤りで、日付なし ID 自体が固定版であり、廃止の日程もある。同じ ID なのに出力の傾向がわずかに変わったときは、重みの更新ではなく、リクエストの振り分け役（ルーター）や安全分類器など周辺の仕組みの更新が最も疑わしい。",
+   "keywords": [
+    "日付付き",
+    "日付なし",
+    "スナップショット",
+    "エイリアス",
+    "claude-sonnet-4-5-20250929",
+    "claude-sonnet-4-6"
+   ],
+   "units": [
+    "5-3"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Model IDs and versioning",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+    },
+    {
+     "title": "Models overview",
+     "url": "https://platform.claude.com/docs/en/models/overview"
+    }
+   ]
+  },
+  {
+   "id": "model-deprecation",
+   "cat": "model",
+   "name": "モデルの廃止（deprecation・retirement）",
+   "yomi": "ディプリケーション・リタイアメント",
+   "short": "古いモデルが使えなくなるまでの手続き",
+   "detail": "モデルの状態は、active（推奨）、legacy（更新なし）、deprecated（非推奨）、retired（使用不可）に分けられる。deprecated は動くが推奨されず、代わりのモデルと廃止日（retirement）が示される。retired になると、そのモデルへのリクエストは失敗する。Anthropic は公開済みモデルの廃止の少なくとも60日前に、利用中の顧客へ通知する。",
+   "analogy": "お店の商品の販売終了予告に近く、終売日が来ると使えなくなる。",
+   "exam": "日付なし ID も日付付き ID と同じく ID ごとに別の廃止日程を持つので、「日付なし ID には廃止の予定がない」は誤り。2026年10月31日時点の公式表では、claude-sonnet-4-5-20250929 が deprecated で、2026年11月30日に廃止予定（後継は claude-sonnet-5-5）。廃止の前に、新モデルを自分の評価で確かめて移すのが公式の勧め。",
+   "keywords": [
+    "廃止",
+    "旧 ID"
+   ],
+   "units": [
+    "5-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Model deprecations",
+     "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+     "title": "Model IDs and versioning",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions"
+    }
+   ]
+  },
+  {
+   "id": "llm",
+   "cat": "model",
+   "name": "LLM（大規模言語モデル）",
+   "yomi": "エルエルエム",
+   "short": "大量の文章で学習した、文章を扱う AI",
+   "detail": "LLM は、大量の文章データで学習した、文章の生成や質問への回答、要約などができる AI モデルのこと。最初の学習（事前学習）では、前の文脈から次の語を予測することを学ぶ。それだけでは指示にうまく従えないので、追加の学習（fine-tuning）や、人の評価を使った強化学習（RLHF）で、役に立つ受け答えができるよう調整する。Claude もこの方式で調整された LLM に基づく。",
+   "analogy": "大量の本を読んで「次に来る言葉」を当てる練習を積んだ、物知りの話し相手に近い。",
+   "exam": "事前学習だけの言語モデルが指示に従いにくい理由は「前の文脈から次の語を予測する学習だから」で、指示に従う振る舞いは fine-tuning や RLHF で調整する。コンテキストウィンドウの小ささや temperature の高さは理由ではない。",
+   "keywords": [
+    "言語モデル",
+    "事前学習",
+    "RLHF",
+    "fine-tuning"
+   ],
+   "units": [
+    "5-1"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Glossary",
+     "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+    }
+   ]
+  },
+  {
+   "id": "token",
+   "cat": "model",
+   "name": "トークン（token）",
+   "yomi": "",
+   "short": "モデルが文章を扱う最小の単位",
+   "detail": "トークンは、言語モデルが文章を処理するときの最小の単位で、単語・単語の一部・文字・バイトなどに当たる。文章はまずトークンの列に変換されてから処理され、料金・出力の上限・レート制限（使える量の上限）もトークンの数で数える。同じ文章でもトークン数はモデルと言語で変わり、Claude 4.7 以降の新しいトークナイザー（文章をトークンに区切る仕組み）は、以前のモデルより同じ文章で約30%多くなる。正確な数は、送る前にトークン計数 API で数える。",
+   "analogy": "文章を細かいブロックに分けて数える、レゴの1ピースのようなもの。",
+   "exam": "古いモデルから Opus 5.5 に替えて入力のトークン数が増えたら、理由は「トークナイザーが変わった」こと（Claude 4.7 以降で約30%増え、Opus 5.5 の移行ガイドでは約1〜1.35倍）。文字数を一定の比率で割ってトークン数を見積もらず、使うモデルで測り直し、max_tokens や費用の見積もりも見直す。思考で使ったトークンも出力トークンとして課金される。",
+   "keywords": [
+    "トークン",
+    "トークン数",
+    "トークナイザー",
+    "出力トークン",
+    "入力トークン"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 33,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Glossary",
+     "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+    },
+    {
+     "title": "Claude Opus 5.5 migration guide",
+     "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+    },
+    {
+     "title": "Token counting",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+    }
+   ]
+  },
+  {
+   "id": "context-window",
+   "cat": "model",
+   "name": "コンテキストウィンドウ（context window）",
+   "yomi": "",
+   "short": "モデルが一度に参照できる文章の量",
+   "detail": "コンテキストウィンドウは、モデルが応答を作るときに参照できる文章の全量で、モデルの「作業記憶」にあたる。システムプロンプト・すべてのメッセージ・ツール定義に加え、その回に生成する出力（思考を含む）も数え、キャッシュから読んだ入力も数える。Opus 5.5・Sonnet 5.5・Haiku 5.5 などの現行モデルは 1M トークンで、1回の出力の上限（最大 128k トークン）はこれとは別に決まっている。",
+   "analogy": "作業机の広さにあたり、机の上に広げられる資料の量に限りがある。",
+   "exam": "入力だけでウィンドウを超えると、どのモデルでも 400（prompt is too long）になる。Claude 4.5 以降は、入力と max_tokens の合計が超えても受け付け、生成中に一杯になると stop_reason が model_context_window_exceeded で止まる。1M に収まっても全部入れるのが最善とは限らず、トークンが増えると精度や想起が落ちる（context rot）ので、入れるものを選ぶ。",
+   "keywords": [
+    "コンテキストウィンドウ",
+    "ウィンドウ",
+    "1M トークン",
+    "context rot"
+   ],
+   "units": [
+    "5-1",
+    "5-2"
+   ],
+   "count": 12,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Context windows",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+    },
+    {
+     "title": "Glossary",
+     "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+    }
+   ]
+  },
+  {
+   "id": "max-tokens",
+   "cat": "model",
+   "name": "max_tokens（最大トークン数）",
+   "yomi": "マックス・トークンズ",
+   "short": "1回の応答で生成する長さの上限",
+   "detail": "max_tokens は、1回の応答でモデルが生成するトークンの上限を指定するパラメータ。応答がこの数に達すると、文の途中でも打ち切られる。思考を使うときは、思考のトークンも max_tokens の一部として数える。厳密な上限を付けられるのはこの値で、effort は目安にすぎない。",
+   "analogy": "原稿用紙の枚数制限に近く、枚数に達したら途中でも書くのを止める。",
+   "exam": "stop_reason が max_tokens なら出力が途中で切れた合図なので、max_tokens を上げるか、続きを別のリクエストで取る（構造化出力の JSON が途中で切れたときも、上限を上げて送り直す）。同期の Messages API では1回の出力は最大 128k トークンで、大きな max_tokens を通常の呼び出しで指定すると SDK が止めるので、ストリーミングで受け取る。",
+   "keywords": [
+    "max_tokens",
+    "128k"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 31,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Create a Message (API reference)",
+     "url": "https://platform.claude.com/docs/en/api/messages/create"
+    },
+    {
+     "title": "Context windows",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+    },
+    {
+     "title": "Steering thinking",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost"
+    }
+   ]
+  },
+  {
+   "id": "stop-reason",
+   "cat": "model",
+   "name": "stop_reason（停止理由）",
+   "yomi": "ストップ・リーズン",
+   "short": "応答がなぜ止まったかを示す値",
+   "detail": "stop_reason は、応答が止まった理由を示すレスポンスの値。end_turn は自然に終わった、max_tokens は出力の上限に届いた、stop_sequence は指定した停止文字列が出た、tool_use は Claude がツールの実行を求めている、refusal は Claude が応答を断った、model_context_window_exceeded はコンテキストウィンドウの上限に届いた、という意味。ほかに、サーバー側のツールの繰り返しが上限に届いたときの pause_turn がある。",
+   "analogy": "電車が「終点に着いた」「時間切れで止まった」と、停車の理由を車内放送で知らせるのに近い。",
+   "exam": "max_tokens と model_context_window_exceeded は、どちらも途中で切れた応答として扱う。tool_use ならアプリがツールを実行し、tool_result を返して続けさせる。refusal は HTTP 200 の通常の応答として返り、stop_details で理由を確かめ、言い換えるか別のモデルで送り直す。",
+   "keywords": [
+    "stop_reason",
+    "end_turn",
+    "max_tokens",
+    "tool_use",
+    "stop_sequence",
+    "refusal",
+    "model_context_window_exceeded"
+   ],
+   "units": [
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 37,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Stop reasons and fallback",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+    },
+    {
+     "title": "Create a Message (API reference)",
+     "url": "https://platform.claude.com/docs/en/api/messages/create"
+    }
+   ]
+  },
+  {
+   "id": "temperature",
+   "cat": "model",
+   "name": "temperature（温度）",
+   "yomi": "テンパラチャー",
+   "short": "出力のばらつきの大きさを決める値",
+   "detail": "temperature は、モデルが次の語を選ぶときのランダムさを調整するパラメータ。値が高いほど多様で創造的な出力になり、低いほど最も確からしい語を選ぶ保守的な出力になる。範囲は 0.0 から 1.0 で、既定は 1.0。ただし 0 にしても完全には決定的にならず、同じ入力でも出力が変わりうる。",
+   "analogy": "サイコロを振る度合いに近く、温度が高いほど意外な語が選ばれやすくなる。",
+   "exam": "「temperature を 0 にすれば毎回同じ回答になる」は誤りで、公式は 0 でも同一の出力は保証されないとする。問題では、同じ回答が必要なときは出た回答を保存して返す、が正解とされている。Opus 4.7 以降（Opus 5.5 を含む）では既定値以外の temperature を送ると 400 になるので外し、振る舞いはプロンプトで導く。",
+   "keywords": [
+    "temperature",
+    "temperature 0",
+    "temperature を 0"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-3"
+   ],
+   "count": 16,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Glossary",
+     "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+    },
+    {
+     "title": "Create a Text Completion (API reference)",
+     "url": "https://platform.claude.com/docs/en/api/completions/create"
+    },
+    {
+     "title": "Claude Opus 5.5 migration guide",
+     "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+    }
+   ]
+  },
+  {
+   "id": "top-p-top-k",
+   "cat": "model",
+   "name": "top_p / top_k（サンプリングの絞り込み）",
+   "yomi": "トップ・ピー／トップ・ケー",
+   "short": "次の語の候補を絞る設定（新モデルでは不可）",
+   "detail": "top_k は、次の語の候補を確率の高い上位 K 個だけに絞る設定で、確率の低い語（ロングテール）を除く。top_p（nucleus sampling）は、確率の高い順に候補の確率を足していき、合計が top_p に達したところで切る設定。どちらも上級者向けの設定とされる。古いモデルでも、思考を使うときは temperature と top_k を併用できず、top_p は 0.95 から 1 の値だけ使える。",
+   "analogy": "",
+   "exam": "Opus 4.7 以降（Opus 5.5・Sonnet 5.5・Haiku 5.5 を含む）では、既定値以外の temperature・top_p・top_k を送ると 400 になる。top_p の既定は 0.99 なので 1 を送っても 400 で、temperature と top_p を同時に送ると既定値でも 400。API バージョン 2026-10-21 以降は、3つとも送るだけで全モデルで 400 になる。",
+   "keywords": [
+    "top_p",
+    "top_k"
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Thinking (Limits and feature compatibility)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+    },
+    {
+     "title": "Create a Text Completion (API reference)",
+     "url": "https://platform.claude.com/docs/en/api/completions/create"
+    },
+    {
+     "title": "Migrating to API version 2026-10-21",
+     "url": "https://platform.claude.com/docs/en/api/migration-2026-10-21"
+    }
+   ]
+  },
+  {
+   "id": "extended-thinking",
+   "cat": "model",
+   "name": "拡張思考（extended thinking）と budget_tokens",
+   "yomi": "エクステンデッド・シンキング",
+   "short": "思考のトークン予算を手動で決める旧方式",
+   "detail": "拡張思考は、thinking の type を enabled にして budget_tokens を付け、思考に使えるトークンの予算を自分で決める方式で、手動モードとも呼ばれる。budget_tokens は最小 1,024 で、max_tokens より小さくする。予算は目安であって厳密な上限ではなく、厳密な上限は max_tokens。現在は旧方式（legacy）で、Opus 4.6 と Sonnet 4.6 では非推奨、Claude 4.7 以降は受け付けず 400 を返す。",
+   "analogy": "考える時間をあらかじめ「30分まで」と決めて渡す、持ち時間制に近い。",
+   "exam": "Opus 4.7 以降や Opus 5.5 で type を enabled にして budget_tokens を付けると 400 になるので、type を adaptive にし、思考の深さは effort で調整する。budget_tokens を小さくしたり max_tokens を大きくしても直らない。Haiku 4.5・Sonnet 4.5・Opus 4.5 は拡張思考だけを受け付け adaptive は 400 になるので、複数のモデルを使い分けるときは、モデルごとに thinking の設定を分ける。",
+   "keywords": [
+    "拡張思考",
+    "budget_tokens",
+    "type:\"enabled\"",
+    "type: \"enabled\""
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Extended thinking",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+    },
+    {
+     "title": "Thinking",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+    }
+   ]
+  },
+  {
+   "id": "adaptive-thinking",
+   "cat": "model",
+   "name": "適応型思考（adaptive thinking）",
+   "yomi": "アダプティブ・シンキング",
+   "short": "考えるか・どれだけ考えるかを Claude が決める方式",
+   "detail": "適応型思考は、thinking の type を adaptive にする（または thinking を省く）と、リクエストごとに考えるかどうかと考える深さを Claude 自身が決める方式。簡単な質問では思考ブロックを出さずに答えることがあり、深さの主な調整は effort で行う。思考のトークンは出力トークンとして課金され、max_tokens の一部としても数える。Opus 5.5 では常にオンで、thinking: disabled を送ると 400 になる。",
+   "analogy": "宿題が簡単ならすぐ答え、難しければ下書きをしてから答える、人の使い分けに近い。",
+   "exam": "effort が low のとき、簡単な入力では思考を省いて答えることがあり、毎回最低限は考えるわけではない。Opus 5.5 は適応型思考だけを受け付け、手動の予算（type を enabled にして budget_tokens を付ける）は 400。Opus 4.7 以降は adaptive だけ、Haiku 4.5 は拡張思考だけを受け付けるので、両方へ振り分けるルーターでは設定を分ける。",
+   "keywords": [
+    "適応型思考",
+    "adaptive",
+    "thinking: {type: \"adaptive\"}"
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Steering thinking",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost"
+    },
+    {
+     "title": "Thinking",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+    }
+   ]
+  },
+  {
+   "id": "effort",
+   "cat": "model",
+   "name": "effort（努力度）",
+   "yomi": "エフォート",
+   "short": "賢さと速さ・費用を引き換えるつまみ",
+   "detail": "effort は output_config.effort に指定し、応答でどれだけトークンを使うか（どれだけ丁寧に作るか）を調整するパラメータで、low・medium・high・xhigh・max の5段階がある。テキスト・ツール呼び出し・思考のすべての出力に効くが、厳密なトークン予算ではなく、振る舞いを導く目安。未指定ならモデルの既定値になり、Opus 5.5 と Haiku 5.5 は medium、ほかの多くのモデルは high。xhigh は Opus 4.6・Sonnet 4.6・Opus 4.5 では使えないなど、対応する段階はモデルごとに違う。",
+   "analogy": "仕事にどれだけ時間をかけるかを選ぶ、丁寧さのダイヤルに近い。",
+   "exam": "low は速さと費用を優先する単純な作業（サブエージェントなど）、xhigh は30分を超え、トークン予算が数百万に及ぶ長時間のエージェントやコーディング、high は複雑な推論や難しいコーディング向けとされる。effort を下げると、操作をまとめて少ないツール呼び出しにし、前置きなしで動き、完了の確認も短くなる傾向がある。Opus 5 以前の Opus は high が既定で Opus 5.5 は medium なので、未指定のまま切り替えると1段低くなる。以前の設定を持ち込まず、自分の評価で effort を振り直して決める。",
+   "keywords": [
+    "effort",
+    "output_config.effort",
+    "xhigh"
+   ],
+   "units": [
+    "2-4",
+    "5-1",
+    "5-3"
+   ],
+   "count": 24,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Effort",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+    },
+    {
+     "title": "Choosing the right model",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+    }
+   ]
+  },
+  {
+   "id": "thinking-display",
+   "cat": "model",
+   "name": "思考の表示（display: summarized / omitted）",
+   "yomi": "ディスプレイ",
+   "short": "思考ブロックの中身を返すか空にするかの設定",
+   "detail": "thinking の display は、レスポンスの思考ブロックに中身を入れるかどうかを決める設定。summarized は思考の要約を返し、omitted は thinking が空のブロックを返す（署名は残る）。どちらを選んでも、課金される思考トークンの量と、思考ブロックを送り返すときの扱いは同じ。思考を画面に出さないなら omitted にすると、ストリーミング（できた部分から順に返す方式）で最初の本文が出るまでが速くなる。",
+   "analogy": "考えた過程のメモを要約で渡すか白紙で渡すかの違いで、頭の中では同じだけ考えている。",
+   "exam": "既定は、Opus 4.6・Sonnet 4.6 以前が summarized で、Opus 4.7 以降（Opus 5.5・Sonnet 5.5・Haiku 5.5・Fable 5.1 を含む）は omitted。Opus 4.6 から替えて思考の欄が空になったら、エラーではなく既定の変更なので、thinking に display を summarized と明示して要約を受け取る。生の思考そのものは、どの設定でも返らない。",
+   "keywords": [
+    "display",
+    "summarized",
+    "omitted",
+    "display:\"summarized\"",
+    "display:\"omitted\""
+   ],
+   "units": [
+    "5-2",
+    "5-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Thinking (Controlling thinking display)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+    },
+    {
+     "title": "Claude Opus 5.5 migration guide",
+     "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+    }
+   ]
+  },
+  {
+   "id": "fast-mode",
+   "cat": "model",
+   "name": "高速モード（fast mode）",
+   "yomi": "ファスト・モード",
+   "short": "同じモデルを速く動かす割増料金の機能",
+   "detail": "高速モードは、同じモデルを速い推論設定で動かし、賢さや能力を変えずに、出力トークン毎秒（OTPS）を最大 2.5 倍にする機能。Messages API では、リクエストに speed: \"fast\" を付けて有効にする。料金は割増で、Opus 5.5 は入力 $8・出力 $40（100万トークンあたり。標準は $4・$20）。対象は Opus 5.5（正式提供）と、研究プレビューの Opus 5・Opus 4.8（ベータヘッダーが必要）で、Sonnet と Haiku は対象外。",
+   "analogy": "同じ車のまま、有料の専用レーンを使って走る速さを上げるのに近い。",
+   "exam": "効果は OTPS に集中して TTFT は対象外で、Message Batches API や Priority Tier の契約とは併用できない。レスポンスの usage.speed に fast か standard が入るので、どの速度で処理されたかはここで見る。専用のレート制限があり、429 のときは speed を外して再送すれば標準速度で処理されるが、速度が違うとプロンプトキャッシュは共有されず外れる。",
+   "keywords": [
+    "高速モード",
+    "fast mode",
+    "speed: \"fast\"",
+    "usage.speed",
+    "2.5 倍"
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 7,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Fast mode",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+    },
+    {
+     "title": "Create a Message (API reference)",
+     "url": "https://platform.claude.com/docs/en/api/messages/create"
+    }
+   ]
+  },
+  {
+   "id": "service-tier",
+   "cat": "model",
+   "name": "service_tier（サービスティア）",
+   "yomi": "サービス・ティア",
+   "short": "リクエストの処理枠（標準・優先・バッチ）",
+   "detail": "サービスティアは、リクエストをどの処理枠で扱うかの区分で、Standard（標準、既定）、Priority（優先）、Batch（非同期）の3つがある。Priority Tier は、事前に契約した処理容量を優先して使い、混雑による過負荷エラーを減らす枠。リクエストの service_tier には、auto（既定。使えれば優先枠）か standard_only（標準だけ）を指定でき、レスポンスの usage.service_tier に standard・priority・batch のどれで処理されたかが入る。公式は、Priority Tier の新規の契約は現在購入できないと案内している。",
+   "analogy": "空港の優先搭乗レーンに近く、契約した人だけが先に通れる。",
+   "exam": "usage.service_tier は処理の枠の記録で、高速モードの速度を見る欄ではない。どの速度で処理されたかを問われたら usage.speed を選ぶ。高速モードは Priority Tier の契約とは併用できない。",
+   "keywords": [
+    "usage.service_tier",
+    "service_tier"
+   ],
+   "units": [
+    "5-1"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Service tiers",
+     "url": "https://platform.claude.com/docs/en/api/service-tiers"
+    },
+    {
+     "title": "Create a Message (API reference)",
+     "url": "https://platform.claude.com/docs/en/api/messages/create"
+    }
+   ]
+  },
+  {
+   "id": "ttft-otps",
+   "cat": "model",
+   "name": "TTFT と OTPS（応答の速さの指標）",
+   "yomi": "ティーティーエフティー・オーティーピーエス",
+   "short": "最初の反応の速さと、出力が流れる速さ",
+   "detail": "TTFT（Time To First Token）は、プロンプトを送ってから最初のトークンが出るまでの時間で、利用者が最初の反応を感じるまでの速さを表す。OTPS（Output Tokens Per Second）は、1秒に出力されるトークンの数で、文章が流れていく速さを表す。ストリーミング（できた部分から順に返す方式）にすると、体感の応答の速さが大きく上がる。",
+   "analogy": "料理店で、最初の一皿が出るまでが TTFT、皿が次々に運ばれる速さが OTPS にあたる。",
+   "exam": "「送信後しばらく画面に何も出ない」は TTFT の問題で、ストリーミングで返す対策が合う。高速モードが伸ばすのは OTPS で、TTFT は対象ではない。レート制限の OTPM（1分あたりの出力トークン数）は別物で、速さの指標ではない。",
+   "keywords": [
+    "TTFT",
+    "OTPS",
+    "出力トークン毎秒",
+    "最初のトークンまでの時間"
+   ],
+   "units": [
+    "5-1"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Glossary",
+     "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+    },
+    {
+     "title": "Reducing latency",
+     "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+    },
+    {
+     "title": "Fast mode",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+    }
+   ]
+  },
+  {
+   "id": "prefill",
+   "cat": "model",
+   "name": "プリフィル（prefill）",
+   "yomi": "プリフィル",
+   "short": "assistant の返答の書き出しを先に書く手法",
+   "detail": "プリフィルは、messages の最後に assistant の発言（書き出しの途中）を置き、Claude にその続きを書かせる手法で、JSON を「{」で始めさせるなど、出力の形をそろえるために使われた。Claude 4.6 以降のモデルでは、最後が assistant のプリフィルになっているリクエストは 400 エラーになる。それより前のモデルは今もプリフィルを受け付け、会話の途中に assistant の発言を置くことは影響を受けない。",
+   "analogy": "作文の出だしを書いてあげて、「続きをどうぞ」と渡すのに近い。",
+   "exam": "Opus 4.5 で使えたプリフィルが新しい Opus で 400 になったら、structured outputs（出力の形を JSON スキーマで縛る機能）かシステムプロンプトでの指示に置き換える。プリフィルに使う文字を変えても直らない。分類のラベルをそろえたいなら、ラベルを enum に持つツールでもよい。",
+   "keywords": [
+    "prefill",
+    "プリフィル"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-3"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude API errors (Prefill not supported)",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    },
+    {
+     "title": "Prompting best practices (Migrating away from prefilled responses)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+    }
+   ]
+  },
+  {
+   "id": "zero-one-few-shot",
+   "cat": "model",
+   "name": "zero-shot / one-shot / few-shot プロンプト",
+   "yomi": "ゼロショット・ワンショット・フューショット",
+   "short": "プロンプトに付ける例の数による呼び分け",
+   "detail": "プロンプトに例を1つも付けず、指示だけで課題をこなさせるのが zero-shot、例を1つだけ付けるのが one-shot（single-shot とも呼ばれる）、複数付けるのが few-shot で、Claude の公式文書では multishot とも呼ぶ。例は、出力の形式・口調・構造をそろえる最も確かな方法の一つで、少数のよい例で正確さと一貫性が上がる。例は <example> タグ（複数なら <examples> タグ）で囲み、指示と区別させる。",
+   "analogy": "初めての仕事を、見本なしで頼む（zero）、見本を1つ見せる（one）、何パターンか見せる（few）の違いに近い。",
+   "exam": "公式が勧める few-shot（multishot）の例は、本番に近い・端のケースを含めて型に幅がある・<example> タグで囲む、の3点で、数は 3〜5 個が目安。例が1つだと、その例のクセまで拾われやすいので型の違う例を足し、分類ラベルのばらつきは入出力の例を付けて直す。適応型思考と組み合わせるときは、各例を「問題・使う方法・期待する答え」の順で示す。",
+   "keywords": [
+    "zero-shot",
+    "single-shot",
+    "one-shot",
+    "few-shot",
+    "multishot",
+    "multi-shot"
+   ],
+   "units": [
+    "5-1"
+   ],
+   "count": 6,
+   "verified": false,
+   "sources": [
+    {
+     "title": "Prompting best practices (Use examples effectively)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+    }
+   ]
+  },
+  {
+   "id": "benchmark-eval",
+   "cat": "model",
+   "name": "ベンチマークと評価セット（eval）",
+   "yomi": "エバル",
+   "short": "自分のデータでモデルの品質を測る問題集",
+   "detail": "ベンチマークは、モデルの性能を測るための試験のこと。評価セット（eval）は、自分の用途に合わせて作る、問題と採点の基準のセットで、実際のプロンプトとデータに、端のケース（エッジケース）を含める。採点は、完全一致などのコード、人、別の LLM のどれかで行い、自動で採点できる形にして件数を多くする方がよいとされる。",
+   "analogy": "他社の全国模試の順位より、自社専用の模擬試験の方が、自分の仕事に合うかを正しく測れる。",
+   "exam": "モデルを替えるか迷ったときの最初の一歩は、自分の質問とデータで評価セットを作ることで、公開ベンチマークの順位や料金だけでは決めない（公式は、良い評価セットを持つことが最も重要な手順とする）。本番は旧 ID を固定したまま動かし、新モデルは自分の評価セットで別に確かめ、effort も以前の設定を持ち込まず評価で振り直す。",
+   "keywords": [
+    "ベンチマーク",
+    "評価セット",
+    "エッジケース",
+    "評価で"
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Choosing the right model",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+    },
+    {
+     "title": "Define success criteria and build evaluations",
+     "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+    }
+   ]
+  }
+ ]
+}

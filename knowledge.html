@@ -101,6 +101,52 @@ nav a { color: var(--accent); }
 .src a { color: var(--accent); word-break: break-all; }
 .dom-label { font-size: 12px; color: var(--ink-soft); font-family: var(--font-mono); }
 .empty { text-align: center; color: var(--ink-soft); padding: 24px 8px; }
+
+/* 講義の用語と問題の用語集の切り替え */
+.modes {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px;
+  background: var(--sheet); border: 1px solid var(--line); border-radius: 12px;
+}
+.modes button {
+  all: unset; cursor: pointer; text-align: center; padding: 10px 6px; border-radius: 9px;
+  font-weight: 700; font-size: 14px; color: var(--ink-soft);
+}
+.modes button[aria-selected="true"] { background: var(--ink); color: var(--sheet); }
+.modes button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.searchrow { display: flex; gap: 8px; }
+.searchrow #search { flex: 1; min-width: 0; }
+#toggleAll {
+  all: unset; cursor: pointer; white-space: nowrap; padding: 0 12px; border-radius: 10px; font-size: 13px;
+  border: 1px solid var(--line); background: var(--sheet); color: var(--accent);
+}
+#toggleAll:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* 問題の用語集: 用語ごとに開閉するカード */
+.intro { background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 14px; display: grid; gap: 4px; }
+.intro p { margin: 0; }
+.intro .meta { font-size: 12px; color: var(--ink-soft); }
+.cat-lead { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.terms { display: grid; }
+.term { border-bottom: 1px solid var(--line); min-width: 0; }
+.term:last-child { border-bottom: 0; }
+.term > summary {
+  list-style: none; cursor: pointer; position: relative; display: grid; gap: 2px;
+  padding: 10px 30px 10px 0;
+}
+.term > summary::-webkit-details-marker { display: none; }
+.term > summary::after {
+  content: "+"; position: absolute; right: 4px; top: 8px;
+  font-family: var(--font-mono); font-size: 20px; color: var(--accent);
+}
+.term[open] > summary::after { content: "−"; }
+.term > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.yomi { font-weight: 400; font-size: 12px; color: var(--ink-soft); margin-left: 6px; }
+.short { margin: 0; font-size: 14px; color: var(--ink-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.chip { font-family: var(--font-mono); font-size: 11px; padding: 0 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.term-body { display: grid; gap: 6px; padding: 0 0 14px; overflow-wrap: anywhere; }
+.sub.where { color: var(--ink-soft); }
+.sub.where::before { content: "出てくる問題："; }
 </style>
 </head>
 <body>
@@ -108,23 +154,43 @@ nav a { color: var(--accent); }
   <header>
     <span class="eyebrow">CLAUDE CERTIFIED DEVELOPER – FOUNDATIONS · CCDV-F v1.0</span>
     <h1>CCDV-F 用語ノート</h1>
-    <p class="lead">ミニ講義で出した用語と、単元ごとに区別すべきものをまとめています。【解説】の付いた用語は、公式ドキュメントで定義を確かめられなかった Claude の説明です。</p>
+    <p class="lead" id="lead"></p>
     <nav>
       <a href="quiz.html">クイズ</a>
       <a href="./">間違いノート</a>
     </nav>
   </header>
+  <div class="modes" role="tablist" aria-label="表示する内容">
+    <button type="button" role="tab" id="mode-lecture" data-mode="lecture">講義の用語</button>
+    <button type="button" role="tab" id="mode-glossary" data-mode="glossary">問題の用語集</button>
+  </div>
   <div class="controls">
-    <div class="tabs" id="tabs" role="group" aria-label="単元"></div>
-    <input id="search" type="search" placeholder="用語やキーワードで探す（例: context window、キャッシュ）" aria-label="検索">
+    <div class="tabs" id="tabs" role="group"></div>
+    <div class="searchrow">
+      <input id="search" type="search" aria-label="検索">
+      <button type="button" id="toggleAll" hidden>すべて開く</button>
+    </div>
   </div>
   <div class="groups" id="groups"><p class="empty">読み込んでいます</p></div>
 </div>
 
 <script>
 let data = { units: [] };
+let gloss = { categories: [], terms: [] };
+let mode = location.hash === "#glossary" ? "glossary" : "lecture";
 let unit = "all";
+let cat = "all";
 let query = "";
+let openAll = false;
+
+const LEADS = {
+  lecture: "ミニ講義で出した用語と、単元ごとに区別すべきものをまとめています。【解説】の付いた用語は、公式ドキュメントで定義を確かめられなかった Claude の説明です。",
+  glossary: "クイズと間違いノートの問題に出てくる技術用語・横文字を、初学者向けに分野別にまとめた用語集です。用語をタップすると、くわしい説明・たとえ・試験のポイント・公式ドキュメントへのリンクが開きます。",
+};
+const PLACEHOLDERS = {
+  lecture: "用語やキーワードで探す（例: context window、キャッシュ）",
+  glossary: "用語・読み方・キーワードで探す（例: ヘッダー、429、バッチ）",
+};
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -141,14 +207,79 @@ function matches(text) {
   return !query || String(text || "").toLowerCase().includes(query);
 }
 
-function render() {
+function sourceLinks(sources) {
+  const links = (sources || []).filter(s => /^https:\/\//.test(String(s.url || "")));
+  return links.length ? el("p", { class: "src" }, ...links.flatMap((s, i) => [i ? " · " : null,
+    el("a", { href: s.url, target: "_blank", rel: "noopener", text: s.title || s.url })])) : null;
+}
+
+function renderTabs(opts, current, label, onPick) {
   const tabs = document.getElementById("tabs");
-  const opts = [["all", "すべて"], ...data.units.map(u => [u.unit, u.unit])];
+  tabs.setAttribute("aria-label", label);
   tabs.replaceChildren(...opts.map(([v, t]) => {
-    const b = el("button", { type: "button", "aria-pressed": String(unit === v), text: t });
-    b.addEventListener("click", () => { unit = v; render(); });
+    const b = el("button", { type: "button", "aria-pressed": String(current === v), text: t });
+    b.addEventListener("click", () => { onPick(v); render(); });
     return b;
   }));
+}
+
+function render() {
+  for (const b of document.querySelectorAll(".modes button")) b.setAttribute("aria-selected", String(b.dataset.mode === mode));
+  document.getElementById("lead").textContent = LEADS[mode];
+  document.getElementById("search").placeholder = PLACEHOLDERS[mode];
+  document.getElementById("toggleAll").hidden = mode !== "glossary";
+  if (mode === "glossary") renderGlossary(); else renderLecture();
+}
+
+// 問題の用語集。開いている用語は id で覚え、検索や切り替えで描き直しても閉じないようにする
+const openIds = new Set();
+
+function renderGlossary() {
+  const cats = gloss.categories || [];
+  renderTabs([["all", "すべて"], ...cats.map(c => [c.id, c.tab || c.label])], cat, "分野", v => { cat = v; });
+  document.getElementById("toggleAll").textContent = openAll ? "すべて閉じる" : "すべて開く";
+
+  const out = [];
+  const total = (gloss.terms || []).length;
+  if (total) {
+    out.push(el("div", { class: "intro" },
+      el("p", { text: "説明は公式ドキュメント（Anthropic のドキュメント、IETF・WHATWG などの標準、Git・GitHub・Python の公式ページ）で確かめた内容です。【解説】の付いた用語は、公式で確かめきれなかった部分を含みます。" }),
+      el("p", { class: "meta", text: `全${total}語 · 対象: ${gloss.scope || "クイズと間違いノートの問題"} · 更新 ${gloss.updatedAt || ""}` })));
+  }
+  for (const c of cats) {
+    if (cat !== "all" && c.id !== cat) continue;
+    const terms = (gloss.terms || []).filter(t => t.cat === c.id && (matches(t.name) || matches(t.yomi) || matches(t.short)
+      || matches(t.detail) || matches(t.analogy) || matches(t.exam) || (t.keywords || []).some(matches)));
+    if (!terms.length) continue;
+    out.push(el("section", { class: "group" },
+      el("h2", { text: c.label }),
+      c.lead ? el("p", { class: "cat-lead", text: c.lead }) : null,
+      el("div", { class: "terms" }, ...terms.map(t => {
+        const d = el("details", { class: "term", id: "g-" + t.id },
+          el("summary", {},
+            el("span", { class: "name" }, t.name, t.yomi ? el("span", { class: "yomi", text: t.yomi }) : null,
+              t.verified ? null : el("span", { class: "badge", text: "【解説】" })),
+            el("p", { class: "short", text: t.short }),
+            (t.units || []).length ? el("span", { class: "chips" }, ...t.units.map(u => el("span", { class: "chip", text: u }))) : null),
+          el("div", { class: "term-body" },
+            el("p", { class: "role", text: t.detail }),
+            t.analogy ? el("p", { class: "sub analogy", text: t.analogy }) : null,
+            t.exam ? el("p", { class: "sub exam", text: t.exam }) : null,
+            (t.units || []).length ? el("p", { class: "sub where", text: `単元${t.units.join("・")}（${t.count}問）` }) : null,
+            sourceLinks(t.sources)));
+        d.open = openAll || !!query || openIds.has(t.id);
+        // 検索中や「すべて開く」で開いたものは覚えない（検索を消したときに開きっぱなしにしない）
+        d.addEventListener("toggle", () => { if (openAll || query) return; if (d.open) openIds.add(t.id); else openIds.delete(t.id); });
+        return d;
+      }))));
+  }
+  const hasTerms = out.some(n => n.tagName === "SECTION");
+  if (!hasTerms) out.push(el("p", { class: "empty", text: total ? "見つかりませんでした。別の言葉で探してみてください。" : "用語集を読み込めませんでした。" }));
+  document.getElementById("groups").replaceChildren(...out);
+}
+
+function renderLecture() {
+  renderTabs([["all", "すべて"], ...data.units.map(u => [u.unit, u.unit])], unit, "単元", v => { unit = v; });
 
   const out = [];
   for (const u of data.units) {
@@ -161,29 +292,41 @@ function render() {
       el("span", { class: "dom-label", text: "単元" + u.unit }),
       el("h2", { text: u.title }),
       ...dists.map(x => el("p", { class: "tip" }, el("b", { text: "区別すべきもの：" + x.title }), x.text)),
-      terms.length ? el("ul", { class: "items" }, ...terms.map(t => {
-        const links = (t.sources || []).filter(s => /^https:\/\//.test(String(s.url || "")));
-        return el("li", {},
-          el("span", { class: "name" }, t.name, t.verified ? null : el("span", { class: "badge", text: "【解説】" })),
-          el("p", { class: "role", text: t.meaning }),
-          t.analogy ? el("p", { class: "sub analogy", text: t.analogy }) : null,
-          t.exam ? el("p", { class: "sub exam", text: t.exam }) : null,
-          links.length ? el("p", { class: "src" }, ...links.flatMap((s, i) => [i ? " · " : null,
-            el("a", { href: s.url, target: "_blank", rel: "noopener", text: s.title || s.url })])) : null);
-      })) : null));
+      terms.length ? el("ul", { class: "items" }, ...terms.map(t => el("li", {},
+        el("span", { class: "name" }, t.name, t.verified ? null : el("span", { class: "badge", text: "【解説】" })),
+        el("p", { class: "role", text: t.meaning }),
+        t.analogy ? el("p", { class: "sub analogy", text: t.analogy }) : null,
+        t.exam ? el("p", { class: "sub exam", text: t.exam }) : null,
+        sourceLinks(t.sources)))) : null));
   }
   document.getElementById("groups").replaceChildren(...(out.length ? out : [el("p", { class: "empty", text: data.units.length ? "見つかりませんでした。別の言葉で探してみてください。" : "まだ用語がありません。ミニ講義で出した用語が、ここに追加されます。" })]));
 }
 
 document.getElementById("search").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); render(); });
+document.getElementById("toggleAll").addEventListener("click", () => { openAll = !openAll; if (!openAll) openIds.clear(); render(); });
+for (const b of document.querySelectorAll(".modes button")) {
+  b.addEventListener("click", () => {
+    mode = b.dataset.mode;
+    history.replaceState(null, "", mode === "glossary" ? "#glossary" : location.pathname + location.search);
+    render();
+  });
+}
+window.addEventListener("hashchange", () => { mode = location.hash === "#glossary" ? "glossary" : "lecture"; render(); });
 
 // 単元は学ぶ順に並べる
 const ORDER = ["5-1", "5-2", "2-4", "2-3", "5-3", "5-4", "6-2", "6-3", "6-1", "8-1", "8-2", "8-3", "1-1", "1-3", "1-2",
   "2-5", "2-6", "3-1", "7-1", "7-2", "7-3", "7-4", "2-1", "2-2", "4-1"];
-fetch("knowledge.json", { cache: "no-store" })
-  .then(r => r.ok ? r.json() : { units: [] })
-  .then(d => { data = d && Array.isArray(d.units) ? d : { units: [] }; data.units.sort((a, b) => ORDER.indexOf(a.unit) - ORDER.indexOf(b.unit)); render(); })
-  .catch(() => render());
+const unitOrder = (a, b) => ORDER.indexOf(a) - ORDER.indexOf(b);
+Promise.all([
+  fetch("knowledge.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null),
+  fetch("glossary.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null),
+]).then(([k, g]) => {
+  data = k && Array.isArray(k.units) ? k : { units: [] };
+  data.units.sort((a, b) => unitOrder(a.unit, b.unit));
+  gloss = g && Array.isArray(g.terms) ? g : { categories: [], terms: [] };
+  for (const t of gloss.terms) t.units = (t.units || []).slice().sort(unitOrder);
+  render();
+});
 </script>
 </body>
 </html>
