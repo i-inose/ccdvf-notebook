@@ -363,7 +363,7 @@
       ],
       "myAnswer": "D",
       "correct": "D",
-      "why": "tool_use は Claude がツールを呼ぶ合図。アプリがツールを実行し、tool_result ブロックを user メッセージで余計なテキストなしに返す。",
+      "why": "tool_use は Claude がツールを呼ぶ合図。アプリがツールを実行し、次の user メッセージで tool_result ブロックを返す。tool_result は content の先頭に置き、テキストを添えるならその後ろにする。",
       "whyNot": {
         "A": "それは end_turn の扱いで、ツール結果を使った最終回答が得られない",
         "B": "打ち切りではないので上限は関係ない",
@@ -600,9 +600,9 @@
       ],
       "myAnswer": "B",
       "correct": "C",
-      "why": "ウィンドウ（1M）は入力と出力を合わせた作業机の広さで、1回のリクエストの出力は別に最大 128k トークン。",
+      "why": "ウィンドウ（1M）は入力と出力を合わせた作業机の広さで、1回のリクエストの出力は別に最大 128k トークン（同期の Messages API の上限）。",
       "whyNot": {
-        "A": "1回の出力の上限（128k）を超える値は指定できない",
+        "A": "通常の（同期の）呼び出しでは、1回の出力の上限（128k）を超える値は指定できない",
         "B": "ウィンドウの広さと1回に出せる量は別の上限",
         "D": "temperature で長さは決まらず、目的は書き切ること"
       },
@@ -613,7 +613,7 @@
           "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
         }
       ],
-      "explanation": "",
+      "explanation": "例外として、Message Batches API でベータヘッダー output-300k-2026-03-24 を付けると、Opus 5.5・Sonnet 5.5・Haiku 5.5 などは 300k まで出力できる。すぐに受け取る通常の呼び出しでは 128k が上限。",
       "no": 16,
       "unit": "5-1",
       "result": "wrong",

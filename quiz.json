@@ -95,7 +95,7 @@
             "E. thinking: {type: \"adaptive\"}"
           ],
           "correct": "AD",
-          "why": "Claude Opus 5.5 では temperature・top_p・top_k を送ると拒否される。振る舞いはプロンプトで導く。",
+          "why": "Claude 4.7 以降のモデル（Opus 5.5 を含む）では、temperature・top_p・top_k に既定値以外を送ると 400 になる（API バージョン 2026-10-21 以降は、値に関係なくどのモデルでも 400）。外して、振る舞いはプロンプトで導く。",
           "whyNot": {
             "B": "effort は Opus 5.5 で思考の深さを決める唯一の値で、5段階すべて使える",
             "C": "max_tokens は必須の値で、外すとかえってエラーになる",
@@ -951,7 +951,7 @@
           "kind": "new",
           "unit": "5-2",
           "topic": "anthropic-version ヘッダー / anthropic-beta・request-id",
-          "question": "curl で Messages API を直接呼ぶと、使う API の版を指定していないため 400 になりました。どのリクエストヘッダーを付けますか？",
+          "question": "curl で Messages API を直接呼ぶと、エラーになりました。使う API の版を指定していなかったのが原因です。どのリクエストヘッダーを付けますか？",
           "choices": [
             "A. request-id",
             "B. anthropic-version",
@@ -1758,14 +1758,14 @@
             "E. retry-after"
           ],
           "correct": "AD",
-          "why": "Messages API には API キーを入れる x-api-key と、API のバージョンを指定する anthropic-version が必要です（SDK はこれらを自動で付けます）。",
+          "why": "Messages API には、API キーを渡す認証のヘッダーと、API のバージョンを指定する anthropic-version が必要です。選択肢の中で認証のヘッダーは x-api-key です（SDK はこれらを自動で付けます）。",
           "whyNot": {
-            "B": "Claude API の API キーは x-api-key ヘッダーで渡す。",
+            "B": "Authorization ヘッダーで送るなら Bearer 形式で、Basic は使えない。",
             "C": "request-id は API が応答に付けて返すヘッダーで、送る側が付けるものではない。",
             "E": "retry-after は 429 などの応答に付く、待ち時間を知らせるヘッダー。"
           },
           "example": "障害を問い合わせるときは、応答の request-id を控えておく。",
-          "explanation": "",
+          "explanation": "公式の最新の説明では、認証は Authorization: Bearer <キー> が基本で、x-api-key は従来からの方法として引き続き使える。",
           "sources": [
             {
               "title": "Versions",
@@ -1893,7 +1893,7 @@
         ],
         "distinguish": {
           "title": "Claude Code のチェックポイント（/rewind）と Git のコミット",
-          "text": "チェックポイントは、Claude が自分のファイル編集ツールで変えたファイルを、会話の前の時点に戻せる仕組み。\nBash コマンドで変わったファイルは対象外で、Git の代わりにはならず、Git と一緒に使う。\nGit のコミットは、チーム全体で共有・レビュー・取り消しができる正式な変更の記録。"
+          "text": "チェックポイントは、Claude が自分のファイル編集ツールで変えたファイルを、会話の前の時点に戻せる仕組み。\nBash コマンドだけで変わったファイルは対象外で、Git の代わりにはならず、Git と一緒に使う。\nGit のコミットは、チーム全体で共有・レビュー・取り消しができる正式な変更の記録。"
         }
       },
       "questions": [
@@ -1982,22 +1982,22 @@
           "kind": "new",
           "unit": "2-4",
           "topic": "チェックポイントの対象（Bash の変更は戻らない）/ Git",
-          "question": "Claude Code が Bash の sed コマンドで設定ファイルを書き換えました。/rewind で会話を前に戻せば、このファイルも元に戻りますか？",
+          "question": "Claude Code が、この会話でまだ編集していない設定ファイルを Bash の sed コマンドで書き換えました。/rewind で会話を前に戻せば、このファイルも元に戻りますか？",
           "choices": [
             "A. 戻る。すべての変更が記録されている",
             "B. 戻る。ただし Git の履歴も消える",
-            "C. 戻らない。Bash の変更は対象外なので Git で戻す",
+            "C. 戻らない。Bash だけの変更は対象外なので Git で戻す",
             "D. 戻らない。/rewind は会話だけで、ファイルは一切戻せない"
           ],
           "correct": "C",
-          "why": "チェックポイントが戻せるのは Claude が自分のファイル編集ツールで変えたファイルで、Bash コマンドで変わったファイルは戻りません。Git と一緒に使います。",
+          "why": "チェックポイントが追跡するのは、Claude がファイル編集ツールで変えたファイルです。Bash コマンドだけで変わったファイルは追跡されないので /rewind では戻らず、Git で戻します。",
           "whyNot": {
-            "A": "Bash による変更は記録の対象外。",
+            "A": "Bash コマンドだけで変えたファイルは記録の対象外。",
             "B": "チェックポイントは Git の履歴とは別の仕組みで、Git の代わりにもならない。",
-            "D": "/rewind はコード・会話・その両方を戻せる。戻せないのは Bash による変更。"
+            "D": "/rewind はコード・会話・その両方を戻せる。戻せないのは Bash だけで変えたファイルなど。"
           },
           "example": "大胆な案を試す前にコミットしておくと、どの方法で変わったファイルでも戻せる。",
-          "explanation": "",
+          "explanation": "例外として、Claude が先にファイル編集ツールで編集したファイルなら、その後の Bash による変更も /rewind で取り消される。",
           "sources": [
             {
               "title": "Best practices for Claude Code",
@@ -2502,12 +2502,12 @@
           "choices": [
             "A. Files API に上げて file_id で参照する",
             "B. 画像を文章より後ろに移して読み込ませる",
-            "C. 長い辺が 2000px 以下になるよう縮小する",
+            "C. 各辺が 3,000px 以下になるよう縮小する",
             "D. max_tokens を増やしてリクエストの上限を広げる",
             "E. 画像をすべて system パラメータに入れる"
           ],
           "correct": "AC",
-          "why": "多くの画像を送ると、枚数より先にリクエストサイズの上限に当たることがあるため、Files API で上げて file_id で参照するとリクエストが小さくなります。また 1リクエストに20枚を超える画像があると1枚あたりの寸法の上限が厳しくなるので、各辺 2000px 以下に縮小します。",
+          "why": "多くの画像を送ると、枚数より先にリクエストサイズの上限に当たることがあるため、Files API で上げて file_id で参照するとリクエストが小さくなります。また 1リクエストに20枚を超える画像があると1枚あたりの寸法の上限が厳しくなるので、各辺 3,000px 以下に縮小します（公式が全プラットフォームで安全とする目安）。",
           "whyNot": {
             "B": "画像の位置は上限には関係なく、推奨はむしろ画像を先に置く並びです。",
             "D": "max_tokens は出力の上限で、入力のリクエストサイズや画像の枚数の上限は広がりません。",
@@ -3388,7 +3388,7 @@
             "D": "モデル名とバージョンを含まない名前は公式の ID の形式ではありません。"
           },
           "example": "評価で合格した版のまま本番を動かし、更新は自分で評価してから切り替える。",
-          "explanation": "Model IDs and versioning の「Before the 4.6 generation」を参照。",
+          "explanation": "Model IDs and versioning の「Before the 4.6 generation」を参照。 なお claude-sonnet-4-5-20250929 は 2026-09-30 に非推奨となり、2026-11-30 に廃止予定（後継は claude-sonnet-5-5）。固定した ID にも廃止日があるので、廃止前に新モデルを評価して移す。",
           "sources": [
             {
               "title": "Model IDs and versioning",
@@ -3463,14 +3463,14 @@
             "E. effort の指定"
           ],
           "correct": "BD",
-          "why": "Opus 4.7 で入った壊れる変更として、手動の思考予算（type:\"enabled\" と budget_tokens）は 400 になり、サンプリングのパラメータ（temperature・top_p・top_k）も外すよう移行ガイドに書かれています。",
+          "why": "Opus 4.7 で入った壊れる変更として、手動の思考予算（type:\"enabled\" と budget_tokens）は 400 になり、サンプリングのパラメータ（temperature・top_p・top_k）も既定値以外を送ると 400 になるので外すよう、移行ガイドに書かれています。",
           "whyNot": {
             "A": "adaptive は Opus 4.7 以降で思考を使うための正しい指定です。",
             "C": "tool_choice の auto は既定値で、そのまま使えます。",
             "E": "effort は思考の深さを調整する正しい手段で、外す必要はありません。"
           },
           "example": "移行ガイドのチェックリストで、出発点のモデル（Opus 4.6 以前）の項目を順に潰す。",
-          "explanation": "temperature = 0 も、以前のモデルで同じ出力を保証していたわけではないと公式は補足しています。",
+          "explanation": "temperature = 0 も、以前のモデルで同じ出力を保証していたわけではないと公式は補足しています。 API バージョン 2026-10-21 以降は、temperature・top_p・top_k は値に関係なくどのモデルでも 400 になる。",
           "sources": [
             {
               "title": "Claude Opus 5.5 migration guide",
