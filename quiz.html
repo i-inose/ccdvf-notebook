@@ -48,6 +48,7 @@ body {
   font-size: 16px;
   line-height: 1.75;
   -webkit-text-size-adjust: 100%;
+  overflow-wrap: anywhere;
 }
 .wrap {
   max-width: 640px;
@@ -207,12 +208,17 @@ const main = () => document.getElementById("main");
 const show = (...nodes) => { main().replaceChildren(...nodes); window.scrollTo(0, 0); };
 
 // 進み具合は端末のブラウザにだけ保存する（取り込みは GitHub の Issue 経由）
+// 同じ id でセットを作り直したとき、前の版の途中経過を引き継がないよう作成日もキーに入れる
+function progressKey(id) {
+  const s = quiz.sets.find(x => x.id === id);
+  return "ccdvfquiz:" + id + (s && s.createdAt ? ":" + s.createdAt : "");
+}
 function loadProgress(id) {
-  try { return JSON.parse(localStorage.getItem("ccdvfquiz:" + id)) || { answers: [], sent: false }; }
+  try { return JSON.parse(localStorage.getItem(progressKey(id))) || { answers: [], sent: false }; }
   catch { return { answers: [], sent: false }; }
 }
 function saveProgress(id, p) {
-  try { localStorage.setItem("ccdvfquiz:" + id, JSON.stringify(p)); } catch {}
+  try { localStorage.setItem(progressKey(id), JSON.stringify(p)); } catch {}
 }
 
 function setStatus(s) {

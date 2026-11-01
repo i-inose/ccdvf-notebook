@@ -47,6 +47,7 @@ body {
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.75;
+  overflow-wrap: anywhere;
 }
 .wrap {
   max-width: 860px;
@@ -55,6 +56,7 @@ body {
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 28px;
 }
 header { display: grid; gap: 6px; }
