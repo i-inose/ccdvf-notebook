@@ -95,6 +95,34 @@
           10
         ]
       }
+    },
+    {
+      "order": 5,
+      "date": "2026-11-01",
+      "label": "単元5-1 セットB（スマホ）",
+      "focus": "5-1",
+      "total": 10,
+      "correct": 8,
+      "byUnit": {
+        "5-1": [
+          8,
+          10
+        ]
+      }
+    },
+    {
+      "order": 6,
+      "date": "2026-11-01",
+      "label": "単元5-1 セットC（スマホ）",
+      "focus": "5-1",
+      "total": 10,
+      "correct": 5,
+      "byUnit": {
+        "5-1": [
+          5,
+          10
+        ]
+      }
     }
   ],
   "notes": [
@@ -805,6 +833,464 @@
       "unit": "5-1",
       "result": "wrong",
       "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "長い文書と例の並べ方 / 長文のプロンプト",
+      "choices": [
+        "A. 指示と例を先頭に置き、契約書を最後に付ける",
+        "B. 契約書ごとにリクエストを分け、例は付けない",
+        "C. 例を契約書の本文の中に混ぜ、タグで区切らずに一緒に渡す",
+        "D. 契約書を先頭に置き、指示と例の後、最後に問いを書く"
+      ],
+      "why": "2万トークンを超える長い入力は、問い・指示・例より上に置くと性能が上がり、問いを最後に置くと複雑な複数文書で質が最大30%上がった。例は <example> タグで囲んで指示と区別する。",
+      "whyNot": {
+        "A": "逆の並べ方。長い文書は上、問いは最後が勧められている",
+        "B": "例をなくすと判定の形式や基準がぶれやすい。リクエストを分ける理由も条件にない",
+        "C": "区切りがないと、Claude が例を指示や本文と取り違えやすい"
+      },
+      "example": "長い資料を渡すときは、資料をタグで囲んで先頭に置き、問いを最後に書く。",
+      "sources": [
+        {
+          "title": "Prompting best practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        }
+      ],
+      "question": "約6万トークンの契約書3通をもとに、条項のリスクを判定するプロンプトを作ります。判定の例を3つ付け、判定の手順も指示します。公式の推奨に沿って、回答の質を最も上げやすい並べ方はどれですか。",
+      "myAnswer": "A",
+      "correct": "D",
+      "explanation": "複数の文書は <document> タグで囲み、<source> などのメタデータを付けると扱いやすい。",
+      "no": 22,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "高速モードの 429 から標準速度へ切り替える / max_retries・キャッシュ",
+      "choices": [
+        "A. max_retries を増やし、高速モードの枠が空くまで待たせる",
+        "B. 最初の高速リクエストは max_retries を 0 にし、429 ですぐ切り替える",
+        "C. 標準速度に切り替えても、高速モードのキャッシュをそのまま読める",
+        "D. 切り替えた標準速度のリクエストは、キャッシュの読み取りにならない",
+        "E. 429 のときは、speed: \"fast\" のまま Message Batches API に回す"
+      ],
+      "why": "SDK は高速モードの 429 を既定で2回まで retry-after を待って再試行する。待たずに切り替えるなら、最初の高速リクエストの max_retries を 0 にし、429 を受けたら speed を外して送り直す。速度が違うリクエストはキャッシュしたプレフィックスを共有しないので、切り替えた分はキャッシュミスとして見積もる。",
+      "whyNot": {
+        "A": "高速モードの枠が空くまで待つ設計で、「待たせない」という条件に合わない",
+        "C": "速度が違うリクエストはキャッシュを共有せず、切り替えるとキャッシュミスになる",
+        "E": "高速モードは Batch API では使えない。Batch は非同期で、すぐ答える用途にも合わない"
+      },
+      "example": "高速モードの枠が足りないときに待つか標準速度で答えるかを決め、切り替えるなら最初の高速リクエストの自動再試行を切る。",
+      "sources": [
+        {
+          "title": "Fast mode",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+        }
+      ],
+      "question": "（2つ選択）Claude Opus 5.5 のチャットで高速モード（fast mode）を使っています。混雑時は 429 になり、SDK が自動で再試行するため利用者が待たされます。待たせるより標準速度ですぐ答えたいです。切り替えの設計と費用の見積もりについて、正しいものはどれですか。",
+      "myAnswer": "BD",
+      "correct": "BD",
+      "explanation": "max_retries を 0 にすると、529 や 500 などほかの一時的なエラーの再試行も止まる。公式の例は、そうしたエラーのときは既定の再試行で元のリクエストを送り直している。高速モードのレート制限は、標準の Opus のレート制限とは別枠。",
+      "no": 23,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "思考中の空白とストリーミング / display summarized・高速モード",
+      "choices": [
+        "A. 高速モードの設定で、最初のトークンまでの時間を縮める",
+        "B. thinking を disabled にして、すぐに答えさせる",
+        "C. thinking.display を summarized にし、要約を表示する",
+        "D. effort を low にして、思考を短くさせる"
+      ],
+      "why": "Opus 5.5 の display の既定は omitted で、思考の文章が返らないため、思考中は長い空白に見える。公式は、思考を利用者に見せる製品では display: \"summarized\" にして思考中の進み具合を戻すよう勧めている。",
+      "whyNot": {
+        "A": "高速モードが上げるのは出力トークン毎秒（OTPS）で、最初のトークンまでの時間（TTFT）ではない",
+        "B": "Opus 5.5 は思考を止められず、disabled は 400 になる",
+        "D": "思考が減って質が下がりうるので、質を下げない条件に合わない"
+      },
+      "example": "思考を見せたいチャットでは summarized、見せない処理では omitted にして最初の本文を早く出す。",
+      "sources": [
+        {
+          "title": "Claude Opus 5.5 migration guide",
+          "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+        },
+        {
+          "title": "Thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+        },
+        {
+          "title": "Fast mode",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+        }
+      ],
+      "question": "Claude Opus 5.5 のチャットで、ストリーミングと高速モード（fast mode）を使っています。難しい質問では文字が出始めるまで長く何も表示されず、利用者が不安になります。回答の質は下げずに、考えている間の進み具合を見せたいです。最も適切な対応はどれですか。",
+      "myAnswer": "C",
+      "correct": "C",
+      "explanation": "omitted は思考の文章をストリーミングしない分、最初の本文のトークンが早く届く。どちらでも思考トークンの課金は同じ。",
+      "no": 24,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "effort とツール呼び出し / Sonnet 5.5 のコーディングエージェント",
+      "choices": [
+        "A. effort を medium に下げ、評価で品質を確かめる",
+        "B. effort を xhigh に上げ、1回で終わらせる",
+        "C. speed: \"fast\" を付けて、出力を速くする",
+        "D. 「計画の説明や要約は書くな」とシステムプロンプトで禁止する"
+      ],
+      "why": "effort はツール呼び出しにも効き、低いと呼び出しが減り前置きも短くなる。公式は Sonnet 5.5 のエージェント型コーディングで、仕様がはっきりした作業は medium から始めるよう勧めている。",
+      "whyNot": {
+        "B": "xhigh は長時間の作業向けで、トークンが増え遅くなる方向に働く",
+        "C": "高速モードは Opus 5.5 など一部のモデルだけで、対応しないモデルに付けるとエラーになる",
+        "D": "禁止より、してほしいことを書くほうが効く。ツール呼び出しの量は effort で調整する"
+      },
+      "example": "エージェントが手厚すぎて遅いときは、まず effort を1段下げ、評価で品質を確かめる。",
+      "sources": [
+        {
+          "title": "Effort",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+        },
+        {
+          "title": "Fast mode",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+        }
+      ],
+      "question": "Claude Sonnet 5.5 のコーディングエージェントを effort high で動かしています。仕様のはっきりした小さな修正でも、毎回計画を説明し、ツールを何度も呼び、詳しい要約を書くので遅いです。品質は保ちつつ、速く安くしたいです。最も適切な対応はどれですか。",
+      "myAnswer": "C",
+      "correct": "A",
+      "explanation": "",
+      "no": 25,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "非決定性とサンプリングパラメータ / 回帰テストの判定",
+      "choices": [
+        "A. temperature を 0 にして、毎回同じ文字列を返させる",
+        "B. top_k を 1 にして、最も確率の高いトークンだけを選ばせる",
+        "C. サンプリングの値は送らず、判定を必要な要素の有無に変える",
+        "D. effort を max にして、出力のぶれを抑える"
+      ],
+      "why": "temperature を 0 にしても完全には決定的にならず、Opus 5.5 は temperature・top_p・top_k を外すことが求められる（既定値以外は 400）。出力がぶれる前提で、要点や形式が入っているかで判定するのが条件に合う。",
+      "whyNot": {
+        "A": "Opus 5.5 では 400 になる。古いモデルでも temperature 0 で同じ出力は保証されない",
+        "B": "top_k も Opus 5.5 では 400 になる。サンプリングの値で決定性は保証されない",
+        "D": "effort は使うトークンの量を決める値で、出力を固定する機能ではない。費用も増える"
+      },
+      "example": "LLM の出力を CI で確かめるときは、完全一致ではなく、必要な項目・形式・ラベルが入っているかで判定する。",
+      "sources": [
+        {
+          "title": "Glossary",
+          "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+        },
+        {
+          "title": "Claude Opus 5.5 migration guide",
+          "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+        },
+        {
+          "title": "Thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+        }
+      ],
+      "question": "Claude Opus 5.5 で問い合わせ要約の回帰テストを CI で回しています。期待する文字列との完全一致で判定しているため、同じ入力でも落ちたり通ったりします。Opus 5.5 で動く設定のまま、テストを安定させたいです。最も適切な対応はどれですか。",
+      "myAnswer": "D",
+      "correct": "C",
+      "explanation": "公式に書かれているのは「temperature 0 でも同じ入力で違う出力になりうる」「Opus 5.5 ではサンプリングの値を外し、振る舞いはプロンプトで導く」の2点。「判定を必要な要素の有無に変える」はこの場面の設計上の判断で、公式の記述ではない。",
+      "no": 26,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "高速モードの対応モデル / Opus 4.6 と usage.speed",
+      "choices": [
+        "A. モデルを Claude Opus 5.5 に替え、speed: \"fast\" を付ける",
+        "B. 高速モードのレート制限の引き上げを申請する",
+        "C. ストリーミングを有効にして、出力トークン毎秒を上げる",
+        "D. モデルを Claude Haiku 4.5 に替えて、応答を速める"
+      ],
+      "why": "Opus 4.6 は speed: \"fast\" とベータヘッダーを付けてもエラーにならず標準速度で動き、usage.speed が \"standard\" になる。高速モードが使えるのは Opus 5.5（研究プレビューで Opus 5・Opus 4.8）なので、Opus 5.5 に移す。",
+      "whyNot": {
+        "B": "レート制限を超えたなら 429 が返る。標準速度で成功しているので制限は原因ではない",
+        "C": "ストリーミングはできた部分から順に返すだけで、生成の速さ（OTPS）は変わらない",
+        "D": "モデルが小さくなり、「賢さを落とさない」という条件に合わない"
+      },
+      "example": "高速モードを入れたら、usage.speed が \"fast\" になっているかで効いているかを確かめる。",
+      "sources": [
+        {
+          "title": "Fast mode",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+        },
+        {
+          "title": "Claude Opus 5.5 migration guide",
+          "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+        }
+      ],
+      "question": "Claude Opus 4.6 の要約 API に speed: \"fast\" と fast-mode-2026-02-01 ヘッダーを付けましたが、出力の速さが変わりません。ログの usage.speed は \"standard\" でした。賢さは落とさずに、出力を速くしたいです。最も適切な対応はどれですか。",
+      "myAnswer": "A",
+      "correct": "A",
+      "explanation": "Opus 4.6 から Opus 5.5 へ移すときは、temperature・top_p・top_k を外し、budget_tokens を使っていれば適応型思考と effort に置き換える（移行ガイドの「Claude Opus 4.6 or earlier」の項目）。Opus 5.5 の高速モードにベータヘッダーは要らない。",
+      "no": 27,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "zero-shot の改善 / 判断の基準と理由を書く",
+      "choices": [
+        "A. 「NEVER」「ALWAYS」のような強い言葉で規則を強調する",
+        "B. temperature を 0 にして、判定を毎回同じにする",
+        "C. effort を max にして、境界の判定を深く考えさせる",
+        "D. 各ラベルの基準と、その基準にする理由を書き添える"
+      ],
+      "why": "例のない指示だけでは、Claude は社内の判断基準を知らない。公式は、出力の条件を具体的に書き、指示の理由（背景）を添えると、Claude が目的をつかんで狙いに合った応答をしやすいとしている。",
+      "whyNot": {
+        "A": "強い言葉だけの規則より、理由を添えた指示のほうが Claude は一般化しやすい（公式の例）",
+        "B": "Opus 5.5 では 400 になり、temperature 0 でも決定的にはならない。基準のずれも直らない",
+        "C": "パラメータの変更で、「指示の書き方だけで」という条件に合わない。基準がなければ判定はそろわない"
+      },
+      "example": "新人に頼むときと同じく、「何を」「どういう基準で」「なぜ」を書き、足りなければ例を足す。",
+      "sources": [
+        {
+          "title": "Prompting best practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        },
+        {
+          "title": "Claude Opus 5.5 migration guide",
+          "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+        }
+      ],
+      "question": "Claude Opus 5.5 で、例を付けない zero-shot のプロンプトで問い合わせを「請求」「障害」「その他」に分けています。「障害で二重に請求された」のような境界の問い合わせで判定がぶれます。例を集める前に、まず指示の書き方だけで改善したいです。最も適切なものはどれですか。",
+      "myAnswer": "C",
+      "correct": "D",
+      "explanation": "zero-shot（例を付けない頼み方）という呼び方は公式ドキュメントの用語ではなく、few-shot（multishot）の説明から読み取った【解説】。正解の根拠は「Be clear and direct」「Add context to improve performance」の記述。",
+      "no": 28,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "トークン数の見積もり / トークナイザーとトークン計数",
+      "choices": [
+        "A. 英語の目安の1トークン約3.5文字で、文字数から割り出す",
+        "B. 移行先のモデルを指定して、トークン計数で数え直す",
+        "C. Opus 4.6 で測ったトークン数を、そのまま使う",
+        "D. 日本語は1文字1トークンとみなし、文字数を使う"
+      ],
+      "why": "Claude 4.7 以降のモデルは新しいトークナイザーで、同じ文章が約30%多いトークンになる。公式は、使う予定のモデルを指定してトークン計数（count_tokens）で数え直すよう勧めている。",
+      "whyNot": {
+        "A": "約3.5文字は以前のモデルでの英語の目安で、文字数との関係は言語とモデルで変わる",
+        "C": "Opus 4.6 は古いトークナイザーで、Opus 5.5 では約30%多くなりうる",
+        "D": "1トークンが何文字かはモデルと言語で変わり、1文字1トークンという決まりはない"
+      },
+      "example": "モデルを替える前に、同じリクエストを今のモデルと移行先のモデルで数え、input_tokens を比べる。",
+      "sources": [
+        {
+          "title": "Glossary",
+          "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+        },
+        {
+          "title": "Token counting",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+        }
+      ],
+      "question": "日本語の社内マニュアルを Claude Opus 5.5 に毎回入れる機能について、費用とコンテキストウィンドウに収まるかを見積もります。手元には、以前 Claude Opus 4.6 で測ったトークン数があります。最も適切な見積もり方はどれですか。",
+      "myAnswer": "B",
+      "correct": "B",
+      "explanation": "トークン計数は無料（使用ティアごとの毎分リクエスト数の制限あり）で、結果は見積もり。実際の入力トークン数とわずかに違うことがある。",
+      "no": 29,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "次トークン生成と出力の長さ / レイテンシの下げ方",
+      "choices": [
+        "A. 要約を「3段落以内」のように段落数で短く指示する",
+        "B. 要約を「ちょうど300語」と語数で厳密に指定する",
+        "C. max_tokens を 500 にして、出力を途中で止める",
+        "D. speed: \"fast\" を付けて、出力トークン毎秒を上げる"
+      ],
+      "why": "モデルは前の文脈から次のトークンを予測して出力を伸ばしていくので、生成するトークンが少ないほど応答は速い。公式は、語数より段落数や文数で長さを指示するほうが効くとしている。",
+      "whyNot": {
+        "B": "LLM は語ではなくトークンで数えるため、語数の指定は段落数や文数の指定ほど効かない",
+        "C": "max_tokens に届くと文や語の途中で切れる。答えが先頭に来る選択式や短い答え向けの手段",
+        "D": "高速モードは割増料金で、予算外という条件に合わない"
+      },
+      "example": "出力が長くて遅いときは、まず必要な長さを段落数や文数で伝える。",
+      "sources": [
+        {
+          "title": "Reducing latency",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+        },
+        {
+          "title": "Glossary",
+          "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+        }
+      ],
+      "question": "Claude Opus 5.5 で会議の要約を作る機能があります。最初の文字はすぐ出ますが、要約が約1,500語と長く、出そろうまで時間がかかります。モデルは変えられず、割増料金の機能は予算外です。最も適切な対応はどれですか。",
+      "myAnswer": "D",
+      "correct": "A",
+      "explanation": "「次のトークンを予測して出力を伸ばす」は用語集の事前学習（pretraining）の説明（自己回帰モデルは前の文脈から次の語を予測する）による。",
+      "no": 30,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "思考の費用の上限 / budget_tokens から max_tokens と effort へ",
+      "choices": [
+        "A. budget_tokens を最低の 1,024 にして送る",
+        "B. effort を low にして、出力トークン数を保証させる",
+        "C. max_tokens で上限を決め、effort で思考量を調整する",
+        "D. display を omitted にして、思考トークンの課金をなくす"
+      ],
+      "why": "Opus 5.5 では budget_tokens（type: \"enabled\"）は 400 になる。max_tokens は思考と本文を合わせた出力の厳密な上限で、それを超えて生成しない。effort は思考にどれだけ回すかの目安として使う。",
+      "whyNot": {
+        "A": "Claude 4.7 以降は type: \"enabled\" と budget_tokens を受け付けず 400 になる",
+        "B": "effort は振る舞いの目安で、トークン数を保証しない",
+        "D": "display は見え方だけを変え、思考トークンは同じように課金される"
+      },
+      "example": "思考ありのモデルでは、max_tokens を思考と回答の両方が収まる大きさにし、思考を減らしたいときは effort を下げる。",
+      "sources": [
+        {
+          "title": "Steering thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost"
+        },
+        {
+          "title": "Extended thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+        },
+        {
+          "title": "Thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+        }
+      ],
+      "question": "Claude Sonnet 4.6 では thinking の budget_tokens で思考の量を抑えていました。Claude Opus 5.5 に移しても、1リクエストで課金される出力トークンの上限を厳密に守りたいです。最も適切な設定はどれですか。",
+      "myAnswer": "C",
+      "correct": "C",
+      "explanation": "ツールを使うループでは、max_tokens は1リクエストごとの上限で、ターン全体の費用は抑えない。",
+      "no": 31,
+      "unit": "5-1",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "適応型思考の応答の形 / content を type で読む",
+      "choices": [
+        "A. thinking を disabled にして、思考を止める",
+        "B. display を summarized にして、content[0] を表示する",
+        "C. max_tokens を上げて、本文の分を空ける",
+        "D. type が text のブロックを選んで本文を読む"
+      ],
+      "why": "Opus 5.5 は適応型思考が常に有効で、応答の先頭に thinking ブロックが来ることがある。位置で読むコードは壊れるので、type が \"text\" のブロックを選んで読む。",
+      "whyNot": {
+        "A": "Opus 5.5 は思考を止められず、thinking: disabled は 400 になる",
+        "B": "content[0] は思考の要約になりうるので、回答の本文を表示できない",
+        "C": "思考の分 max_tokens の見直しは要るが、位置で読む不具合は直らない"
+      },
+      "example": "思考ありのモデルでは、応答のブロックを位置ではなく type で選ぶ。ストリーミングでもブロックの種類で分ける。",
+      "sources": [
+        {
+          "title": "Claude Opus 5.5 migration guide",
+          "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+        },
+        {
+          "title": "Thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+        }
+      ],
+      "question": "Claude Opus 4.8 で thinking を付けずに動かしていた FAQ ボットを Claude Opus 5.5 に替えたところ、回答を表示する処理が失敗するようになりました。コードは response.content[0].text を読んでいます。最初に直すべき点はどれですか。",
+      "myAnswer": "A",
+      "correct": "D",
+      "explanation": "Opus 5.5 の display の既定は omitted で、thinking ブロックの thinking フィールドは空のまま、署名（signature）だけが入る。",
+      "no": 32,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "context rot と長い会話 / compaction・ツール結果のクリア・キャッシュ",
+      "choices": [
+        "A. サーバー側の compaction で、古い部分を要約させる",
+        "B. プロンプトキャッシュで、これまでの会話をキャッシュする",
+        "C. max_tokens を 128k に上げて、余裕を持たせる",
+        "D. 高速モードで、1ターンの処理を速く終わらせる",
+        "E. context editing で、古いツールの結果をクリアする"
+      ],
+      "why": "トークンが増えるほど精度や想起が落ちる（context rot）ので、載せる量を減らす。公式は長い会話やエージェントにはサーバー側の compaction を主な手段とし、古いツール結果のクリアは context editing でできるとしている。",
+      "whyNot": {
+        "B": "キャッシュは料金が変わるだけで、キャッシュした部分もウィンドウに数える",
+        "C": "max_tokens は出力の上限で、入力に積み上がった量は減らない",
+        "D": "高速モードは出力の速さを上げるだけで、載る量は変わらない"
+      },
+      "example": "長く続くエージェントでは、compaction で古い会話を要約し、使い終わったツール結果はクリアする。",
+      "sources": [
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "question": "（2つ選択）Claude Opus 5.5 のサポートエージェントで、会話とツールの結果が積み上がり、1M トークンのコンテキストウィンドウには収まっているのに回答の精度が落ちてきました。同じ会話は続けたいです。ウィンドウに載る量を減らす手段はどれですか。",
+      "myAnswer": "BE",
+      "correct": "AE",
+      "explanation": "compaction は Claude 4.6 以降のモデルでベータとして使える。",
+      "no": 33,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-11-01",

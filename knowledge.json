@@ -214,7 +214,8 @@
               "url": "https://platform.claude.com/docs/en/about-claude/glossary"
             }
           ],
-          "addedAt": "2026-11-01"
+          "addedAt": "2026-11-01",
+          "updatedAt": "2026-11-01"
         },
         {
           "name": "高速モード（fast mode）",
@@ -228,7 +229,8 @@
               "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
             }
           ],
-          "addedAt": "2026-11-01"
+          "addedAt": "2026-11-01",
+          "updatedAt": "2026-11-01"
         },
         {
           "name": "zero-shot と single-shot（one-shot）プロンプト【解説】",
@@ -237,6 +239,53 @@
           "exam": "出力の形式・口調・構造がぶれるなら例を足す。例は実際の用途に近く、多様にする（似た例ばかりだと意図しないパターンを拾う）。公式ドキュメントに zero-shot・single-shot の定義はなく、few-shot（multishot）の説明から読み取った",
           "verified": false,
           "sources": [],
+          "addedAt": "2026-11-01",
+          "updatedAt": "2026-11-01"
+        },
+        {
+          "name": "multi-shot（few-shot / multishot）プロンプト",
+          "meaning": "入出力の例を複数付けて、出力の形式・口調・構造を導く手法",
+          "analogy": "新人に見本を何枚か見せる。似た見本ばかりだとクセまでまね、幅のある見本だと要点をつかむ",
+          "exam": "目安は 3〜5 個。例は <example> タグ（複数なら <examples>）で囲み指示と区別する。実際の用途に近く、多様にする。例の評価や追加を Claude に頼んでもよい。思考と組み合わせるときは「問題・解き方・期待する答え」の形で示す",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ],
+          "addedAt": "2026-11-01"
+        },
+        {
+          "name": "effort の各レベル（low / medium / high / xhigh / max）",
+          "meaning": "応答に使うトークンの量を決める5段階の値。output_config.effort で指定する",
+          "analogy": "仕事の念の入れ方の指示。low は手早く、high はしっかり、xhigh は長丁場の大仕事、max は徹底的に",
+          "exam": "low は簡単な作業やサブエージェント、medium は速さ・費用・性能の釣り合い、high は難しい推論やコーディング、xhigh は30分を超える長時間のエージェント作業、max は最も深い推論。既定は多くのモデルで high、Opus 5.5 と Haiku 5.5 は medium。effort を下げるとツール呼び出しも減る",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Effort",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+            }
+          ],
+          "addedAt": "2026-11-01"
+        },
+        {
+          "name": "レイテンシ（latency）と TTFT（time to first token）",
+          "meaning": "レイテンシはプロンプトを送ってから出力を受け取るまでの時間。TTFT は最初のトークンが出るまでの時間",
+          "analogy": "レイテンシは注文してから料理が全部そろうまで。TTFT は最初の一皿が出てくるまで",
+          "exam": "下げる方法は、速いモデルを選ぶ、入力と出力のトークンを減らす、ストリーミングで返す。TTFT はストリーミングと組み合わせると体感の速さに効く。まず性能の出るプロンプトを作ってから、速さの対策をする",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Reducing latency",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+            },
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            }
+          ],
           "addedAt": "2026-11-01"
         }
       ],
@@ -259,6 +308,12 @@
         {
           "title": "高速モード（fast mode）とストリーミング（streaming）",
           "text": "高速モードは生成そのものを速くし、出力トークン毎秒（OTPS）を上げる。割増料金がかかる。\nストリーミングは生成の速さは変えず、できた部分から順に返すので、待たされている感じを減らす。\n両方は一緒に使え、高速モードの効果はストリーミングで最も目に見える。",
+          "addedAt": "2026-11-01",
+          "updatedAt": "2026-11-01"
+        },
+        {
+          "title": "effort と thinking（思考モード）",
+          "text": "thinking は、答える前に思考ブロックで考えるかどうか（考え方のモード）を決める。\neffort は、応答全体にどれだけ手間をかけるかを決め、適応型思考ではどれだけ頻繁に深く考えるかも左右する。\nadaptive は思考モードの名前で、effort の値ではない。",
           "addedAt": "2026-11-01"
         }
       ]
