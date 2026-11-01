@@ -52,9 +52,10 @@
     "2-3",
     "2-4",
     "5-1",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 22,
+   "count": 27,
    "verified": true,
    "sources": [
     {
@@ -81,10 +82,9 @@
     "GET /v1/models"
    ],
    "units": [
-    "2-4",
     "5-2"
    ],
-   "count": 2,
+   "count": 1,
    "verified": true,
    "sources": [
     {
@@ -121,7 +121,7 @@
     "2-4",
     "5-2"
    ],
-   "count": 6,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -155,7 +155,7 @@
     "5-2",
     "5-3"
    ],
-   "count": 51,
+   "count": 52,
    "verified": true,
    "sources": [
     {
@@ -182,10 +182,9 @@
     "GET /v1/models"
    ],
    "units": [
-    "2-4",
     "5-2"
    ],
-   "count": 2,
+   "count": 1,
    "verified": true,
    "sources": [
     {
@@ -218,12 +217,10 @@
     "HTTP 529"
    ],
    "units": [
-    "2-3",
-    "2-4",
     "5-1",
     "5-2"
    ],
-   "count": 12,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -260,11 +257,12 @@
     "Authorization: Basic"
    ],
    "units": [
+    "2-3",
     "2-4",
-    "5-2",
-    "5-3"
+    "5-1",
+    "5-2"
    ],
-   "count": 25,
+   "count": 19,
    "verified": true,
    "sources": [
     {
@@ -295,10 +293,12 @@
     "output_config.format"
    ],
    "units": [
+    "2-3",
     "2-4",
+    "5-2",
     "5-3"
    ],
-   "count": 7,
+   "count": 11,
    "verified": true,
    "sources": [
     {
@@ -329,9 +329,10 @@
     "additionalProperties"
    ],
    "units": [
+    "2-3",
     "2-4"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -360,10 +361,8 @@
    "keywords": [
     "YAML"
    ],
-   "units": [
-    "2-4"
-   ],
-   "count": 2,
+   "units": [],
+   "count": 0,
    "verified": true,
    "sources": [
     {
@@ -393,10 +392,9 @@
     "curl"
    ],
    "units": [
-    "2-4",
     "5-2"
    ],
-   "count": 4,
+   "count": 1,
    "verified": true,
    "sources": [
     {
@@ -426,10 +424,10 @@
     "base64"
    ],
    "units": [
-    "2-3",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 2,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -454,7 +452,7 @@
    "short": "API を使いやすくした開発者向けの部品一式",
    "detail": "SDK は、あるサービスや環境向けのプログラムを作るための道具一式のこと。Claude の公式 SDK（Python や TypeScript など）を使うと、HTTP リクエストの組み立てを自分で書かずに、関数を呼ぶだけで API を使える。認証・anthropic-version・content-type のヘッダーの自動付与、ストリーミング、エラー処理、自動リトライ（再試行）、タイムアウトの設定などを備える。",
    "analogy": "家具の組み立てキットのように、必要な部品と工具が最初から揃っている。",
-   "exam": "SDK が自動でやってくれるのは、ヘッダーの付与と、接続エラー・429・5xx の既定2回の自動リトライなど。レート制限の上限は SDK ではなく組織の利用ティアで決まり、会話の履歴も API 側には保存されない。AWS の認証情報で使うなら、SDK の Bedrock 用クライアント（AnthropicBedrock など）を選ぶ。",
+   "exam": "SDK が自動でやってくれるのは、ヘッダーの付与と、接続エラー・429・5xx の既定2回の自動リトライなど。レート制限の上限は SDK ではなく組織の利用ティアで決まり、会話の履歴も API 側には保存されない。AWS の認証情報で使うなら、SDK の Bedrock 用クライアント（Opus 4.7 以降は AnthropicBedrockMantle）を選ぶ。",
    "keywords": [
     "SDK",
     "Python SDK"
@@ -462,9 +460,11 @@
    "units": [
     "2-3",
     "2-4",
-    "5-2"
+    "5-1",
+    "5-2",
+    "5-3"
    ],
-   "count": 25,
+   "count": 35,
    "verified": true,
    "sources": [
     {
@@ -499,9 +499,11 @@
    "units": [
     "2-3",
     "2-4",
-    "5-2"
+    "5-1",
+    "5-2",
+    "5-3"
    ],
-   "count": 15,
+   "count": 22,
    "verified": true,
    "sources": [
     {
@@ -536,7 +538,7 @@
     "5-2",
     "5-3"
    ],
-   "count": 21,
+   "count": 16,
    "verified": true,
    "sources": [
     {
@@ -569,10 +571,9 @@
     "event: error"
    ],
    "units": [
-    "2-3",
     "5-2"
    ],
-   "count": 7,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -636,10 +637,10 @@
     "with_options"
    ],
    "units": [
-    "2-3",
+    "2-4",
     "5-2"
    ],
-   "count": 5,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -668,10 +669,12 @@
     "retry-after"
    ],
    "units": [
+    "2-3",
     "2-4",
+    "5-1",
     "5-2"
    ],
-   "count": 19,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -707,10 +710,9 @@
     "2-3",
     "2-4",
     "5-1",
-    "5-2",
     "5-3"
    ],
-   "count": 11,
+   "count": 9,
    "verified": true,
    "sources": [
     {
@@ -743,9 +745,10 @@
     "ANTHROPIC_LOG"
    ],
    "units": [
+    "2-4",
     "5-2"
    ],
-   "count": 6,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -780,7 +783,7 @@
     "5-1",
     "5-3"
    ],
-   "count": 11,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -808,6 +811,7 @@
     "Secrets"
    ],
    "units": [
+    "2-3",
     "2-4",
     "5-2"
    ],
@@ -829,6 +833,153 @@
    ]
   },
   {
+   "id": "pagination-cursor",
+   "cat": "web",
+   "name": "ページ送り（pagination）とカーソル（after_id・first_id）",
+   "yomi": "ページネーション、カーソル",
+   "short": "一覧を何ページかに分けて受け取り、続きを目印で頼む仕組み",
+   "detail": "一覧を返す API は、全件を一度に返さず、1ページずつ分けて返す。Claude API の一覧エンドポイント（GET /v1/messages/batches や GET /v1/models）は1ページ既定20件（limit は1〜1000）で、応答の has_more が true なら続きがある。続きは、応答の last_id を次のリクエストの after_id に渡して取る。first_id は前のページを取る before_id に使う。番号で位置を指定する offset 方式ではない。",
+   "analogy": "本のしおり。読み終えたページにしおり（last_id）を挟み、次はそのしおりの次から読む。",
+   "exam": "「20件で止まる」なら、has_more を見て last_id を after_id に渡して続きを取る。公式 SDK は戻り値を for 文で回すと次のページを自動で取りに行く。limit=1000 でも上限を超える件数は1回で取り切れない。",
+   "keywords": [
+    "after_id",
+    "first_id"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "List Message Batches - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/messages/batches/list"
+    },
+    {
+     "title": "List Models - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/models/list"
+    },
+    {
+     "title": "Python SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    }
+   ]
+  },
+  {
+   "id": "json-lines",
+   "cat": "web",
+   "name": "JSON Lines（.jsonl）",
+   "yomi": "ジェイソン・ラインズ",
+   "short": "1行に1つずつ JSON を並べたファイルの形",
+   "detail": ".jsonl は、1行ごとに独立した JSON オブジェクトを書くファイルの形。ファイル全体は1つの JSON 配列ではないので、1行ずつ読んで JSON として解釈する。Message Batches API の結果（results_url の先）はこの形で、1行が1つの要求の結果を表す。",
+   "analogy": "1枚に1件ずつ書いた伝票の束。束ごと1枚の表として読むのではなく、1枚ずつめくって読む。",
+   "exam": "バッチの結果は .jsonl を1行ずつ読み、送った順とは限らないので custom_id で元の要求と結び付ける。ファイル全体を json.loads で1回に読む選択肢は誤り。",
+   "keywords": [
+    ".jsonl"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Batch processing - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+    },
+    {
+     "title": "List Message Batches - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/messages/batches/list"
+    }
+   ]
+  },
+  {
+   "id": "promise-all-allsettled",
+   "cat": "web",
+   "name": "Promise.all と Promise.allSettled",
+   "yomi": "プロミス・オール、プロミス・オールセトルド",
+   "short": "並行した処理の結果をまとめて受け取る、JavaScript の2つの方法",
+   "detail": "JavaScript・TypeScript で複数の非同期処理を並行させ、結果をまとめて受け取る方法。Promise.all は1つでも失敗するとすぐ失敗として返るので、互いに依存する処理や、1つの失敗で全体を止めたい場面に向く。Promise.allSettled はすべてが終わるのを待ち、1件ずつ status（fulfilled か rejected）と結果を返すので、互いに独立した処理の成否を個別に知りたい場面に向く。",
+   "analogy": "Promise.all は1人でも欠席したら会議を中止する決まり、Promise.allSettled は全員の出欠を名簿に記録してから進める決まり。",
+   "exam": "並行した Claude API の呼び出しで、成功分は使い、失敗分だけ再実行したいなら Promise.allSettled。SDK の自動リトライ（既定2回）で通らなかった失敗は reject として届く。Python の asyncio.gather では return_exceptions=True が近い。",
+   "keywords": [
+    "Promise.allSettled",
+    "Promise.all",
+    "Promise.race"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Promise.allSettled() - MDN Web Docs",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+    },
+    {
+     "title": "Claude API errors - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "load-balancer",
+   "cat": "web",
+   "name": "ロードバランサー（load balancer）",
+   "yomi": "ロードバランサー",
+   "short": "届いたリクエストを複数のサーバーに振り分ける仕組み",
+   "detail": "ロードバランサーは、利用者から届くリクエストを複数のサーバー（仮想サーバーやコンテナなど）に振り分け、1台に負荷が集中しないようにする仕組み。動いていないサーバーには送らないので、アプリが止まりにくくなる。サーバーを足したり外したりしても、利用者からの流れを止めずに済む。振り分け先は毎回変わりうるので、会話履歴などの状態を1台のメモリだけに置くと、別のサーバーに振り分けられたときに引き継げない。",
+   "analogy": "銀行の番号札の案内係のように、空いている窓口へお客さんを順に案内する役。",
+   "exam": "Messages API はステートレスなので、毎回それまでの会話履歴をすべて送る。複数台のサーバーで受けるなら、履歴はどのサーバーからも読めるデータベースなどに置く（設計上の判断）。",
+   "keywords": [
+    "ロードバランサー"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "What is Elastic Load Balancing? - AWS",
+     "url": "https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html"
+    },
+    {
+     "title": "Using the Messages API",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+    }
+   ]
+  },
+  {
+   "id": "multipart-form-data",
+   "cat": "web",
+   "name": "multipart/form-data（フォームデータ）",
+   "yomi": "マルチパート・フォームデータ",
+   "short": "ファイルなどを、区切りで分けた複数のパートに入れて送る本文の形式",
+   "detail": "HTTP の本文の形式の1つ。送る値を、境界の文字列（boundary）で区切った「パート」に1つずつ入れ、各パートの名前は Content-Disposition ヘッダーで示す。ファイルや大きなデータを送るときに使う。JSON（application/json）やキーと値を & でつなぐ形式（application/x-www-form-urlencoded）とは別物。curl では -F 'file=@パス' と書くと、この形式で送る。",
+   "analogy": "書類と添付ファイルを、仕切り紙で分けて1つの封筒に入れて送るようなもの。",
+   "exam": "Files API のアップロード（POST /v1/files）は、この形式の file パートにファイルを入れて送る。JSON の本文に base64 で入れて送る形ではない。期限を付けるなら、同じフォームに expires_in_seconds を足す。SDK の client.files.upload は、パスやバイト列を渡すとこの形にして送ってくれる。",
+   "keywords": [
+    "multipart/form-data"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "POST - HTTP | MDN",
+     "url": "https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Methods/POST"
+    },
+    {
+     "title": "Upload File (Files API reference)",
+     "url": "https://platform.claude.com/docs/en/api/files/upload"
+    }
+   ]
+  },
+  {
    "id": "git",
    "cat": "dev",
    "name": "Git",
@@ -842,10 +993,9 @@
    ],
    "units": [
     "2-3",
-    "2-4",
-    "5-2"
+    "2-4"
    ],
-   "count": 4,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -873,8 +1023,7 @@
    ],
    "units": [
     "2-4",
-    "5-1",
-    "5-2"
+    "5-1"
    ],
    "count": 6,
    "verified": true,
@@ -902,8 +1051,7 @@
     "コミット"
    ],
    "units": [
-    "2-4",
-    "5-2"
+    "2-4"
    ],
    "count": 3,
    "verified": true,
@@ -934,7 +1082,7 @@
    "units": [
     "2-4"
    ],
-   "count": 1,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -966,9 +1114,10 @@
     "マージ前"
    ],
    "units": [
+    "2-3",
     "2-4"
    ],
-   "count": 2,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -994,9 +1143,12 @@
     "PR"
    ],
    "units": [
-    "2-4"
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-3"
    ],
-   "count": 4,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -1022,10 +1174,12 @@
     "レビュー"
    ],
    "units": [
+    "2-3",
     "2-4",
+    "5-1",
     "5-2"
    ],
-   "count": 6,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -1085,9 +1239,12 @@
     "CI"
    ],
    "units": [
-    "2-4"
+    "2-3",
+    "2-4",
+    "5-1",
+    "5-3"
    ],
-   "count": 1,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -1146,9 +1303,11 @@
     "Secrets"
    ],
    "units": [
-    "2-4"
+    "2-3",
+    "2-4",
+    "5-2"
    ],
-   "count": 1,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -1176,7 +1335,7 @@
    "units": [
     "2-4"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -1199,12 +1358,11 @@
     "テストケース"
    ],
    "units": [
-    "2-3",
     "2-4",
-    "5-2",
+    "5-1",
     "5-3"
    ],
-   "count": 6,
+   "count": 8,
    "verified": false,
    "sources": [
     {
@@ -1293,7 +1451,7 @@
    "units": [
     "2-4"
    ],
-   "count": 1,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -1323,7 +1481,7 @@
    "units": [
     "2-4"
    ],
-   "count": 3,
+   "count": 1,
    "verified": true,
    "sources": [
     {
@@ -1348,10 +1506,8 @@
    "keywords": [
     "plan mode"
    ],
-   "units": [
-    "2-4"
-   ],
-   "count": 1,
+   "units": [],
+   "count": 0,
    "verified": true,
    "sources": [
     {
@@ -1384,7 +1540,7 @@
    "units": [
     "2-4"
    ],
-   "count": 2,
+   "count": 1,
    "verified": true,
    "sources": [
     {
@@ -1410,10 +1566,8 @@
     "/rewind",
     "チェックポイント"
    ],
-   "units": [
-    "2-4"
-   ],
-   "count": 1,
+   "units": [],
+   "count": 0,
    "verified": true,
    "sources": [
     {
@@ -1442,10 +1596,8 @@
    "keywords": [
     "/batch"
    ],
-   "units": [
-    "2-4"
-   ],
-   "count": 1,
+   "units": [],
+   "count": 0,
    "verified": true,
    "sources": [
     {
@@ -1477,7 +1629,7 @@
    "units": [
     "2-4"
    ],
-   "count": 1,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -1491,6 +1643,66 @@
     {
      "title": "Claude Code Docs: CLI reference",
      "url": "https://code.claude.com/docs/en/cli-reference"
+    }
+   ]
+  },
+  {
+   "id": "semver-major",
+   "cat": "dev",
+   "name": "セマンティックバージョニング（SemVer）とメジャーバージョン",
+   "yomi": "セマンティック・バージョニング、セムバー",
+   "short": "版番号の上がり方で、変更の大きさを伝える決まり",
+   "detail": "版番号を MAJOR.MINOR.PATCH の3つで表し、互換性のない変更ならメジャー、互換性のある機能追加ならマイナー、互換性のある不具合修正ならパッチを上げる決まり。Claude の公式 SDK はおおむねこの決まりに従い、メジャーバージョンごとに送る anthropic-version が決まっている。Python SDK では 2.0.0 が API バージョン 2026-10-21 を送る最初の版。",
+   "analogy": "建物の改修の知らせ。壁紙の張り替え（パッチ）なら気にせず住めるが、間取りの変更（メジャー）なら家具の置き方を見直す必要がある。",
+   "exam": "依存更新でメジャーバージョンが上がったら、移行ガイドを読んでから取り込む。SDK 2.0.0 で temperature・top_p・top_k が消え、2026-10-21 では送ると 400 になる、のように振る舞いが変わる。",
+   "keywords": [
+    "メジャーバージョン"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Semantic Versioning 2.0.0",
+     "url": "https://semver.org/spec/v2.0.0.html"
+    },
+    {
+     "title": "Python SDK - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    },
+    {
+     "title": "Migrating to API version 2026-10-21 - Claude Platform Docs",
+     "url": "https://platform.claude.com/docs/en/api/migration-2026-10-21"
+    }
+   ]
+  },
+  {
+   "id": "review-md",
+   "cat": "dev",
+   "name": "REVIEW.md（Code Review の指示ファイル）",
+   "yomi": "レビュー・エムディー",
+   "short": "Claude の Code Review に、何をどの重さで指摘するかを伝えるファイル",
+   "detail": "REVIEW.md は、リポジトリ直下に置く Code Review 専用の指示ファイル。何を指摘するか、どの重大度にするか、何を飛ばすか（生成ファイル、CI がすでに確かめていることなど）を書く。プロジェクト全体の決まりは CLAUDE.md に書き、Code Review は両方を読む。REVIEW.md は PR の基準ブランチか既定ブランチから読まれ、PR 自身の変更からは読まれない。",
+   "analogy": "検査係に渡すチェック表。検査を受ける側（PR の作成者）がその場で書き換えても、検査係は事務所に保管された原本（既定ブランチ）を使う。",
+   "exam": "PR の中で REVIEW.md を書き換えても、その PR のレビューには効かない。手元で実行する /code-review は CLAUDE.md を読み、REVIEW.md は読まない。指摘を減らす指示を確実に効かせるには既定ブランチを保護する。",
+   "keywords": [
+    "REVIEW.md"
+   ],
+   "units": [
+    "2-4"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Customize Code Review - Claude Code Docs",
+     "url": "https://code.claude.com/docs/en/code-review-customize"
+    },
+    {
+     "title": "Code Review - Claude Code Docs",
+     "url": "https://code.claude.com/docs/en/code-review"
     }
    ]
   },
@@ -1512,9 +1724,10 @@
     "2-3",
     "2-4",
     "5-1",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 21,
+   "count": 25,
    "verified": true,
    "sources": [
     {
@@ -1547,9 +1760,10 @@
    "units": [
     "2-3",
     "2-4",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 13,
+   "count": 14,
    "verified": true,
    "sources": [
     {
@@ -1577,12 +1791,10 @@
     "最上位の system"
    ],
    "units": [
-    "2-3",
     "5-1",
-    "5-2",
     "5-3"
    ],
-   "count": 8,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -1615,7 +1827,7 @@
     "2-4",
     "5-2"
    ],
-   "count": 20,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -1648,10 +1860,9 @@
    ],
    "units": [
     "2-4",
-    "5-1",
     "5-2"
    ],
-   "count": 13,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -1685,7 +1896,7 @@
    "units": [
     "5-2"
    ],
-   "count": 9,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -1712,7 +1923,6 @@
     "request_id"
    ],
    "units": [
-    "2-4",
     "5-2"
    ],
    "count": 4,
@@ -1742,9 +1952,11 @@
     "ワークスペース"
    ],
    "units": [
+    "2-3",
+    "2-4",
     "5-2"
    ],
-   "count": 3,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -1779,9 +1991,10 @@
    "units": [
     "2-3",
     "5-1",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 8,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -1817,10 +2030,9 @@
     "event: error"
    ],
    "units": [
-    "2-3",
     "5-2"
    ],
-   "count": 5,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -1856,11 +2068,10 @@
    ],
    "units": [
     "2-3",
-    "2-4",
     "5-1",
     "5-2"
    ],
-   "count": 11,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -1886,10 +2097,11 @@
     "retry-after"
    ],
    "units": [
-    "2-4",
+    "2-3",
+    "5-1",
     "5-2"
    ],
-   "count": 7,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -1921,9 +2133,10 @@
    "units": [
     "2-3",
     "5-1",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 9,
+   "count": 11,
    "verified": true,
    "sources": [
     {
@@ -1947,10 +2160,9 @@
     "enforced_spend_limit_reached"
    ],
    "units": [
-    "2-4",
     "5-2"
    ],
-   "count": 5,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -1978,8 +2190,8 @@
     "Anthropic()"
    ],
    "units": [
-    "2-4",
-    "5-2"
+    "2-3",
+    "2-4"
    ],
    "count": 3,
    "verified": true,
@@ -2009,10 +2221,12 @@
     "自動リトライ"
    ],
    "units": [
+    "2-3",
     "2-4",
+    "5-1",
     "5-2"
    ],
-   "count": 16,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -2040,9 +2254,10 @@
     "10分"
    ],
    "units": [
+    "2-4",
     "5-2"
    ],
-   "count": 5,
+   "count": 9,
    "verified": true,
    "sources": [
     {
@@ -2107,9 +2322,10 @@
     "ANTHROPIC_LOG"
    ],
    "units": [
+    "2-4",
     "5-2"
    ],
-   "count": 5,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -2139,10 +2355,10 @@
     ".stream()"
    ],
    "units": [
-    "2-3",
+    "2-4",
     "5-2"
    ],
-   "count": 3,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -2156,6 +2372,163 @@
     {
      "title": "Claude API errors",
      "url": "https://platform.claude.com/docs/en/api/errors"
+    }
+   ]
+  },
+  {
+   "id": "content-block-type",
+   "cat": "api",
+   "name": "コンテンツブロック（content block）と type",
+   "yomi": "コンテンツブロック",
+   "short": "応答の content 配列に入る部品。種類は type で見分ける",
+   "detail": "Messages API の応答の content は、text・thinking・tool_use などのブロックの配列で、各ブロックの種類は type フィールドで分かる。Claude Opus 5.5 のように思考が常に有効なモデルでは、最初の text ブロックより前に thinking ブロックが来ることがあるため、content[0].text のように位置で読むコードは壊れる。公式は、type が \"text\" のブロックを選んで本文を読み、ストリーミングでもブロックの種類で分けるよう勧めている。",
+   "analogy": "届いた箱の中身を、並び順ではなく貼られたラベルで仕分ける。",
+   "exam": "思考なしのモデルから思考ありのモデルへ移すと、位置で読むコードが壊れる。対策は type で選ぶこと。thinking を disabled にするのは Opus 5.5 では 400 になる。",
+   "keywords": [
+    "content[0].text",
+    "type が text"
+   ],
+   "units": [
+    "5-1",
+    "5-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Opus 5.5 migration guide",
+     "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+    }
+   ]
+  },
+  {
+   "id": "input-json-delta",
+   "cat": "api",
+   "name": "input_json_delta（ストリーミングで届くツール入力の断片）",
+   "yomi": "インプット ジェイソン デルタ",
+   "short": "ツール使用をストリーミングで受けるとき、ツールの入力が JSON の文字列の断片として届くイベント",
+   "detail": "ストリーミングでツール使用（tool_use）のブロックが届くとき、ツールに渡す入力（input）は content_block_delta の delta に type が \"input_json_delta\" の形で入り、partial_json に JSON の文字列の断片が入る。断片1つだけでは正しい JSON にならないので、同じブロックの断片を順につなぎ、content_block_stop を受け取ってから解析する。最終的な tool_use.input はオブジェクトになる。Python と TypeScript の SDK のストリーミング補助を使えば、途中から解析済みの入力も受け取れる。現在のモデルは入力のキーと値を1組ずつ出すため、ツール使用中はイベントの間が空くことがある。",
+   "analogy": "1文字ずつ届く電報を、最後まで受け取ってから文として読むようなもの。",
+   "exam": "input_json_delta が届くたびに JSON として解析すると失敗する。partial_json を連結し、content_block_stop の後で解析する。文字の断片（text_delta）とは別の delta の種類。",
+   "keywords": [
+    "input_json_delta",
+    "partial_json"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Streaming messages",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+    }
+   ]
+  },
+  {
+   "id": "opentelemetry-sdk",
+   "cat": "api",
+   "name": "OpenTelemetry（SDK のトレース）",
+   "yomi": "オープンテレメトリー",
+   "short": "処理の流れと所要時間を span として記録し、監視基盤に送る標準の仕組み。Claude SDK も span を出せる",
+   "detail": "OpenTelemetry は、アプリの処理を span（1つの処理の開始から終了までの記録）の木として残し、監視基盤に送るための標準の仕組み。Claude SDK は、アプリが tracer provider を登録すると、その tracer provider を使って呼び出しごとに anthropic.messages.create などの span を出す。呼び出しのコードは変えずに済み、span は自社の処理のトレースの中に並ぶ。span にはモデル名やトークン数が入り、ストリーミングでは最初の差分までの秒数も入る。既定の content_mode は metadata_only で、プロンプトと応答は入らない。content にすると入る。SDK のトレースはベータ。",
+   "analogy": "荷物に追跡番号を付けて、どの営業所を何時に通ったかを一覧で見られるようにする仕組み。",
+   "exam": "呼び出し箇所を書き換えずに所要時間やトークン数を見たいなら、tracer provider を最初の呼び出しより前に登録する。個人情報を送れないなら content_mode は既定の metadata_only のままにする。ANTHROPIC_LOG は SDK のログを出す設定で、別もの。",
+   "keywords": [
+    "OpenTelemetry"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Set up OpenTelemetry with the Claude SDK",
+     "url": "https://platform.claude.com/docs/en/manage-claude/opentelemetry/sdk"
+    },
+    {
+     "title": "OpenTelemetry span reference",
+     "url": "https://platform.claude.com/docs/en/api/opentelemetry/spans"
+    }
+   ]
+  },
+  {
+   "id": "api-key-types",
+   "cat": "api",
+   "name": "API キーの種類（personal key / service account key / workspace key）",
+   "yomi": "パーソナルキー、サービスアカウントキー、ワークスペースキー",
+   "short": "API キーを作るときに選ぶ型。誰として動き、いつ使えなくなるかが決まる",
+   "detail": "personal key は作った本人（ユーザー）として動き、本人が組織から外れると使えなくなる。service account key は組織が管理するサービスアカウントとして動き、CI や本番サービスなど共有・自動の処理に向く。workspace key は従来の型（legacy）で、作ったワークスペースに属し、作った人が組織を離れても、期限切れ・無効化・削除・ワークスペースのアーカイブまで使える。新しい連携には personal key か service account key が勧められている。キーは1つのワークスペースに限定して作ることも、限定せずに作ることもでき、限定しないキーではリクエストごとに anthropic-workspace-id ヘッダーでワークスペースを指定する。",
+   "analogy": "個人の社員証、部署で共有する業務用カード、昔ながらの部屋の合鍵の違いのようなもの。",
+   "exam": "共有・自動の処理には service account key を使う。ワークスペースに限定しないキーで anthropic-workspace-id を付け忘れると 400 invalid_request_error になる。SDK は認証・anthropic-version・content-type のヘッダーは自動で付けるが、anthropic-workspace-id は自分で渡す。",
+   "keywords": [
+    "サービスアカウントキー",
+    "ワークスペースキー"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Authentication",
+     "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+    },
+    {
+     "title": "API overview",
+     "url": "https://platform.claude.com/docs/en/api/overview"
+    }
+   ]
+  },
+  {
+   "id": "ratelimit-headers",
+   "cat": "api",
+   "name": "レート制限の応答ヘッダー（anthropic-ratelimit-*）",
+   "yomi": "アンソロピック レートリミット ヘッダー",
+   "short": "応答に付く、レート制限の上限・残り・満タンに戻る時刻を示すヘッダー",
+   "detail": "API の応答には、requests（リクエスト数）、input-tokens（入力トークン）、output-tokens（出力トークン）、tokens（いま最も厳しい制限）ごとに、-limit（上限）・-remaining（残り）・-reset（満タンに戻る時刻、RFC 3339 形式）のヘッダーが付く。トークンの残りは千単位に丸められる。たとえば anthropic-ratelimit-output-tokens-remaining が 0 なら、出力トークンの上限（OTPM）に当たっている。429 では、待つ秒数を示す retry-after ヘッダーが付くこともある。",
+   "analogy": "車の燃料計のように、どのタンクがどれだけ残っているかを示す計器。",
+   "exam": "429 の対策は、どの残りが 0 かで選ぶ。入力ならプロンプトキャッシュ、出力なら effort や出力量の見直し、リクエスト数なら送る間隔をならす。max_tokens は OTPM の計算に入らない。",
+   "keywords": [
+    "anthropic-ratelimit-output-tokens-remaining",
+    "anthropic-ratelimit-*"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Rate limits",
+     "url": "https://platform.claude.com/docs/en/api/rate-limits"
+    }
+   ]
+  },
+  {
+   "id": "app-attest",
+   "cat": "api",
+   "name": "App Attest（iOS・macOS アプリの認証）",
+   "yomi": "アップ アテスト",
+   "short": "配布した iOS・macOS アプリが、API キーを持たずに Claude API を直接呼べる認証方式",
+   "detail": "App Attest は、端末から Claude API を直接呼ぶ iOS・macOS アプリ向けの認証方式。アプリの各インストールが、Console に登録した本物の改変されていないアプリであることを Apple の App Attest の仕組みで証明すると、Anthropic が端末に短期のアクセストークンを発行する。トークンはワークスペースに限定され、1時間で切れ、Messages API の呼び出しだけに使える。利用料金はそのワークスペースに請求される。バックエンドやプロキシを持たないアプリでも、API キーをアプリに入れずに済む。",
+   "analogy": "本物の会員証を見せた人にだけ、1時間有効の入館券を渡す受付のようなもの。",
+   "exam": "公式に対象として挙がっているのは iOS と macOS のアプリだけ。Android も含めて同じ仕組みにするなら、自社サーバーにキーを置いて中継する。API キーは秘密を管理できるサーバー向けで、クラウドで動く本番処理には Workload Identity Federation も選べる。",
+   "keywords": [
+    "App Attest"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Authentication",
+     "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
     }
    ]
   },
@@ -2181,7 +2554,7 @@
     "5-2",
     "5-3"
    ],
-   "count": 19,
+   "count": 18,
    "verified": true,
    "sources": [
     {
@@ -2210,9 +2583,11 @@
    ],
    "units": [
     "2-3",
-    "5-2"
+    "2-4",
+    "5-2",
+    "5-3"
    ],
-   "count": 6,
+   "count": 14,
    "verified": true,
    "sources": [
     {
@@ -2238,7 +2613,7 @@
    "units": [
     "5-2"
    ],
-   "count": 3,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -2266,9 +2641,11 @@
     "count_tokens"
    ],
    "units": [
-    "5-2"
+    "5-1",
+    "5-2",
+    "5-3"
    ],
-   "count": 6,
+   "count": 8,
    "verified": true,
    "sources": [
     {
@@ -2292,8 +2669,8 @@
     "url を指定した画像"
    ],
    "units": [
-    "2-3",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
    "count": 4,
    "verified": true,
@@ -2318,9 +2695,10 @@
     "document ブロック"
    ],
    "units": [
+    "2-3",
     "5-2"
    ],
-   "count": 1,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -2349,9 +2727,11 @@
    ],
    "units": [
     "2-3",
-    "5-1"
+    "5-1",
+    "5-2",
+    "5-3"
    ],
-   "count": 10,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -2384,9 +2764,11 @@
    ],
    "units": [
     "2-3",
-    "5-1"
+    "5-1",
+    "5-2",
+    "5-3"
    ],
-   "count": 8,
+   "count": 11,
    "verified": true,
    "sources": [
     {
@@ -2440,10 +2822,11 @@
     "additionalProperties"
    ],
    "units": [
+    "2-3",
     "2-4",
     "5-3"
    ],
-   "count": 3,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -2471,7 +2854,7 @@
     "5-2",
     "5-3"
    ],
-   "count": 9,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -2498,9 +2881,10 @@
     "プレフィックス"
    ],
    "units": [
-    "2-3"
+    "2-3",
+    "5-1"
    ],
-   "count": 3,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -2524,6 +2908,7 @@
    ],
    "units": [
     "2-3",
+    "2-4",
     "5-1"
    ],
    "count": 4,
@@ -2554,9 +2939,10 @@
    "units": [
     "2-3",
     "5-1",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 3,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -2583,9 +2969,11 @@
     "stop_sequence"
    ],
    "units": [
-    "5-1"
+    "5-1",
+    "5-2",
+    "5-3"
    ],
-   "count": 3,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -2604,9 +2992,9 @@
    "name": "Amazon Bedrock の Claude",
    "yomi": "ベッドロック",
    "short": "AWS 経由で Claude を使う方法",
-   "detail": "Claude を AWS の Amazon Bedrock 経由で使う方法で、請求も IAM（AWS の権限管理）も AWS にまとまる。SDK の Bedrock 用クライアント（AnthropicBedrock など）を、AWS の認証情報で使う。モデル ID は anthropic. で始まり（例は anthropic.claude-opus-5-5）、旧方式ではその前に推論プロファイルの接頭辞（global.、us.、jp. など）を付ける。global は世界中の空いた場所へ送るので安く、地域の推論プロファイル（jp. など）は、その地域の中で処理する。",
+   "detail": "Claude を AWS の Amazon Bedrock 経由で使う方法で、請求も IAM（AWS の権限管理）も AWS にまとまる。Opus 4.7 以降は Messages API と同じ形の新しい方式で、SDK の AnthropicBedrockMantle を AWS の認証情報で使う。Opus 4.6 以前は旧方式（InvokeModel・Converse）で、AnthropicBedrock を使う。モデル ID は anthropic. で始まり（例は anthropic.claude-opus-5-5）、旧方式ではその前に推論プロファイルの接頭辞（global.、us.、jp. など）を付ける。global は世界中の空いた場所へ送るので安く、地域の推論プロファイル（jp. など）は、その地域の中で処理する。",
    "analogy": "同じ料理（Claude）を、AWS という店の伝票（請求）と会員証（権限）で注文するようなもの。",
-   "exam": "地域の推論プロファイル（jp. など）は global より約10%高く、データを日本の地域内だけで処理したい金融機関などは、こちらを選ぶ。リクエストの大きさの上限は20MB（Claude API は128MB）で、トークン数が収まっていても先にこの上限に当たる。Message Batches API・Models API・Files API・画像や文書の URL 指定は使えない。",
+   "exam": "地域の推論プロファイル（jp. など）は global より約10%高く、データを日本の地域内だけで処理したい金融機関などは、こちらを選ぶ。旧方式ではリクエストの大きさの上限が20MB（Claude API は128MB）で、トークン数が収まっていても先にこの上限に当たる。Message Batches API・Models API・Files API・画像や文書の URL 指定は使えない。AWS が推論基盤を運用するので、AWS を唯一のデータ処理者にしたい組織に向く。Anthropic が運用する Claude Platform on AWS（データを処理するのは Anthropic）と取り違えない。",
    "keywords": [
     "Amazon Bedrock",
     "Bedrock",
@@ -2617,9 +3005,10 @@
    ],
    "units": [
     "2-3",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 3,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -2633,16 +3022,20 @@
     {
      "title": "Route model inference requests across AWS Regions with cross-Region inference",
      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html"
+    },
+    {
+     "title": "Claude Platform on AWS",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws"
     }
    ]
   },
   {
    "id": "vertex-claude",
    "cat": "feature",
-   "name": "Google Cloud の Claude（Vertex AI・Google managed）",
+   "name": "Google Cloud の Claude（Agent Platform・Google managed）",
    "yomi": "バーテックス・エーアイ",
    "short": "Google Cloud 経由で Claude を使う方法",
-   "detail": "Claude を Google Cloud（Vertex AI）経由で使う方法で、公式ドキュメントでは Claude Models on Google Cloud（Google managed）と呼ぶ。請求は Google Cloud にまとまり、SDK の AnthropicVertex を使い、モデルはエンドポイントの URL で指定する。エンドポイントは3種類で、global（空いた地域へ送る・推奨）、multi-region（us か eu の範囲）、regional（指定した1つの地域だけ）がある。multi-region と regional は global より10%高い。",
+   "detail": "Claude を Google Cloud の Agent Platform 経由で使う方法で、公式ドキュメントでは Claude Models on Google Cloud（Google managed）と呼ぶ。請求は Google Cloud にまとまり、SDK の AnthropicVertex を使い、モデルはエンドポイントの URL で指定する。エンドポイントは3種類で、global（空いた地域へ送る・推奨）、multi-region（us か eu の範囲）、regional（指定した1つの地域だけ）がある。multi-region と regional は global より10%高い。",
    "analogy": "世界中の窓口のどこでもよいか（global）、指定した窓口だけを使うか（regional）を選ぶようなもの。",
    "exam": "厳しいデータ所在地の要件には regional（単一地域）、広い範囲でよければ multi-region、可用性優先なら global を選ぶ。Message Batches API・Models API・Files API・画像や文書の URL 指定は使えず（画像は base64 で送る）、リクエストの上限は30MB。regional は Claude Sonnet 4.6 以前のモデル向けで、新しいモデルは global か multi-region を使う。",
    "keywords": [
@@ -2650,9 +3043,10 @@
     "Claude Models on Google Cloud（Google managed）"
    ],
    "units": [
-    "2-3"
+    "2-3",
+    "5-2"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -2722,6 +3116,320 @@
    ]
   },
   {
+   "id": "citations",
+   "cat": "feature",
+   "name": "citations（引用）と page_location",
+   "yomi": "サイテーションズ",
+   "short": "回答の根拠になった文書の箇所を、位置付きで返す機能",
+   "detail": "document ブロック（PDF・プレーンテキスト・カスタムコンテンツ）に citations: {\"enabled\": true} を付けると、応答の text ブロックに、根拠の文（cited_text）と文書の中の位置が付いて返る。位置は、PDF ならページの範囲（page_location、1始まりで終わりのページは含まない）、プレーンテキストなら文字の位置（char_location）、カスタムコンテンツならブロックの番号。",
+   "analogy": "答案の各文に「教科書の何ページ」と付箋を貼って返してもらうようなもの。",
+   "exam": "cited_text は出力トークンに数えない。API が解析して返すので、指す位置は渡した文書の有効な場所になる（プロンプトで引用させるより確実）。structured outputs（output_config.format）とは併用できず 400。1リクエストの文書は全部で有効にするか、どれも有効にしないか。PDF の中の画像は引用できない。",
+   "keywords": [
+    "citations",
+    "page_location"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Citations",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+    },
+    {
+     "title": "PDF support",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/pdf-support"
+    }
+   ]
+  },
+  {
+   "id": "tool-search-tool",
+   "cat": "feature",
+   "name": "tool search tool と defer_loading",
+   "yomi": "ツール・サーチ・ツール／ディファー・ローディング",
+   "short": "たくさんのツールから、必要なものだけを検索して読み込む仕組み",
+   "detail": "ツールが多いとき、tools に tool search tool（regex 版か BM25 版）を加え、すぐには使わないツールに defer_loading: true を付ける。最初は検索用のツールと後回しにしないツールだけがコンテキストに入り、Claude が検索で見つけたツールだけが定義に展開される。検索は Anthropic 側で実行されるサーバーツールで、後回しにしたツールの定義もリクエストの tools には毎回すべて入れる。",
+   "analogy": "分厚いカタログを全部机に広げず、索引で引いて必要なページだけを開くようなもの。",
+   "exam": "ツールが30〜50個を超えると選ぶ精度が落ちる。複数の MCP サーバーで定義が約5.5万トークンになる例では、85%以上減らせる。全部に defer_loading を付けると 400。よく使う3〜5個は後回しにしない。検索の server_tool_use には tool_result を返さない。",
+   "keywords": [
+    "tool search tool",
+    "defer_loading"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Tool search tool",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool"
+    }
+   ]
+  },
+  {
+   "id": "server-tools-pause-turn",
+   "cat": "feature",
+   "name": "サーバーツール（web_search など）と pause_turn",
+   "yomi": "サーバー・ツール／ポーズ・ターン",
+   "short": "Anthropic 側で実行されるツールと、その一時停止の合図",
+   "detail": "web_search・web_fetch・code_execution などのサーバーツールは Anthropic 側で実行され、呼び出し（server_tool_use）と結果のブロックが同じ応答に入る。アプリは tool_result を返さない。サーバー側で回すループが長くなると stop_reason が pause_turn で止まることがあり、そのときは応答をそのまま assistant メッセージとして足し、同じ tools を付けて送ると続きから再開する。",
+   "analogy": "調べ物を任せた相手から「ここで一度区切ります」と連絡が来たので、手元のメモをそのまま返して「続きをお願いします」と頼むようなもの。",
+   "exam": "pause_turn はエラーではなく一時停止。max_tokens を増やすのでも、tool_result を作るのでもない。続きもまた止まることがあるので、回数に上限を付けて繰り返す。自作のクライアントツールと同時に呼ばれたときは、stop_reason が tool_use になる。",
+   "keywords": [
+    "pause_turn",
+    "web_search",
+    "server_tool_use",
+    "サーバーツール"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Server tools",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools"
+    }
+   ]
+  },
+  {
+   "id": "claude-platform-on-aws",
+   "cat": "feature",
+   "name": "Claude Platform on AWS",
+   "yomi": "クロード・プラットフォーム・オン・エーダブリューエス",
+   "short": "Anthropic が運用し、AWS の認証と請求で使う Claude の提供形態",
+   "detail": "Claude API と同じエンドポイントを、AWS の認証（IAM の SigV4 署名か API キー）と AWS Marketplace の請求で使う提供形態。運用と推論データの処理は Anthropic が行う。Message Batches API・Files API・プロンプトキャッシュなど、Claude API とほぼ同じ機能が使える。SDK では AnthropicAWS クライアントを使う。",
+   "analogy": "メーカーの直営店が AWS のショッピングモールに出店していて、支払いはモールのカードでできるようなもの。",
+   "exam": "AWS を唯一のデータ処理者にしたい組織や、FedRAMP High・HIPAA 対応が必要な組織には、AWS が運用する Claude in Amazon Bedrock が勧められる。Batch や Files を AWS の請求で使いたいならこちら。高速モードや Anthropic の HIPAA 対応の仕組みは使えない。",
+   "keywords": [
+    "Claude Platform on AWS",
+    "AnthropicAWS"
+   ],
+   "units": [
+    "2-3",
+    "5-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Platform on AWS",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws"
+    },
+    {
+     "title": "Claude in Amazon Bedrock (Opus 4.7 and later)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock"
+    }
+   ]
+  },
+  {
+   "id": "mcp",
+   "cat": "feature",
+   "name": "MCP（Model Context Protocol）と MCP サーバー",
+   "yomi": "エムシーピー",
+   "short": "AI アプリを外部のツールやデータにつなぐための共通の規格",
+   "detail": "MCP は、AI アプリケーションを外部のシステム（ファイルやデータベースなどのデータ、検索や計算などのツール、決まった手順のプロンプト）につなぐためのオープンな標準。ツールやデータを提供する側を MCP サーバーと呼び、Claude や Claude Code などの対応するアプリから接続して使う。一度 MCP サーバーを作れば、対応する複数のアプリから同じように使える。",
+   "analogy": "公式の例えでは AI アプリ用の USB-C 端子。差し込み口の形がそろっているので、1つ作ればいろいろな機器につなげる。",
+   "exam": "複数のアプリで同じ社内のツールやデータを使い回すなら MCP サーバーにする。MCP サーバーをたくさんつなぐとツール定義が増えてコンテキストを圧迫し、選ぶ精度も落ちるので、tool search tool と defer_loading で必要なものだけを読み込む。",
+   "keywords": [
+    "MCP"
+   ],
+   "units": [
+    "2-3",
+    "2-4"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "What is the Model Context Protocol (MCP)?",
+     "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+    },
+    {
+     "title": "Tool search tool",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool"
+    }
+   ]
+  },
+  {
+   "id": "compaction",
+   "cat": "feature",
+   "name": "compaction（サーバー側のコンパクション）",
+   "yomi": "コンパクション",
+   "short": "会話の古い部分を、Claude がサーバー側で要約に置き換える機能",
+   "detail": "長い会話やエージェントの作業で、古いターンを Claude がサーバー側で書いた要約に置き換え、コンテキストウィンドウに収めたまま続けられるようにする機能。要約のコードを自分で書かなくてよい。会話が長くなるほど応答の質が落ちる（context rot）ので、載せる量を小さく保つ目的もある。要約を頼むタイミングを自分で決める「Compaction on demand」と、入力トークンがしきい値に達したら API が行う「Compaction at a token threshold」があり、どちらもベータ。",
+   "analogy": "机に積み上がった古い議事録を、要点だけのメモ1枚にまとめ直して机を空ける。",
+   "exam": "長い会話・長時間のエージェントでウィンドウに載る量を減らす主な手段。プロンプトキャッシュは料金が変わるだけで、ウィンドウの消費は減らない点と区別する。古いツール結果や思考ブロックを要約せずに消すのは context editing。",
+   "keywords": [
+    "compaction"
+   ],
+   "units": [
+    "5-1"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Compaction overview",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"
+    },
+    {
+     "title": "Context windows",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+    }
+   ]
+  },
+  {
+   "id": "context-editing",
+   "cat": "feature",
+   "name": "context editing（コンテキスト編集）",
+   "yomi": "コンテキスト・エディティング",
+   "short": "会話にたまった古いツール結果や思考を、API 側で消す機能（ベータ）",
+   "detail": "会話が長くなったとき、古いツール結果（clear_tool_uses_20250919）や前のターンの思考ブロック（clear_thinking_20251015）を、プロンプトが Claude に届く前に API 側で消す機能。消したツール結果は、消したことを示す文に置き換わる。ベータなので anthropic-beta に context-management-2025-06-27 を付け、context_management で使う戦略を指定する。",
+   "analogy": "作業机に積み上がった読み終わりの資料を、係の人が「片付け済み」の付箋に置き換えてくれるようなもの。",
+   "exam": "ツールを多用するエージェントで、ウィンドウを圧迫したり精度を下げたり（context rot）する古いツール結果を消したいときに使う。SDK では client.beta.messages.create に betas と context_management を渡す。プロンプトキャッシュは料金が変わるだけでウィンドウの消費は減らない点と区別する。会話全体を要約する compaction とは別の機能。",
+   "keywords": [
+    "context editing",
+    "context_management",
+    "thinking block clearing"
+   ],
+   "units": [
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Context editing",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"
+    },
+    {
+     "title": "Beta headers",
+     "url": "https://platform.claude.com/docs/en/api/beta-headers"
+    }
+   ]
+  },
+  {
+   "id": "agent-skills",
+   "cat": "feature",
+   "name": "Agent Skills（スキル）",
+   "yomi": "エージェント・スキルズ",
+   "short": "指示・スクリプト・資料をまとめ、必要なときだけ Claude が読み込む部品",
+   "detail": "SKILL.md（名前と説明の入った指示書）と、スクリプトや参考資料をフォルダにまとめたもの。ふだんは名前と説明だけがコンテキストに入り、依頼が説明に合ったときに本文を読み、必要な資料やスクリプトはさらに必要なときだけ読む（段階的な読み込み）。Anthropic が用意した PowerPoint・Excel・Word・PDF のスキルと、自作のスキルがある。API ではコード実行ツールのコンテナの中で動き、container にスキルの ID を指定する。",
+   "analogy": "新人向けの手順書の棚のようなもの。普段は背表紙（名前と説明）だけを見ておき、該当する仕事が来たときにその1冊を開く。",
+   "exam": "Excel や PowerPoint などのファイル作成をさせたいなら、用意済みのスキル（xlsx・pptx など）を使う。API で使うにはコード実行ツールが必要。Claude API・Claude Platform on AWS などで使え、Amazon Bedrock では使えない。API で上げた自作スキルはワークスペース内で共有される。",
+   "keywords": [
+    "Agent Skills"
+   ],
+   "units": [
+    "5-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Agent Skills",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
+    },
+    {
+     "title": "Claude in Amazon Bedrock (Opus 4.7 and later)",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock"
+    }
+   ]
+  },
+  {
+   "id": "strict-tool-use",
+   "cat": "feature",
+   "name": "strict tool use（strict: true）",
+   "yomi": "ストリクト・ツール・ユース",
+   "short": "ツールの入力が JSON スキーマに必ず合うようにする設定",
+   "detail": "ツール定義に strict: true を付けると、Claude が作るツールの入力（引数）が、指定した JSON スキーマに合うことが保証される。生成の段階でスキーマに合う出力だけを選ぶ仕組み（grammar-constrained sampling）を使う。たとえば整数の欄に \"two\" や \"2\" のような文字列が入らなくなる。",
+   "analogy": "記入欄ごとに数字しか打てない申込フォーム。書き方の間違いが最初から起きない。",
+   "exam": "Opus 5.5・Sonnet 5.5 は強制ツール使用（tool_choice の any・tool）を 400 で拒む。スキーマに合う JSON が欲しいときは tool_choice を auto のままにして strict: true を付けるか、構造化出力（structured outputs）を使う。",
+   "keywords": [
+    "strict: true"
+   ],
+   "units": [
+    "2-4",
+    "5-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Strict tool use",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+    },
+    {
+     "title": "What's new in Claude Opus 5.5",
+     "url": "https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5"
+    }
+   ]
+  },
+  {
+   "id": "mid-conversation-system-messages",
+   "cat": "feature",
+   "name": "会話途中の system メッセージ（mid-conversation system messages）",
+   "yomi": "ミッド・カンバセーション・システム・メッセージ",
+   "short": "会話の途中に role が system のメッセージを足して指示を変える方法",
+   "detail": "最上位の system を書き換える代わりに、messages の途中へ {\"role\": \"system\"} のメッセージを追記して、そこから先に効く指示を加える機能。最上位の system は前置きの先頭にあるので、書き換えるとその後ろのキャッシュがすべて無効になるが、この方法なら前のキャッシュをそのまま読める。Fable 5.1、Opus 5.5、Sonnet 5.5、Haiku 5.5 などで使え、Sonnet 5 では使えない。",
+   "analogy": "議事録を書き直す代わりに、途中から「ここから方針変更」と追記する。前のページはそのまま使える。",
+   "exam": "Opus 5.5 や Sonnet 5.5 の思考ブロックは、前の system・tools・メッセージが変わると無効になり、2026年8月31日以降に作ったアカウントでは 400 になる。変わる指示は最上位の system を書き換えず、会話途中の system メッセージで追記する。",
+   "keywords": [
+    "会話途中の system メッセージ"
+   ],
+   "units": [
+    "5-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Mid-conversation system messages and tool changes",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages"
+    },
+    {
+     "title": "What's new in Claude Sonnet 5.5",
+     "url": "https://platform.claude.com/docs/en/models/sonnet-5-5/whats-new-sonnet-5-5"
+    }
+   ]
+  },
+  {
+   "id": "advisor-tool",
+   "cat": "feature",
+   "name": "advisor tool（助言役のモデルに相談するツール）",
+   "yomi": "アドバイザー・ツール",
+   "short": "安いモデルが作業し、難しい場面だけ上位モデルに相談する仕組み",
+   "detail": "advisor tool（beta、type は advisor_20260301）は、速くて安い実行役（executor）のモデルが、作業の途中で賢い助言役（advisor）のモデルに相談できるツール。助言役は会話全体を読んで計画や軌道修正を返し、実行役が続きを進める。大半のトークンを実行役の単価で済ませられる。組み合わせられるモデルには決まりがあり、たとえば Sonnet 5.5 の実行役は Opus 4.8 や Haiku 5.5 を助言役にすると 400 になる。",
+   "analogy": "新人が仕事を進め、迷ったときだけ先輩に相談する。先輩の時間は相談した分しか使わない。",
+   "exam": "公式は「2つ目のモデルを足す前に、今のモデルの effort を掃引する」とし、組み合わせは単独モデルの曲線を上回るときだけ作るとしている。advisor は実行役が相談したときしか効かないので、相談の頻度と費用を自分の課題で測る。",
+   "keywords": [
+    "advisor tool",
+    "助言役（advisor）"
+   ],
+   "units": [
+    "5-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Advisor tool",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool"
+    },
+    {
+     "title": "Optimizing for cost and intelligence",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+    }
+   ]
+  },
+  {
    "id": "claude-models",
    "cat": "model",
    "name": "Claude のモデル（Opus・Sonnet・Haiku）",
@@ -2738,10 +3446,13 @@
     "Haiku 5.5"
    ],
    "units": [
+    "2-3",
+    "2-4",
     "5-1",
+    "5-2",
     "5-3"
    ],
-   "count": 25,
+   "count": 64,
    "verified": true,
    "sources": [
     {
@@ -2774,7 +3485,7 @@
    "units": [
     "5-3"
    ],
-   "count": 4,
+   "count": 1,
    "verified": true,
    "sources": [
     {
@@ -2801,6 +3512,7 @@
     "旧 ID"
    ],
    "units": [
+    "5-2",
     "5-3"
    ],
    "count": 2,
@@ -2834,7 +3546,7 @@
    "units": [
     "5-1"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -2866,7 +3578,7 @@
     "5-2",
     "5-3"
    ],
-   "count": 33,
+   "count": 56,
    "verified": true,
    "sources": [
     {
@@ -2899,10 +3611,13 @@
     "context rot"
    ],
    "units": [
+    "2-3",
+    "2-4",
     "5-1",
-    "5-2"
+    "5-2",
+    "5-3"
    ],
-   "count": 12,
+   "count": 19,
    "verified": true,
    "sources": [
     {
@@ -2935,7 +3650,7 @@
     "5-2",
     "5-3"
    ],
-   "count": 31,
+   "count": 36,
    "verified": true,
    "sources": [
     {
@@ -2977,7 +3692,7 @@
     "5-2",
     "5-3"
    ],
-   "count": 37,
+   "count": 43,
    "verified": true,
    "sources": [
     {
@@ -3005,11 +3720,12 @@
     "temperature を 0"
    ],
    "units": [
-    "2-3",
+    "2-4",
     "5-1",
+    "5-2",
     "5-3"
    ],
-   "count": 16,
+   "count": 18,
    "verified": true,
    "sources": [
     {
@@ -3040,10 +3756,10 @@
     "top_k"
    ],
    "units": [
-    "5-1",
-    "5-3"
+    "2-4",
+    "5-1"
    ],
-   "count": 3,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -3076,10 +3792,12 @@
     "type: \"enabled\""
    ],
    "units": [
+    "2-3",
     "5-1",
+    "5-2",
     "5-3"
    ],
-   "count": 6,
+   "count": 9,
    "verified": true,
    "sources": [
     {
@@ -3107,8 +3825,9 @@
     "thinking: {type: \"adaptive\"}"
    ],
    "units": [
+    "2-3",
     "5-1",
-    "5-3"
+    "5-2"
    ],
    "count": 8,
    "verified": true,
@@ -3138,11 +3857,13 @@
     "xhigh"
    ],
    "units": [
+    "2-3",
     "2-4",
     "5-1",
+    "5-2",
     "5-3"
    ],
-   "count": 24,
+   "count": 33,
    "verified": true,
    "sources": [
     {
@@ -3172,10 +3893,12 @@
     "display:\"omitted\""
    ],
    "units": [
+    "2-3",
+    "5-1",
     "5-2",
     "5-3"
    ],
-   "count": 2,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -3205,10 +3928,11 @@
     "2.5 倍"
    ],
    "units": [
+    "2-3",
     "5-1",
     "5-3"
    ],
-   "count": 7,
+   "count": 16,
    "verified": true,
    "sources": [
     {
@@ -3234,10 +3958,8 @@
     "usage.service_tier",
     "service_tier"
    ],
-   "units": [
-    "5-1"
-   ],
-   "count": 1,
+   "units": [],
+   "count": 0,
    "verified": true,
    "sources": [
     {
@@ -3266,9 +3988,10 @@
     "最初のトークンまでの時間"
    ],
    "units": [
-    "5-1"
+    "5-1",
+    "5-3"
    ],
-   "count": 3,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -3300,10 +4023,10 @@
    ],
    "units": [
     "2-3",
-    "5-1",
+    "2-4",
     "5-3"
    ],
-   "count": 3,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -3336,7 +4059,7 @@
    "units": [
     "5-1"
    ],
-   "count": 6,
+   "count": 5,
    "verified": false,
    "sources": [
     {
@@ -3361,10 +4084,11 @@
     "評価で"
    ],
    "units": [
+    "2-3",
     "5-1",
     "5-3"
    ],
-   "count": 4,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -3374,6 +4098,124 @@
     {
      "title": "Define success criteria and build evaluations",
      "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+    }
+   ]
+  },
+  {
+   "id": "xml-tags",
+   "cat": "model",
+   "name": "XML タグ（<example> / <examples> / <answer> など）",
+   "yomi": "エックスエムエルタグ",
+   "short": "プロンプトの中身を種類ごとにタグで囲み、取り違えを防ぐ書き方",
+   "detail": "指示・背景・例・入力などをそれぞれのタグ（<instructions>、<context>、<input> など）で囲むと、Claude が複雑なプロンプトを取り違えにくくなる。few-shot（multishot）の例は <example>、複数なら <examples> で囲み、指示と区別する。長い文書は <document> で囲み、<source> などのメタデータを付ける。思考を使えないときの手書きの思考の連鎖（CoT）では、最終的な答えを <answer> タグに入れさせると取り出しやすい。",
+   "analogy": "書類をクリアファイルに分けて、表に「指示」「見本」「資料」と書いておく。",
+   "exam": "例が指示と取り違えられるなら <example> タグで囲む。Opus 5.5 などでは、推論を <thinking> タグに書き出させる指示は断られることがあるので、思考に任せる。",
+   "keywords": [
+    "<examples>",
+    "<answer>"
+   ],
+   "units": [
+    "5-1"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Prompting best practices",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+    }
+   ]
+  },
+  {
+   "id": "thinking-block-signature",
+   "cat": "model",
+   "name": "思考ブロックと署名（thinking block / signature）",
+   "yomi": "シコウブロック・シグネチャ",
+   "short": "応答に入る思考の部分と、その真正性を確かめる暗号化された印",
+   "detail": "思考ありの応答には、本文（text）の前に thinking ブロックが入る。ブロックには思考の要約（display が summarized のとき）と、暗号化された元の思考を持つ signature が入る。ストリーミングでは思考は thinking_delta で届き、ブロックの最後に signature_delta が1回届く。サーバーは送り返された signature から元の思考を復元するので、アプリ側は中身を読めず、書き換えてもいけない。",
+   "analogy": "封をした下書きの封筒のようなもの。表に要約のメモが貼ってあっても、中身は差出人（API）しか開けず、封を破ると受け付けてもらえない。",
+   "exam": "ツールの結果（tool_result）を返すときは、直前の思考ブロックを署名ごと、変えずに送り返す（これが必須の場面）。改変すると API がエラーを返す。ストリーミングでは差分を自分でつながず、get_final_message() などで組み立てたものを使う。Opus 4.5 以降・Sonnet 4.6 以降・Haiku 5.5 などは前のターンの思考ブロックを残し、入力トークンとして数える。",
+   "keywords": [
+    "思考ブロック",
+    "thinking_delta"
+   ],
+   "units": [
+    "2-3",
+    "5-1",
+    "5-2",
+    "5-3"
+   ],
+   "count": 7,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Thinking",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+    },
+    {
+     "title": "Context windows",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+    },
+    {
+     "title": "Streaming Messages",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+    }
+   ]
+  },
+  {
+   "id": "claude-fable-5-1",
+   "cat": "model",
+   "name": "Claude Fable 5.1（最上位モデル）",
+   "yomi": "クロード・フェイブル",
+   "short": "全利用者が使えるなかで最も能力の高い Claude のモデル",
+   "detail": "Claude Fable 5.1（claude-fable-5-1）は、全利用者に公開されているなかで最も能力の高いモデル。難しい推論や、数時間続くエージェントの仕事、多段の調査向け。料金は入力 $10・出力 $50/MTok で、遅延は現行モデルで最も大きい（Slower）。適応型思考は常に有効で、effort の既定は high。同じ能力の Claude Mythos 5.1 は、Anthropic の認定プログラムを通った組織だけが使える。",
+   "analogy": "難しい手術だけを任される専門医。腕は確かだが診察料が高く、普段の診察は別の医師に頼む。",
+   "exam": "公式は「多くの作業は Opus 5.5 から始め、Opus 5.5 を xhigh や max の effort で評価してもなお足りないときに Fable 5.1 へ移る」としている。「とにかく最上位」は誤答の定番。費用は1件を解き終えるまでの費用で比べる。",
+   "keywords": [
+    "Fable 5.1"
+   ],
+   "units": [
+    "5-3"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Models overview",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+     "title": "Choosing the right model",
+     "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+    }
+   ]
+  },
+  {
+   "id": "between-tools",
+   "cat": "model",
+   "name": "between_tools（Sonnet 5.5 で回答前の思考を止める設定）",
+   "yomi": "ビトウィーン・ツールズ",
+   "short": "Sonnet 5.5 で、回答前の思考をなくす thinking の設定",
+   "detail": "thinking: {type: \"between_tools\"} は、Claude Sonnet 5.5 だけが受け付ける最も低い思考の設定で、disabled の代わりに使う（Sonnet 5.5 は disabled を 400 で拒む）。回答の前には考えず、ツール呼び出しの合間に書く短い進捗メモだけが thinking ブロックで返る。effort は low・medium・high でだけ使え、xhigh や max と組み合わせると 400。会話の途中で effort を変えることもできない。",
+   "analogy": "下調べを省いて作業を始め、区切りごとに短い報告メモだけを残す働き方。",
+   "exam": "思考の止め方はモデルで違う。Sonnet 5.5 は between_tools、Haiku 5.5 は effort high 以下で disabled、Opus 5.5 は止められないので effort を下げる。Sonnet 5.5 以外に between_tools を送ると 400。",
+   "keywords": [
+    "between_tools"
+   ],
+   "units": [
+    "5-2",
+    "5-3"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "What's new in Claude Sonnet 5.5",
+     "url": "https://platform.claude.com/docs/en/models/sonnet-5-5/whats-new-sonnet-5-5"
+    },
+    {
+     "title": "Troubleshooting thinking",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting"
     }
    ]
   }
