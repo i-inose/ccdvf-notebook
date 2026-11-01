@@ -197,6 +197,47 @@
             }
           ],
           "addedAt": "2026-10-29"
+        },
+        {
+          "name": "サンプリングパラメータ（sampling parameters: temperature / top_p / top_k）",
+          "meaning": "次のトークンを確率に従ってどう選ぶか（サンプリング）を調整するリクエストの値。Claude 4.7 以降のモデル（Opus 5.5 など）では既定値以外を送ると 400 エラーになる（API バージョン 2026-10-21 以降は値に関係なく 400）",
+          "analogy": "くじ引きの箱の中身をいじる道具。新しいモデルでは箱に触れず、頼み方（プロンプト）で結果を導く",
+          "exam": "Claude Opus 5.5 への移行では temperature・top_p・top_k を外し、振る舞いはプロンプトで導く。temperature 0 でも以前から同じ出力は保証されていなかった",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Claude Opus 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+            },
+            {
+              "title": "Glossary",
+              "url": "https://platform.claude.com/docs/en/about-claude/glossary"
+            }
+          ],
+          "addedAt": "2026-11-01"
+        },
+        {
+          "name": "高速モード（fast mode）",
+          "meaning": "同じモデルを速い推論設定で動かし、出力トークン毎秒（OTPS）を最大 2.5 倍にするモード。リクエストに speed: \"fast\" を付ける。料金は割増",
+          "analogy": "同じ料理人が特急料金で手を速める。腕前（賢さ）は変わらず、出来上がるまでが速くなる",
+          "exam": "賢さは変わらない。速くなるのは OTPS で、最初のトークンまでの時間（TTFT）ではない。Batch API と一緒には使えない。使われた速度は usage.speed で確かめる。標準速度に切り替えるとプロンプトキャッシュは共有されない",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Fast mode",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+            }
+          ],
+          "addedAt": "2026-11-01"
+        },
+        {
+          "name": "zero-shot と single-shot（one-shot）プロンプト【解説】",
+          "meaning": "zero-shot は例を付けず指示だけで頼む方法。single-shot は例を1つだけ付けて頼む方法",
+          "analogy": "zero-shot は口頭の説明だけで仕事を頼む。single-shot は見本を1枚だけ渡す。見本が1枚だと、その見本のクセまでまねされやすい",
+          "exam": "出力の形式・口調・構造がぶれるなら例を足す。例は実際の用途に近く、多様にする（似た例ばかりだと意図しないパターンを拾う）。公式ドキュメントに zero-shot・single-shot の定義はなく、few-shot（multishot）の説明から読み取った",
+          "verified": false,
+          "sources": [],
+          "addedAt": "2026-11-01"
         }
       ],
       "distinctions": [
@@ -214,6 +255,11 @@
           "title": "思考ブロックを「必ず返す」場面と「自動で外れる・残る」場面",
           "text": "ツール使用の途中（tool_result を返すとき）は、その思考ブロックを改変せずに必ず返す。\n新しい user ターンに入ったあとの過去の思考ブロックは、古いモデルでは API が自動で外し、新しいモデルでは既定で残して入力として課金する。",
           "addedAt": "2026-10-29"
+        },
+        {
+          "title": "高速モード（fast mode）とストリーミング（streaming）",
+          "text": "高速モードは生成そのものを速くし、出力トークン毎秒（OTPS）を上げる。割増料金がかかる。\nストリーミングは生成の速さは変えず、できた部分から順に返すので、待たされている感じを減らす。\n両方は一緒に使え、高速モードの効果はストリーミングで最も目に見える。",
+          "addedAt": "2026-11-01"
         }
       ]
     }

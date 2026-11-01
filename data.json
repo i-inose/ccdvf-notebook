@@ -79,6 +79,20 @@
           10
         ]
       }
+    },
+    {
+      "order": 4,
+      "date": "2026-11-01",
+      "label": "単元5-1 セットA（スマホ）",
+      "focus": "5-1",
+      "total": 10,
+      "correct": 7,
+      "byUnit": {
+        "5-1": [
+          7,
+          10
+        ]
+      }
     }
   ],
   "notes": [
@@ -690,6 +704,109 @@
       "streak": 0,
       "addedAt": "2026-10-29",
       "nextReview": "2026-10-31"
+    },
+    {
+      "topic": "高速モードと Batch API の併用",
+      "choices": [
+        "A. 付ければ全件が 2.5 倍速く終わる",
+        "B. 付けると料金が半額になる",
+        "C. 付けると精度が上がり再実行が減る",
+        "D. Batch API では高速モードを使えない"
+      ],
+      "why": "高速モードは Batch API では使えない。速さが必要な処理は通常の Messages API で高速モードを使う。",
+      "whyNot": {
+        "A": "Batch API と高速モードは併用できない",
+        "B": "高速モードは割増料金で、安くはならない",
+        "C": "高速モードは賢さや能力を変えない"
+      },
+      "example": "安さ優先の大量処理は Batch API、待ち時間優先の対話は高速モードと使い分ける。",
+      "sources": [
+        {
+          "title": "Fast mode",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+        }
+      ],
+      "question": "毎晩5万件の要約を Message Batches API で送っています。さらに早く終わらせるため、各リクエストに speed: \"fast\" を付ける案が出ました。正しい判断はどれですか？",
+      "myAnswer": "A",
+      "correct": "D",
+      "explanation": "",
+      "no": 19,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "高速モードの 429 と標準速度への切り替え / キャッシュ",
+      "choices": [
+        "A. 429 なら API が自動で標準速度で返す",
+        "B. speed を外して再送すれば標準速度で返る",
+        "C. 標準速度でも高速モードのキャッシュが効く",
+        "D. 高速モードの上限は標準の上限と共通",
+        "E. 速度を変えるとプロンプトキャッシュは外れる"
+      ],
+      "why": "429 を受けたら speed: \"fast\" を外して再送すれば標準速度で処理される。速度が違うリクエストはキャッシュした接頭辞を共有しないので、切り替えるとキャッシュは外れる。",
+      "whyNot": {
+        "A": "対応モデルでは 429 などのエラーが返る。自動で標準速度に落とすのは Opus 4.6 の例外だけ",
+        "C": "速度が違うリクエストはキャッシュを共有しない",
+        "D": "高速モードには標準の Opus とは別の専用レート制限がある"
+      },
+      "example": "待つより早く返したいときは、最初の高速リクエストの自動再試行を 0 にして、失敗したら標準速度で送り直す。",
+      "sources": [
+        {
+          "title": "Fast mode",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/fast-mode"
+        }
+      ],
+      "question": "（2つ選択）高速モードのリクエストが 429 エラーで失敗しました。標準速度に切り替えて応答を返す設計について、正しい説明はどれですか？",
+      "myAnswer": "BD",
+      "correct": "BE",
+      "explanation": "",
+      "no": 20,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "single-shot の例のクセ / 例の多様さ",
+      "choices": [
+        "A. 型の違う例を足し、例どうしに幅を持たせる",
+        "B. 例を消し、指示も最小限にする",
+        "C. 同じ型の例を5つに増やす",
+        "D. 「例をまねしないで」とだけ書き足す"
+      ],
+      "why": "例は多様にし、意図しないパターンを拾わないようにするのが公式の推奨。例が1つだと、その例のクセまでまねされやすい。",
+      "whyNot": {
+        "B": "例は出力の形式・口調・構造をそろえる最も確かな方法の一つで、消すと形がぶれやすい",
+        "C": "同じ型の例を増やすと、そのパターンがより強く固定される",
+        "D": "例が1つのままでは、何が変えてよい部分なのかが伝わらない"
+      },
+      "example": "例を足すときは、実際の用途に近く、端のケースも含むように選ぶ。",
+      "sources": [
+        {
+          "title": "Prompting best practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        }
+      ],
+      "question": "見出しの書き方を見せるため、例を1つだけ付けました（single-shot）。すると、どの記事でも見出しがその例と同じ「〇〇の3つのポイント」になりました。最適な直し方はどれですか？",
+      "myAnswer": "C",
+      "correct": "A",
+      "explanation": "",
+      "no": 21,
+      "unit": "5-1",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-01",
+      "nextReview": "2026-11-03"
     }
   ]
 }
