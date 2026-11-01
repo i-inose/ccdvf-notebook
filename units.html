@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CCDV-F 単元の表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* レイアウト: 単元の決め方 → ドメインと配点 → 学ぶ順の単元一覧 を縦に並べる */
+:root {
+  --paper: #f6f7f9;
+  --sheet: #ffffff;
+  --grid: #e3e8ef;
+  --ink: #1d2a3a;
+  --ink-soft: #5a6778;
+  --line: #d5dce6;
+  --accent: #2456a6;
+  --accent-soft: #e6eefb;
+  --green: #1f7a4d;
+  --green-soft: #e3f4ea;
+  --font-display: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #12161c; --sheet: #1a2029; --grid: #1f2630; --ink: #e4e9f0; --ink-soft: #9aa6b5;
+    --line: #2e3744; --accent: #8db4f5; --accent-soft: #1d2a40; --green: #7fd1a4; --green-soft: #17302a;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+  overflow-wrap: anywhere;
+}
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding-top: max(16px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(40px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+header { display: grid; gap: 4px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--accent); }
+h1 { font-family: var(--font-display); font-weight: 900; font-size: 24px; line-height: 1.3; margin: 0; }
+.lead { margin: 0; color: var(--ink-soft); font-size: 14px; }
+nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+nav a { color: var(--accent); }
+.panel { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin: 0 0 10px; }
+.points { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 14px; }
+.note { margin: 10px 0 0; font-size: 12px; color: var(--ink-soft); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+th { color: var(--ink-soft); font-weight: 500; font-size: 12px; white-space: nowrap; }
+td.num { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.dname { font-weight: 700; }
+.en { display: block; font-size: 12px; color: var(--ink-soft); }
+.bar { display: block; height: 6px; margin-top: 4px; border-radius: 3px; background: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-family: var(--font-mono); font-size: 12px; padding: 0 6px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.uid { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-right: 6px; }
+.uname { font-weight: 700; }
+.desc { display: block; font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
+.dom { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+tr.current td { background: var(--accent-soft); }
+.stage { display: inline-block; font-size: 11px; font-weight: 700; padding: 0 6px; border-radius: 999px; white-space: nowrap; }
+.stage.current { background: var(--accent); color: var(--sheet); }
+.stage.done { background: var(--green-soft); color: var(--green); }
+.stage.todo { background: var(--grid); color: var(--ink-soft); }
+.rounds { display: block; font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); white-space: nowrap; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">CLAUDE CERTIFIED DEVELOPER – FOUNDATIONS · CCDV-F v1.0</span>
+    <h1>CCDV-F 単元の表</h1>
+    <p class="lead">試験の出題範囲を、どの単元に分けて、どの順で学んでいるかの一覧です。</p>
+    <nav>
+      <a href="./">間違いノート</a>
+      <a href="quiz.html">クイズ</a>
+      <a href="knowledge.html">用語ノート</a>
+    </nav>
+  </header>
+
+  <section class="panel" aria-labelledby="h-how">
+    <h2 id="h-how">単元の決め方</h2>
+    <ul class="points">
+      <li>試験ガイド（Exam Guide v1.0）は、出題範囲を8つのドメインに分け、その下に25のサブスキルを置いています。この25個をそのまま単元にしています。</li>
+      <li>単元 ID の「5-2」は、ドメイン5の2つ目のサブスキルという意味です。</li>
+      <li>配点は、試験全体（53問）に占める割合で、試験ガイドの値です。1% はおよそ0.5問にあたります。</li>
+      <li>学ぶ順は、前の単元の用語を前提にできるよう、基礎（LLM・API・開発の基本）から並べています。</li>
+      <li>1つの単元は10問を2回解いたら次へ進みます。配点が3%未満の単元は1回で進みます。</li>
+    </ul>
+    <p class="note">ドメイン名の日本語と各単元の説明は、試験ガイドの英語の説明を要約した訳です。正式な名前は英語の方です。</p>
+  </section>
+
+  <section class="panel" aria-labelledby="h-dom">
+    <h2 id="h-dom">ドメインと配点</h2>
+    <table>
+      <thead><tr><th>ドメイン</th><th>配点</th><th>単元</th></tr></thead>
+      <tbody id="domains"></tbody>
+    </table>
+  </section>
+
+  <section class="panel" aria-labelledby="h-units">
+    <h2 id="h-units">学ぶ順の単元一覧</h2>
+    <p class="note" id="summary" style="margin:0 0 8px"></p>
+    <table>
+      <thead><tr><th>順</th><th>単元</th><th>配点</th><th>進み具合</th></tr></thead>
+      <tbody id="units"></tbody>
+    </table>
+  </section>
+</div>
+
+<script>
+// 試験ガイド v1.0 のドメインと単元（サブスキル）。説明は原文の要約
+const DOMAINS = {
+  1: ["エージェントとワークフロー", "Agents and Workflows", 14.7],
+  2: ["アプリケーションと連携", "Applications and Integration", 33.1],
+  3: ["Claude Code", "Claude Code", 3.1],
+  4: ["評価・テスト・デバッグ", "Eval, Testing, and Debugging", 2.6],
+  5: ["モデルの選択と最適化", "Model Selection and Optimization", 16.8],
+  6: ["プロンプトとコンテキスト", "Prompt and Context Engineering", 11.0],
+  7: ["セキュリティと安全", "Security and Safety", 8.1],
+  8: ["ツールと MCP", "Tools and MCPs", 10.6],
+};
+// 並びは学ぶ順
+const UNITS = [
+  ["5-1", "LLM Fundamentals", 5.2, "トークン、コンテキストウィンドウ、サンプリング、非決定性、次トークン生成。高速モード・思考・effort。zero / single / multi-shot"],
+  ["5-2", "Technical Fundamentals", 6.1, "REST API を包む SDK との連携、websockets など、アプリ開発の技術の基礎"],
+  ["2-4", "Software Engineering Foundations", 7.4, "REST、JSON、非同期処理、バージョン管理、開発工程との連携、コードレビュー、リファクタリング"],
+  ["2-3", "Claude API Mechanics", 6.8, "messages・tools・streaming・vision・thinking・caching、他社クラウド経由の利用、Batch とリアルタイムの選び方"],
+  ["5-3", "Model Selection and Tradeoffs", 2.7, "Opus・Sonnet・Haiku の使い分け、品質・遅延・費用のトレードオフ、モデルの更新で変わる挙動"],
+  ["5-4", "Cost and Token Management", 2.8, "トークンの予算、使用量の追跡、費用の見積もり、プロンプトキャッシュによる節約"],
+  ["6-2", "Prompt Engineering", 4.6, "明確な指示、few-shot の例、system と user の置き分け、出力の制約、反復改善、入力のサニタイズ"],
+  ["6-3", "Output Handling", 2.6, "構造化出力、応答の検証、防御的なパース、自信ありげな出力を疑う"],
+  ["6-1", "Context Engineering", 3.8, "コンテキストウィンドウの管理、ドリフトや肥大の防止（ツール出力の刈り込み・compaction）、サブエージェントでの分離"],
+  ["8-1", "Tool Implementation", 4.4, "ツール使用（関数呼び出し）、ツールの説明の書き方、エラー処理、クライアント側とサーバー側のツール、承認の仕組み"],
+  ["8-2", "MCP Server Development", 2.1, "MCP サーバーの作成・デプロイ・連携、resources・tools・prompts、stdio などの通信"],
+  ["8-3", "Agentic Customization", 4.1, "組み込みツール・独自ツール・Skills・MCP の使い分け"],
+  ["1-1", "Agent Architecture", 4.5, "ワークフローとエージェントの使い分け、マネージャー型の階層、サブエージェントの役割"],
+  ["1-3", "Agent Patterns and Frameworks", 4.9, "ツール使用のループ・サブエージェント・メモリ・コンテキスト管理などのパターンと、LangGraph などのフレームワーク"],
+  ["1-2", "Agent Construction with Claude", 5.3, "Claude Agent SDK、独自のエージェントループ、自前と Anthropic ホストの運用形態、hooks"],
+  ["2-5", "Claude Application Design", 8.6, "Claude Code・Desktop・claude.ai・API での指示の解釈の違い、コンテンツの境界、スキーマ設計、セッションの整理、プラグイン管理"],
+  ["2-6", "Configuration Management", 4.1, "CLAUDE.md、settings.json、モデルのバージョン固定、プロンプトのバージョン管理、プラグインの依存"],
+  ["3-1", "Claude Code Operation", 3.1, "Rules・Skills・Commands・Agents・Agent Memory、セッション管理、スラッシュコマンド、headless・auto モード、CLAUDE.md の階層"],
+  ["7-1", "AI Application Security", 3.2, "プロンプトインジェクションとジェイルブレイクへの対策、信頼できない入力、データ漏えいの防止、個人情報の扱い"],
+  ["7-2", "Guardrails and Safe Deployment", 2.3, "コンテンツポリシー、ガードレールの多層化、最小権限などの secure-by-design"],
+  ["7-3", "Claude Hooks", 1.0, "hooks で破壊的な操作を防ぐガードレール"],
+  ["7-4", "Identity, Secrets, and Key Management", 1.6, "開発と本番での秘密情報・認証情報・API キーの管理、アクセスの承認と監視"],
+  ["2-1", "Understanding Requirements", 3.4, "業務要件と構成から、機能とインフラの要件を決める"],
+  ["2-2", "Systems Life Cycle", 2.8, "システムの開発・導入・運用・保守のライフサイクル管理"],
+  ["4-1", "Debugging and Error Handling", 2.6, "エラーの種類の見分け、復旧方法の選択、トレースの分析、連携部分とモデル出力のどちらが原因かの切り分け"],
+].map(([id, name, weight, desc]) => ({ id, name, weight, desc, dom: Number(id[0]) }));
+
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k === "text") node.textContent = v;
+    else node.setAttribute(k, v);
+  }
+  for (const c of children) if (c != null) node.append(c);
+  return node;
+}
+
+function renderDomains() {
+  const max = Math.max(...Object.values(DOMAINS).map(d => d[2]));
+  document.getElementById("domains").replaceChildren(...Object.entries(DOMAINS).map(([no, [ja, en, w]]) => el("tr", {},
+    el("td", {}, el("span", { class: "dname", text: `D${no} ${ja}` }), el("span", { class: "en", text: en })),
+    el("td", { class: "num" }, `${w.toFixed(1)}%`, el("span", { class: "bar", style: `width:${Math.round(w / max * 100)}%` })),
+    el("td", {}, el("span", { class: "chips" }, ...UNITS.filter(u => u.dom === Number(no)).sort((a, b) => a.id.localeCompare(b.id))
+      .map(u => el("span", { class: "chip", text: u.id })))))));
+}
+
+function renderUnits(plan, sessions) {
+  const stages = plan.stages || {};
+  const rounds = id => sessions.filter(s => String(s.focus) === id).length;
+  const need = u => (u.weight < 3 ? 1 : 2);
+  const done = UNITS.filter(u => u.id !== plan.currentUnit && rounds(u.id) >= need(u)).length;
+  document.getElementById("summary").textContent = plan.currentUnit
+    ? `今の単元は ${plan.currentUnit}。回数を終えた単元 ${done} / ${UNITS.length}（習得 ${UNITS.filter(u => stages[u.id] === "mastered").length}）。`
+    : "";
+  document.getElementById("units").replaceChildren(...UNITS.map((u, i) => {
+    const r = rounds(u.id), cur = plan.currentUnit === u.id;
+    const st = stages[u.id] === "mastered" ? ["done", "習得"]
+      : cur ? ["current", "今の単元"]
+      : r >= need(u) ? ["done", "回数を終えた"]
+      : r ? ["current", "学習中"] : ["todo", "未着手"];
+    return el("tr", { class: cur ? "current" : "" },
+      el("td", { class: "num", text: String(i + 1) }),
+      el("td", {},
+        el("span", { class: "uid", text: u.id }), el("span", { class: "uname", text: u.name }),
+        el("span", { class: "desc", text: u.desc }),
+        el("span", { class: "dom", text: `D${u.dom} ${DOMAINS[u.dom][0]}` })),
+      el("td", { class: "num", text: `${u.weight.toFixed(1)}%` }),
+      el("td", {}, el("span", { class: "stage " + st[0], text: st[1] }), el("span", { class: "rounds", text: `${r}回（目安${need(u)}回）` })));
+  }));
+}
+
+renderDomains();
+renderUnits({}, []);
+fetch("data.json", { cache: "no-store" })
+  .then(r => r.json())
+  .then(d => renderUnits(d.plan || {}, d.sessions || []))
+  .catch(() => {});
+</script>
+</body>
+</html>
