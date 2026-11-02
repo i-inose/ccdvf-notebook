@@ -124,6 +124,34 @@
           10
         ]
       }
+    },
+    {
+      "order": 7,
+      "date": "2026-11-02",
+      "label": "単元5-2 セットA（スマホ）",
+      "focus": "5-2",
+      "total": 10,
+      "correct": 5,
+      "byUnit": {
+        "5-2": [
+          5,
+          10
+        ]
+      }
+    },
+    {
+      "order": 8,
+      "date": "2026-11-02",
+      "label": "出し直し セットA（スマホ）",
+      "focus": 0,
+      "total": 10,
+      "correct": 8,
+      "byUnit": {
+        "5-1": [
+          8,
+          10
+        ]
+      }
     }
   ],
   "notes": [
@@ -221,12 +249,13 @@
       "explanation": "",
       "no": 3,
       "unit": "5-1",
-      "result": "guess",
+      "result": "wrong",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-28",
-      "nextReview": "2026-10-30"
+      "nextReview": "2026-11-04",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "入力超過の 400 / model_context_window_exceeded / チャット画面の自動削除",
@@ -258,9 +287,10 @@
       "result": "wrong",
       "confidence": "low",
       "status": "active",
-      "streak": 0,
+      "streak": 1,
       "addedAt": "2026-10-28",
-      "nextReview": "2026-10-30"
+      "nextReview": "2026-11-09",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "思考トークンの課金・max_tokens・コンテキストウィンドウ",
@@ -288,12 +318,13 @@
       "explanation": "",
       "no": 5,
       "unit": "5-1",
-      "result": "wrong",
+      "result": "guess",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-28",
-      "nextReview": "2026-10-30"
+      "nextReview": "2026-11-04",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "事前学習（次トークン予測）/ fine-tuning・RLHF",
@@ -325,9 +356,10 @@
       "result": "wrong",
       "confidence": "low",
       "status": "active",
-      "streak": 0,
+      "streak": 1,
       "addedAt": "2026-10-28",
-      "nextReview": "2026-10-30"
+      "nextReview": "2026-11-09",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "context rot / 全部入れる",
@@ -393,9 +425,10 @@
       "result": "guess",
       "confidence": "low",
       "status": "active",
-      "streak": 0,
+      "streak": 1,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-09",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "stop_reason tool_use / end_turn",
@@ -429,7 +462,8 @@
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-04",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "途中で切れた stop_reason / end_turn・stop_sequence",
@@ -457,12 +491,13 @@
       "explanation": "",
       "no": 10,
       "unit": "5-1",
-      "result": "guess",
+      "result": "wrong",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-04",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "モデル変更でトークン数が変わる（トークナイザー）",
@@ -496,7 +531,8 @@
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-04",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "stop_sequences / システムプロンプトでのお願い",
@@ -528,9 +564,10 @@
       "result": "guess",
       "confidence": "low",
       "status": "active",
-      "streak": 0,
+      "streak": 1,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-09",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "stop_reason refusal / tool_use",
@@ -559,12 +596,13 @@
       "explanation": "",
       "no": 13,
       "unit": "5-1",
-      "result": "wrong",
+      "result": "guess",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-04",
+      "lastReviewed": "2026-11-02"
     },
     {
       "topic": "tool_result と一緒に返す思考ブロック（署名ごと・改変なし）",
@@ -1296,6 +1334,324 @@
       "streak": 0,
       "addedAt": "2026-11-01",
       "nextReview": "2026-11-03"
+    },
+    {
+      "topic": "SDK が付けないヘッダー（anthropic-workspace-id）/ SDK の更新・x-api-key・API バージョン",
+      "choices": [
+        "A. SDK を最新版に上げ、ワークスペース ID を自動で付けさせる",
+        "B. クライアントの既定ヘッダーで anthropic-workspace-id を送る",
+        "C. キーを Authorization ではなく x-api-key ヘッダーで送り直す",
+        "D. anthropic-version を 2026-10-21 に上げて送り直す"
+      ],
+      "why": "SDK が自動で付けるのは認証・anthropic-version・content-type のヘッダーで、anthropic-workspace-id は自分で渡す。ワークスペースに限定しないキーではこのヘッダーが必須なので、クライアントの既定ヘッダー（default_headers）に一度設定すれば、すべての呼び出しに付く。",
+      "whyNot": {
+        "A": "SDK は版を上げてもワークスペース ID を自動では付けない。キーが必要とするときは自分で渡す。",
+        "C": "Authorization と x-api-key はどちらも受け付けられる。ヘッダー名を変えても、使うワークスペースは決まらない。",
+        "D": "API バージョンはワークスペースの指定と関係ない。必要なヘッダーが欠けたままになる。"
+      },
+      "example": "1つのサービスアカウントキーで本番用と検証用のワークスペースを使い分けるとき、クライアントごとに anthropic-workspace-id を既定ヘッダーに入れておく。",
+      "sources": [
+        {
+          "title": "API overview",
+          "url": "https://platform.claude.com/docs/en/api/overview"
+        },
+        {
+          "title": "Authentication",
+          "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+        }
+      ],
+      "question": "社内アプリは Python SDK で Claude を呼んでいます。従来のワークスペースキーを、ワークスペースに限定しないサービスアカウントキー（service account key）に替えたら、すべての呼び出しが 400 になり、「このキーはワークスペースに限定されていない」という趣旨のメッセージが出ました。コードの変更は最小にしたいです。最も適切な対応はどれですか？",
+      "myAnswer": "A",
+      "correct": "B",
+      "explanation": "もう1つの直し方は、特定のワークスペースに限定したキーを作ること。限定したキーなら、このヘッダーを省いてもそのワークスペースで動く。",
+      "no": 34,
+      "unit": "5-2",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "SDK の OpenTelemetry トレース（tracer provider を登録するだけ・既定は metadata_only）/ ANTHROPIC_LOG・呼び出しごとの計測・content モード",
+      "choices": [
+        "A. ANTHROPIC_LOG を debug にし、SDK のログを監視基盤へ流す",
+        "B. 各呼び出しの前後に、時刻を記録して送るコードを書き足す",
+        "C. tracer provider を登録し、SDK の span を既定のまま送る",
+        "D. content_mode を content にし、プロンプトも span に入れる"
+      ],
+      "why": "SDK は、アプリが登録した tracer provider を使って呼び出しごとに span を出し、自社のトレースの中に並ぶ。呼び出し箇所は変えずに済み、既定の content_mode は metadata_only なので、プロンプトと応答は span に入らない。",
+      "whyNot": {
+        "A": "SDK が標準の logging にログを出す設定で、自社の処理のトレースの中に span として並ぶわけではない【解説】。",
+        "B": "計測はできるが、数十か所の呼び出しを書き換えることになり、条件に合わない。",
+        "D": "content モードはプロンプトと応答を span に含めるので、個人情報を送らない条件に反する。"
+      },
+      "example": "応答が遅いと言われたとき、自社の処理のトレースの中で、Claude の呼び出しにかかった時間とトークン数を確かめる。",
+      "sources": [
+        {
+          "title": "Set up OpenTelemetry with the Claude SDK",
+          "url": "https://platform.claude.com/docs/en/manage-claude/opentelemetry/sdk"
+        },
+        {
+          "title": "OpenTelemetry span reference",
+          "url": "https://platform.claude.com/docs/en/api/opentelemetry/spans"
+        },
+        {
+          "title": "Python SDK",
+          "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+        }
+      ],
+      "question": "社内の監視基盤は OpenTelemetry でトレースを集めています。Python SDK で Claude を呼ぶ箇所が数十あり、各呼び出しの所要時間とトークン数を、自社の処理のトレースの中で見たいです。呼び出し箇所は書き換えたくなく、個人情報を含むプロンプトは監視基盤に送れません。最も適切なのはどれですか？",
+      "myAnswer": "D",
+      "correct": "C",
+      "explanation": "SDK のトレースはベータで、span の名前や属性が変わることがあるので、SDK の版を固定しておく。tracer provider は最初の呼び出しより前に登録する。ストリーミングの span には、最初の差分が届くまでの秒数（gen_ai.response.time_to_first_chunk）も記録される。",
+      "no": 35,
+      "unit": "5-2",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "ストリーミングで打ち切りを見分ける（message_delta の stop_reason）/ message_start・content_block_stop・message_stop",
+      "choices": [
+        "A. 最初に届く message_start に含まれる stop_reason",
+        "B. 終わり近くに届く message_delta の delta.stop_reason",
+        "C. 内容ブロックの終わりを示す content_block_stop の有無",
+        "D. message_stop が届く前に接続が切れたかどうか"
+      ],
+      "why": "stop_reason は message_start の時点では null で、生成が終わると message_delta の delta に入る。そこが \"max_tokens\" なら上限で打ち切られたと分かる。",
+      "whyNot": {
+        "A": "message_start は生成を始める前に届くので、stop_reason は null のまま。",
+        "C": "content_block_stop はどの内容ブロックの終わりにも届き、打ち切りかどうかは分からない。",
+        "D": "max_tokens で止まっても、ストリームは message_delta と message_stop で通常どおり終わる。接続の切断はネットワークの障害を見分けるときに使う。"
+      },
+      "example": "長い議事録の要約で、stop_reason が \"max_tokens\" のときだけ「続きを書く」を表示し、\"end_turn\" なら出さない。",
+      "sources": [
+        {
+          "title": "Streaming messages",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+        },
+        {
+          "title": "Stop reasons and fallback",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ],
+      "question": "SDK を入れられない環境のため、HTTP クライアントで SSE を直接読んでチャットを表示しています。応答が max_tokens で打ち切られたときだけ「続きを書く」ボタンを出したいです。判定のために追加のリクエストは送りたくありません。どのイベントのどの値で判定しますか？",
+      "myAnswer": "B",
+      "correct": "B",
+      "explanation": "message_delta の usage には、その時点までの出力トークン数が累積で入る。",
+      "no": 36,
+      "unit": "5-2",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "自前の SSE パーサー（知らないイベントは読み飛ばす・usage は累積）/ message_delta の文字・200 で安心・usage を足す",
+      "choices": [
+        "A. 知らない type のイベントが来たら、読み飛ばして処理を続ける",
+        "B. 本文の文字の断片は、message_delta イベントから取り出す",
+        "C. HTTP 200 を受け取ったら、その後のエラーは処理しない",
+        "D. 届いた message_delta の output_tokens を足して合計を出す",
+        "E. 出力トークン数は、最後の message_delta の値をそのまま使う"
+      ],
+      "why": "公式は、新しいイベント種別が追加されることがあるので、知らない種別もうまく扱うよう求めている。message_delta の usage は累積値なので、最後の値がその応答の出力トークン数になる。",
+      "whyNot": {
+        "B": "文字の断片は content_block_delta の text_delta に入る。message_delta は stop_reason など応答全体の変化を運ぶ。",
+        "C": "200 の後でも、overloaded_error などが error イベントとして届くことがある。",
+        "D": "usage は累積値なので、足すと実際より多く数えてしまう。"
+      },
+      "example": "社内の利用料金の集計で、ストリーミング応答ごとに最後の message_delta の output_tokens を記録する。",
+      "sources": [
+        {
+          "title": "Streaming messages",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+        },
+        {
+          "title": "Versions",
+          "url": "https://platform.claude.com/docs/en/api/versioning"
+        }
+      ],
+      "question": "（2つ選択）社内で自前の SSE パーサーを作り、ストリーミング応答の本文と出力トークン数を記録しています。コードレビューで、公式ドキュメントの説明に沿った作りになっているかを確かめます。説明に沿っているものはどれですか？",
+      "myAnswer": "AB",
+      "correct": "AE",
+      "explanation": "公式の言い方は「知らないイベント種別を gracefully に扱う」。読み飛ばして処理を続けるのは、その最も簡単な実装【解説】。",
+      "no": 37,
+      "unit": "5-2",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "スマホアプリから呼ぶときのキーの置き場所（自社サーバー経由）/ App Attest・有効期限・難読化",
+      "choices": [
+        "A. キーは自社サーバーに置き、アプリは自社サーバー経由で呼ぶ",
+        "B. App Attest を使い、両方の OS のアプリから API を直接呼ぶ",
+        "C. 有効期限 30 日のキーをアプリに入れ、毎月差し替える",
+        "D. キーを難読化してアプリに埋め込み、解析されにくくする"
+      ],
+      "why": "API キーは、秘密の保管を自分で管理できるサーバーで使う認証方式。キーを自社サーバーに置いて中継すれば、端末にキーを置かずに、両方の OS で同じ仕組みにできる。",
+      "whyNot": {
+        "B": "App Attest は iOS と macOS のアプリ向けで、Android には使えない。iOS だけで配るアプリなら正しい。",
+        "C": "端末に置く時点で方針に反する。有効期限は漏れたキーが使える期間を縮めるだけで、公式も保管の代わりにはならないとしている。",
+        "D": "端末に置く時点で方針に反する。アプリに入れたキーは、難読化しても解析で取り出せる【解説】。"
+      },
+      "example": "自社のバックエンドで利用者の認証と回数制限をしてから、サーバーのキーで Claude を呼ぶ。",
+      "sources": [
+        {
+          "title": "Authentication",
+          "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+        }
+      ],
+      "question": "iOS と Android の両方で配るスマホアプリに、Claude の要約機能を付けます。来月リリースの予定で、API キーは端末に置かない方針です。両方の OS で同じ仕組みにしたいです。最も適切な構成はどれですか？",
+      "myAnswer": "A",
+      "correct": "A",
+      "explanation": "「自社サーバー経由」は、公式の表（API キーは秘密を管理できるサーバー向け、App Attest はバックエンドなしで直接呼ぶ iOS・macOS アプリ向け）から導いた構成【解説】。サーバーがクラウドで動くなら、固定のキーの代わりに Workload Identity Federation で短期のトークンを使う方法もある。",
+      "no": 38,
+      "unit": "5-2",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "公式 SDK がない言語から呼ぶ（ヘッダーと再試行を自分で用意）/ 履歴の保存・レート制限の計算・料金",
+      "choices": [
+        "A. API 側で会話履歴を保存する仕組みを、自分で有効にする",
+        "B. 組織のレート制限の上限を、自分のコードで計算して守る",
+        "C. 認証などの必須ヘッダーの付与と、一時的なエラーの再試行",
+        "D. SDK 経由のときだけ適用されていた、トークン単価の割引"
+      ],
+      "why": "SDK は認証・anthropic-version・content-type のヘッダーの付与、一時的なエラーの再試行、ストリーミングの組み立て、タイムアウトの管理を肩代わりする。REST API を直接呼ぶときは、これらを自分で用意する。",
+      "whyNot": {
+        "A": "Messages API はステートレスで、SDK を使っても API 側に履歴は残らない。履歴は Python 版でもアプリが毎回送っていた。",
+        "B": "レート制限は API 側が組織ごとにかけ、超えると 429 が返る。SDK が上限そのものを管理していたわけではない。",
+        "D": "料金は呼び方に関係なく同じ。SDK は HTTP の呼び出しを包むだけで、割引はない。"
+      },
+      "example": "公式 SDK のない言語で Claude を呼ぶとき、ヘッダーを付ける共通関数と、429・5xx を retry-after に従って出し直す処理を最初に作る。",
+      "sources": [
+        {
+          "title": "API overview",
+          "url": "https://platform.claude.com/docs/en/api/overview"
+        },
+        {
+          "title": "Python SDK",
+          "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+        },
+        {
+          "title": "Using the Messages API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+        }
+      ],
+      "question": "Rust で書いた社内サービスから Claude を呼びます。Rust には公式 SDK がないため、HTTP クライアントで REST API を直接呼びます。公式 SDK を使う既存の Python 版と同じ動きを保ちたいです。SDK が肩代わりしていたもののうち、自分で実装する必要があるのはどれですか？",
+      "myAnswer": "C",
+      "correct": "C",
+      "explanation": "公式 SDK があるのは Python・TypeScript・C#・Go・Java・PHP・Ruby。Python SDK が既定でリトライするのは、接続エラー・408・409・429・5xx（2回・指数バックオフ）。",
+      "no": 39,
+      "unit": "5-2",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "直接の HTTP 連携で無通信の接続が切られる（TCP keep-alive）/ timeout を延ばす・送り直す・max_tokens を下げる",
+      "choices": [
+        "A. クライアントの timeout を 15 分に延ばし、応答を最後まで待つ",
+        "B. 失敗したら、同じリクエストを数回まで自動で送り直す",
+        "C. max_tokens を下げ、5 分以内に生成を終わらせる",
+        "D. HTTP 接続のソケットに TCP keep-alive を設定する"
+      ],
+      "why": "公式は、API と直接連携するときに TCP ソケットの keep-alive を設定すると、ネットワークによっては無通信の接続が切られる影響を減らせるとしている。SDK はこの設定を自動で行うが、SDK なしでは自分で設定する。",
+      "whyNot": {
+        "A": "接続を切っているのはネットワークの途中なので、クライアントの待ち時間を延ばしても応答は届かない。",
+        "B": "送り直しても同じように無通信の時間が続いて切られるので、成功しない。",
+        "C": "思考トークンも max_tokens の内側なので、分析が途中で切れる（stop_reason が \"max_tokens\"）。質を落とさない条件に合わない。"
+      },
+      "example": "SDK を使えない環境で長い同期の呼び出しをするとき、HTTP クライアントのソケット設定で keep-alive を有効にする。",
+      "sources": [
+        {
+          "title": "Claude API errors",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        },
+        {
+          "title": "Python SDK",
+          "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+        },
+        {
+          "title": "Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ],
+      "question": "社内の共通 HTTP ライブラリしか使えない規程のため、Claude Opus 5.5 を SDK なしで直接呼んでいます。effort high の長い分析は応答まで7分ほどかかりますが、社内ネットワークは5分ほど通信がない接続を切るため、応答なしで失敗します。ストリーミング化は来期で、分析の質は落とせません。最も適切な対策はどれですか？",
+      "myAnswer": "A",
+      "correct": "D",
+      "explanation": "根本的な対策は、長い処理をストリーミングか Message Batches API にすること（公式の勧め）。keep-alive は「一部のネットワークで影響を減らす」対策で、すべての切断を防ぐとは書かれていない。",
+      "no": 40,
+      "unit": "5-2",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "出し直しても直らないエラー（拡張思考の指定の 400・期限切れキーの 401）/ 529・429・500",
+      "choices": [
+        "A. 400「\"thinking.type.enabled\" is not supported」",
+        "B. 529 overloaded_error（API 全体の一時的な混雑）",
+        "C. 429 rate_limit_error（retry-after: 30 付き）",
+        "D. 401 authentication_error（キーの有効期限切れ）",
+        "E. 500 api_error（その日に一度だけ発生）"
+      ],
+      "why": "Opus 5.5 は拡張思考（type: \"enabled\"）を受け付けず、400 になる。期限切れのキーは 401 になり、再び有効にはできない。どちらもリクエストの中身か設定が原因なので、出し直しても同じ結果になる。",
+      "whyNot": {
+        "B": "一時的な混雑で、SDK が既定でリトライする。",
+        "C": "retry-after の秒数だけ待てば通る。SDK も retry-after を守ってリトライする。",
+        "E": "内部の一時的なエラーで、指数バックオフで出し直す。続くなら request-id を添えてサポートに問い合わせる。"
+      },
+      "example": "エラーの集計で、400 はコードか入力の修正、429・5xx はリトライの様子見、と振り分ける。",
+      "sources": [
+        {
+          "title": "Claude API errors",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        },
+        {
+          "title": "Authentication",
+          "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+        },
+        {
+          "title": "Python SDK",
+          "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+        }
+      ],
+      "question": "（2つ選択）Claude Opus 5.5 を使うアプリの1日分のエラーログを整理しています。SDK の自動リトライで自然に解消するものは様子見とし、設定・コード・入力のどれかを直さないと解消しないものだけを担当者に回します。担当者に回すべきものはどれですか？",
+      "myAnswer": "BD",
+      "correct": "AD",
+      "explanation": "拡張思考は、適応型思考（thinking: {type: \"adaptive\"}）と effort に置き換える。期限切れのキーは新しいキーを作って差し替え、以後は期限の前に入れ替える。",
+      "no": 41,
+      "unit": "5-2",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-02",
+      "nextReview": "2026-11-04"
     }
   ]
 }

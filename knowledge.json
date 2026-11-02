@@ -317,6 +317,109 @@
           "addedAt": "2026-11-01"
         }
       ]
+    },
+    {
+      "unit": "5-2",
+      "title": "Technical Fundamentals",
+      "terms": [
+        {
+          "name": "クライアント SDK（client SDK）が REST API を包む仕組み",
+          "meaning": "Claude API は https://api.anthropic.com の REST API で、SDK はその HTTP 呼び出しを各言語の関数として包み、ヘッダー付与・型・リトライ・ストリーミングなどを肩代わりする道具。",
+          "analogy": "REST API は「郵便局の窓口」、SDK は「代筆と投函をしてくれる秘書」です。\n窓口に直接行くなら、宛名（URL）・切手（ヘッダー）・書式（JSON）を自分で全部そろえます。\n秘書に「この手紙を出して」と頼めば、切手を貼り、届かなければ出し直しまでしてくれます。\nただし、窓口の営業時間や1日の受付枚数（レート制限）は秘書がいても変わりません。",
+          "exam": "SDK が自動でしてくれるのは、認証・anthropic-version・content-type ヘッダーの付与、型付きの入出力、一時的なエラーの自動リトライ、ストリーミング、タイムアウト管理。\n料金やレート制限の上限は SDK を使っても変わらない、という取り違えを狙われやすい。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "API overview",
+              "url": "https://platform.claude.com/docs/en/api/overview"
+            },
+            {
+              "title": "SDKs, CLI, and libraries",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/overview"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        },
+        {
+          "name": "ストリーミング（streaming）と SSE（server-sent events）",
+          "meaning": "リクエストに \"stream\": true を付けると、応答が完成するのを待たずに、SSE というイベントの列で少しずつ届く仕組み。",
+          "analogy": "宅配で言えば、通常の応答は「全部そろってから1箱で届く」配送、ストリーミングは「できた分から順に小包で届く」配送です。\n小包には順番の札が付いていて、最初に「これから送ります」（message_start）、途中に中身（content_block_delta）、最後に「これで全部です」（message_stop）が届きます。\nときどき「まだ配達中です」というはがき（ping）も混ざります。",
+          "exam": "イベントの順番は message_start → content_block_start → content_block_delta（複数）→ content_block_stop → message_delta → message_stop。\n文字の断片は content_block_delta の text_delta に入る。\n新しいイベント種別が追加されることがあるので、知らないイベントは落ちずに無視するよう作る。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            },
+            {
+              "title": "Versions",
+              "url": "https://platform.claude.com/docs/en/api/versioning"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        },
+        {
+          "name": "API キーとリクエストヘッダー（Authorization / x-api-key、anthropic-version）",
+          "meaning": "API キーは Console で作る秘密の文字列で、Authorization: Bearer（または従来の x-api-key）ヘッダーで送る。anthropic-version と content-type も必須のヘッダー。",
+          "analogy": "API キーはマンションの「合鍵」です。\n合鍵を玄関マット（ソースコードや公開リポジトリ）の下に置けば、誰でも入れてしまいます。\nだから金庫（シークレットマネージャーや環境変数）にしまい、なくしたかもと思ったらすぐ鍵を無効にして作り直します。\nanthropic-version は「どの版の取扱説明書で話すか」を伝える名札です。",
+          "exam": "キーは環境変数 ANTHROPIC_API_KEY やシークレットマネージャーに置き、コードやブラウザ側に埋め込まない。\n漏れた疑いがあれば Console で無効化（Disable）か削除（Delete）し、新しいキーに差し替える。\nanthropic-version は必須だが、SDK を使えば自動で送られる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Authentication",
+              "url": "https://platform.claude.com/docs/en/manage-claude/authentication"
+            },
+            {
+              "title": "API overview",
+              "url": "https://platform.claude.com/docs/en/api/overview"
+            },
+            {
+              "title": "Versions",
+              "url": "https://platform.claude.com/docs/en/api/versioning"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        },
+        {
+          "name": "自動リトライと指数バックオフ（exponential backoff）",
+          "meaning": "接続エラーや 429・5xx などの一時的な失敗を、待ち時間を少しずつ延ばしながら自動で出し直す仕組み。公式 SDK は既定で2回まで行う。",
+          "analogy": "人気店に電話がつながらないとき、1秒おきにかけ続けるとさらに回線が混みます。\n1回目は少し待って、2回目はもう少し長く待って、とかけ直す間隔を広げるのが指数バックオフです。\nただし「注文の書き方が間違っている」（400）なら、何度かけ直しても断られるので、注文を直すしかありません。",
+          "exam": "SDK が既定でリトライするのは、接続エラー・408・409・429・5xx（529 を含む）。回数は max_retries で変えたり 0 で止めたりできる。\nretry-after ヘッダーがあればその秒数を守る。\n400 invalid_request_error や 401 はリトライしても直らないので、リクエストやキーを直す。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        },
+        {
+          "name": "ステートレス（stateless）な Messages API",
+          "meaning": "Messages API は前の会話を覚えていないので、毎回それまでの会話履歴を messages に全部入れて送る。",
+          "analogy": "毎回ちがう担当者が出るコールセンターのようなものです。\n前回の担当者に話した内容は引き継がれないので、毎回「これまでの経緯」を書いたメモを最初から渡します。\nメモ（会話履歴）が長くなるほど、読む量（入力トークン）も増えます。",
+          "exam": "2ターン目で前の話を覚えていないのは不具合ではなく仕様。履歴を自分で保持して毎回送る。\nセッション ID やストリーミングで記憶させる、という選択肢は誤り。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Using the Messages API",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "SDK を使って呼ぶ場合と HTTP（curl）で直接呼ぶ場合",
+          "text": "どちらも同じ REST API（POST /v1/messages）を呼んでおり、料金・レート制限・モデルの能力は同じ。\nSDK はヘッダーの付与、型、一時的なエラーの自動リトライ（既定2回）、ストリーミングの組み立て、タイムアウト管理を肩代わりする。\ncurl などで直接呼ぶときは、Authorization（または x-api-key）・anthropic-version・content-type を自分で付け、リトライも自分で書く。",
+          "addedAt": "2026-11-02"
+        }
+      ]
     }
   ]
 }
