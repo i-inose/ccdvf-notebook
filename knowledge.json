@@ -411,12 +411,89 @@
             }
           ],
           "addedAt": "2026-11-02"
+        },
+        {
+          "name": "WebSocket【解説】",
+          "meaning": "1本の接続をつないだままにして、サーバーとクライアントがどちらからでも好きなときにデータを送り合える双方向の通信方式。",
+          "analogy": "SSE は「ラジオ」で、放送局（サーバー）からの声を聞くだけです。\nWebSocket は「つなぎっぱなしの電話」で、どちらからでも話しかけられます。\nエージェントが作業している最中に、利用者が「やっぱりこっちを先に」と割り込みたいなら、電話のほうが向いています。",
+          "exam": "Claude の Messages API のストリーミングは WebSocket ではなく SSE（サーバーからの一方向）。\nWebSocket は、自分のアプリとブラウザの間で、作業中のエージェントに追加の指示を送るなど双方向のやり取りが要る場面で使う。Agent SDK をコンテナで常駐させる構成では、コンテナが HTTP か WebSocket の窓口を公開する。",
+          "verified": false,
+          "sources": [
+            {
+              "title": "Hosting the Agent SDK",
+              "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        },
+        {
+          "name": "レート制限（rate limit）と 429・retry-after",
+          "meaning": "組織ごとに、1分あたりのリクエスト数（RPM）・入力トークン数（ITPM）・出力トークン数（OTPM）に上限があり、超えると 429 rate_limit_error が返る仕組み。",
+          "analogy": "回転寿司のレーンを思い浮かべてください。\nお皿（枠）は空いた分だけ少しずつ補充され、1分ごとに一気に満タンに戻るわけではありません（トークンバケット）。\n一度にお皿を取りすぎると、店員さんに「〇秒待ってください」（retry-after）と言われます。",
+          "exam": "429 で retry-after ヘッダーがあれば、その秒数だけ待ってから出し直す。\n60 RPM が「1秒1リクエスト」のように短い間隔で効くことがあり、短いバーストでも 429 になる。急に利用量を増やすと加速制限（acceleration limits）でも 429 になるので、徐々に増やす。\n月の支出上限（spend cap）に達した 429 には retry-after がなく、リトライしても直らない。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        },
+        {
+          "name": "タイムアウト（timeout）と長いリクエスト",
+          "meaning": "応答を待つ時間の上限。Python SDK の既定は10分で、timeout オプションで変えられる。長くかかる生成はストリーミングか Message Batches API を使う。",
+          "analogy": "レストランで「10分待って料理が来なければ帰る」と決めているお客さんのようなものです。\n大皿料理（大きい max_tokens）を頼むと10分では出てきません。\nそこで「できた分から少しずつ運んでもらう」（ストリーミング）か、「あとで取りに来る持ち帰り予約」（Batches API）にします。",
+          "exam": "非ストリーミングで約10分を超えそうなリクエストは、SDK がエラーにして止める。stream=True にすれば避けられる。\n長く無通信の接続はネットワークの途中で切られることがある。\nタイムアウトした呼び出しも既定で2回リトライされる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ],
+          "addedAt": "2026-11-02"
+        },
+        {
+          "name": "HTTP エラーの種類（529 overloaded・ストリーム途中のエラー）と request-id",
+          "meaning": "API はエラーを JSON（error.type と message）で返し、すべての応答に request-id ヘッダーが付く。529 は API 全体が混んでいる状態。ストリーミングでは 200 の後に error イベントとしてエラーが届くことがある。",
+          "analogy": "429 は「あなたは今日もう回数を使い切りました」、529 は「お店全体が満席です」という違いです。\nrequest-id は「レシートの番号」で、問い合わせのときにこれを伝えると、お店がその注文をすぐ探せます。\nストリーミング中のエラーは、料理を運び始めた後で「やっぱり作れなくなりました」と言われるようなものです。",
+          "exam": "サポートに問い合わせるときは request-id（SDK なら _request_id）を添える。API キーは渡さない。\nストリーミングでは HTTP 200 が返った後に overloaded_error などの error イベントが届くことがあるので、ステータスコードだけでなくイベントも見る。\n途中で切れたら、受け取った分を使って続きを頼むリクエストを作れる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            },
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            },
+            {
+              "title": "API overview",
+              "url": "https://platform.claude.com/docs/en/api/overview"
+            }
+          ],
+          "addedAt": "2026-11-02"
         }
       ],
       "distinctions": [
         {
           "title": "SDK を使って呼ぶ場合と HTTP（curl）で直接呼ぶ場合",
           "text": "どちらも同じ REST API（POST /v1/messages）を呼んでおり、料金・レート制限・モデルの能力は同じ。\nSDK はヘッダーの付与、型、一時的なエラーの自動リトライ（既定2回）、ストリーミングの組み立て、タイムアウト管理を肩代わりする。\ncurl などで直接呼ぶときは、Authorization（または x-api-key）・anthropic-version・content-type を自分で付け、リトライも自分で書く。",
+          "addedAt": "2026-11-02"
+        },
+        {
+          "title": "SSE（server-sent events）と WebSocket",
+          "text": "SSE は HTTP の上で、サーバーからクライアントへ一方向にイベントを流し続ける方式。Claude の Messages API のストリーミングはこれ。\nWebSocket は1本の接続でサーバーとクライアントが双方向にやり取りする方式【解説】。\nClaude から文字を少しずつ受け取るだけなら SSE、作業中のエージェントに利用者が追加の指示を送り込むなら、自分のアプリ側に WebSocket の窓口を用意する。",
           "addedAt": "2026-11-02"
         }
       ]
