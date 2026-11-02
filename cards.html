@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CCDV-F 単語カード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* レイアウト: 範囲の選択 → カード1枚（表で思い出し、タップで裏を見て自己採点）→ 進み具合 */
+:root {
+  --paper: #f6f7f9;
+  --sheet: #ffffff;
+  --grid: #e3e8ef;
+  --ink: #1d2a3a;
+  --ink-soft: #5a6778;
+  --line: #d5dce6;
+  --accent: #2456a6;
+  --accent-soft: #e6eefb;
+  --red: #c8322b;
+  --red-soft: #fbe9e7;
+  --green: #1f7a4d;
+  --green-soft: #e3f4ea;
+  --amber: #a86400;
+  --amber-soft: #fdf1dc;
+  --font-display: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #12161c; --sheet: #1a2029; --grid: #1f2630; --ink: #e4e9f0; --ink-soft: #9aa6b5;
+    --line: #2e3744; --accent: #8db4f5; --accent-soft: #1d2a40; --red: #ff8a80; --red-soft: #3a1f1e;
+    --green: #7fd1a4; --green-soft: #17302a; --amber: #f2b85c; --amber-soft: #3a2c15; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+  overflow-wrap: anywhere;
+}
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: max(16px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(40px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+header { display: grid; gap: 4px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--accent); }
+h1 { font-family: var(--font-display); font-weight: 900; font-size: 24px; line-height: 1.3; margin: 0; }
+.lead { margin: 0; color: var(--ink-soft); font-size: 14px; }
+nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+nav a { color: var(--accent); }
+.panel { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 14px; min-width: 0; }
+.controls { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: 4.5em minmax(0, 1fr); gap: 8px; align-items: center; font-size: 13px; color: var(--ink-soft); }
+select {
+  width: 100%; font: inherit; font-size: 14px; color: var(--ink); background: var(--sheet);
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+}
+.seg { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button {
+  all: unset; cursor: pointer; flex: 1; text-align: center; padding: 6px 8px; font-size: 13px; color: var(--ink-soft);
+}
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--sheet); font-weight: 700; }
+.stats { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--ink-soft); }
+.stats b { color: var(--ink); font-family: var(--font-mono); font-weight: 500; }
+
+.card { display: grid; gap: 12px; }
+.meta { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--ink-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-family: var(--font-mono); font-size: 11px; padding: 0 6px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.badge { font-size: 11px; font-weight: 700; padding: 0 6px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); }
+.front { min-height: 120px; display: grid; align-content: center; gap: 6px; text-align: center; padding: 12px 4px; }
+.front .term { font-family: var(--font-display); font-weight: 900; font-size: 22px; line-height: 1.4; }
+.front .yomi { font-size: 13px; color: var(--ink-soft); }
+.front .clue { font-size: 16px; line-height: 1.7; }
+.hint { text-align: center; font-size: 12px; color: var(--ink-soft); margin: 0; }
+.back { display: grid; gap: 10px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.back .answer { font-family: var(--font-display); font-weight: 900; font-size: 20px; text-align: center; }
+.box { border-radius: 8px; padding: 10px 12px; background: var(--paper); }
+.box .label { display: block; font-size: 11px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+.box p { margin: 0; font-size: 14px; }
+.box.exam { background: var(--accent-soft); }
+details summary { cursor: pointer; font-size: 13px; color: var(--accent); }
+details p { margin: 6px 0 0; font-size: 14px; }
+.src { margin: 0; font-size: 12px; color: var(--ink-soft); }
+.src a { color: var(--accent); word-break: break-all; }
+.btn {
+  all: unset; box-sizing: border-box; cursor: pointer; text-align: center; padding: 12px; border-radius: 10px;
+  font-weight: 700; font-size: 15px; background: var(--ink); color: var(--sheet);
+}
+.grade { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn.again { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
+.btn.good { background: var(--green-soft); color: var(--green); border: 1px solid var(--green); }
+.btn.secondary { background: var(--sheet); color: var(--accent); border: 1px solid var(--line); font-weight: 500; font-size: 14px; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.empty { text-align: center; display: grid; gap: 10px; padding: 18px 4px; }
+.empty b { font-family: var(--font-display); font-size: 17px; }
+.note { margin: 0; font-size: 12px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">CLAUDE CERTIFIED DEVELOPER – FOUNDATIONS · CCDV-F v1.0</span>
+    <h1>CCDV-F 単語カード</h1>
+    <p class="lead">単語を見て意味を思い出してから、答えを見てください。思い出す練習のほうが、読み返すより記憶に残ります。</p>
+    <nav>
+      <a href="quiz.html">クイズ</a>
+      <a href="./">間違いノート</a>
+      <a href="knowledge.html#glossary">用語集</a>
+      <a href="units.html">単元の表</a>
+    </nav>
+  </header>
+
+  <section class="panel controls" aria-label="範囲と向き">
+    <label class="row">範囲<select id="scope"></select></label>
+    <label class="row">分野<select id="cat"></select></label>
+    <div class="row"><span>向き</span>
+      <div class="seg" role="group" aria-label="カードの向き">
+        <button type="button" data-dir="term" aria-pressed="true">単語 → 意味</button>
+        <button type="button" data-dir="meaning" aria-pressed="false">意味 → 単語</button>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="panel" id="stage" aria-live="polite"></section>
+
+  <p class="note">進み具合はこのブラウザの中にだけ保存されます。「覚えた」の単語は 1・3・7・14・30 日と間隔を空けて出し、「まだ」の単語は同じ回の中でもう一度出します。1回に出すのは、復習の単語と新しい単語を合わせて20枚までです。</p>
+  <button class="btn secondary" type="button" id="reset">進み具合を消す</button>
+</div>
+
+<script>
+// 単語カード。glossary.json の用語を、間隔反復（ライトナー方式）で出す
+const ORDER = ["5-1", "5-2", "2-4", "2-3", "5-3", "5-4", "6-2", "6-3", "6-1", "8-1", "8-2", "8-3", "1-1", "1-3", "1-2",
+  "2-5", "2-6", "3-1", "7-1", "7-2", "7-3", "7-4", "2-1", "2-2", "4-1"];
+const INTERVALS = [1, 3, 7, 14, 30];   // 「覚えた」を続けた回数ごとの、次に出すまでの日数
+const SESSION = 20;                     // 1回に出す枚数
+const REINSERT = 3;                     // 「まだ」の単語を何枚後にもう一度出すか
+const KEY = "ccdvfcards:v1";
+const PREF = "ccdvfcards:pref";
+
+let terms = [], cats = [], currentUnit = null;
+let progress = load(KEY, {});
+let pref = load(PREF, { scope: "upto", cat: "all", dir: "term" });
+let queue = [], cur = null, revealed = false, done = 0;
+
+function load(k, fallback) {
+  try { return JSON.parse(localStorage.getItem(k)) || fallback; } catch { return fallback; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, JSON.stringify(v)); } catch {}
+}
+function today() { return new Date().toLocaleDateString("sv-SE"); }
+function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return d.toLocaleDateString("sv-SE"); }
+
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k === "text") node.textContent = v;
+    else node.setAttribute(k, v);
+  }
+  for (const c of children) if (c != null) node.append(c);
+  return node;
+}
+
+function inScope(t) {
+  if (pref.cat !== "all" && t.cat !== pref.cat) return false;
+  if (pref.scope === "all") return true;
+  const units = t.units || [];
+  if (pref.scope === "upto") {
+    const limit = ORDER.indexOf(currentUnit);
+    return units.some(u => ORDER.indexOf(u) <= limit);
+  }
+  return units.includes(pref.scope);
+}
+
+function buildQueue() {
+  const pool = terms.filter(inScope);
+  const t = today();
+  const due = pool.filter(x => progress[x.id] && progress[x.id].due <= t)
+    .sort((a, b) => progress[a.id].due.localeCompare(progress[b.id].due) || progress[a.id].box - progress[b.id].box);
+  const fresh = pool.filter(x => !progress[x.id]);
+  queue = [...due, ...fresh].slice(0, SESSION);
+  done = 0;
+  next();
+}
+
+function renderStats() {
+  const pool = terms.filter(inScope);
+  const t = today();
+  const seen = pool.filter(x => progress[x.id]);
+  const learned = seen.filter(x => progress[x.id].box >= 2).length;
+  const due = seen.filter(x => progress[x.id].due <= t).length;
+  const stats = document.getElementById("stats");
+  stats.replaceChildren(
+    el("span", {}, "範囲の単語 ", el("b", { text: String(pool.length) })),
+    el("span", {}, "今日の復習 ", el("b", { text: String(due) })),
+    el("span", {}, "まだ見ていない ", el("b", { text: String(pool.length - seen.length) })),
+    el("span", {}, "定着（2回以上続けて覚えた） ", el("b", { text: String(learned) })));
+}
+
+function next() {
+  cur = queue.shift() || null;
+  revealed = false;
+  render();
+}
+
+function grade(ok) {
+  const p = progress[cur.id] || { box: 0, due: today() };
+  if (ok) {
+    p.box = Math.min(p.box + 1, INTERVALS.length);
+    p.due = addDays(INTERVALS[p.box - 1]);
+  } else {
+    p.box = 0;
+    p.due = today();
+    queue.splice(Math.min(REINSERT, queue.length), 0, cur);
+  }
+  p.last = today();
+  progress[cur.id] = p;
+  save(KEY, progress);
+  done++;
+  next();
+}
+
+function catLabel(id) { const c = cats.find(x => x.id === id); return c ? c.tab : id; }
+
+function render() {
+  renderStats();
+  const stage = document.getElementById("stage");
+  if (!terms.length) {
+    stage.replaceChildren(el("div", { class: "empty" }, el("b", { text: "用語を読み込めませんでした" }), "通信の状態を確かめて、ページを開き直してください。"));
+    return;
+  }
+  if (!cur) {
+    const more = terms.filter(inScope).some(x => !progress[x.id] || progress[x.id].due <= today());
+    const again = el("button", { class: "btn", type: "button", text: "続けてもう1回" });
+    again.addEventListener("click", buildQueue);
+    stage.replaceChildren(el("div", { class: "empty" },
+      el("b", { text: done ? `${done}枚おわりました` : "今日の分はありません" }),
+      more ? "範囲の中に、まだ出していない単語や復習の単語があります。" : "この範囲の単語は、今日はすべて済んでいます。範囲を広げることもできます。",
+      more ? again : null));
+    return;
+  }
+  const t = cur;
+  const isTermFirst = pref.dir === "term";
+  const meta = el("div", { class: "meta" },
+    el("span", { text: `${catLabel(t.cat)}・あと${queue.length + 1}枚` }),
+    el("span", { class: "chips" }, ...(t.units || []).map(u => el("span", { class: "chip", text: u })),
+      t.verified ? null : el("span", { class: "badge", text: "【解説】" })));
+  const front = el("div", { class: "front" },
+    ...(isTermFirst
+      ? [el("span", { class: "term", text: t.name }), t.yomi ? el("span", { class: "yomi", text: t.yomi }) : null]
+      : [el("span", { class: "clue", text: t.short })]));
+  const children = [meta, front];
+  if (!revealed) {
+    const show = el("button", { class: "btn", type: "button", text: "答えを見る" });
+    show.addEventListener("click", () => { revealed = true; render(); });
+    children.push(el("p", { class: "hint", text: isTermFirst ? "意味を思い出してから押してください" : "単語を思い出してから押してください" }), show);
+  } else {
+    const back = el("div", { class: "back" },
+      isTermFirst ? null : el("div", { class: "answer", text: t.name }),
+      isTermFirst ? box("", "ひとことで", t.short) : null,
+      box("", "くわしく", t.detail),
+      box("exam", "試験のポイント", t.exam),
+      t.analogy ? el("details", {}, el("summary", { text: "たとえで言うと" }), el("p", { text: t.analogy })) : null,
+      (t.sources || []).length ? el("p", { class: "src" }, "出典：", ...t.sources.flatMap((s, i) => [i ? "、" : "", el("a", { href: s.url, target: "_blank", rel: "noopener", text: s.title })])) : null);
+    const again = el("button", { class: "btn again", type: "button", text: "まだ" });
+    const good = el("button", { class: "btn good", type: "button", text: "覚えた" });
+    again.addEventListener("click", () => grade(false));
+    good.addEventListener("click", () => grade(true));
+    children.push(back, el("div", { class: "grade" }, again, good));
+  }
+  stage.replaceChildren(el("div", { class: "card" }, ...children));
+}
+
+function box(cls, label, text) {
+  return el("div", { class: "box " + cls }, el("span", { class: "label", text: label }), el("p", { text }));
+}
+
+function renderControls() {
+  const scope = document.getElementById("scope");
+  const units = ORDER.filter(u => terms.some(t => (t.units || []).includes(u)));
+  scope.replaceChildren(
+    el("option", { value: "upto", text: currentUnit ? `今の単元（${currentUnit}）までに出た単語` : "今の単元までに出た単語" }),
+    el("option", { value: "all", text: "すべての単語" }),
+    ...units.map(u => el("option", { value: u, text: `単元 ${u} に出る単語` })));
+  scope.value = [...scope.options].some(o => o.value === pref.scope) ? pref.scope : "upto";
+  pref.scope = scope.value;
+  const cat = document.getElementById("cat");
+  cat.replaceChildren(el("option", { value: "all", text: "すべての分野" }), ...cats.map(c => el("option", { value: c.id, text: c.tab })));
+  cat.value = [...cat.options].some(o => o.value === pref.cat) ? pref.cat : "all";
+  pref.cat = cat.value;
+  for (const b of document.querySelectorAll(".seg button")) b.setAttribute("aria-pressed", String(b.dataset.dir === pref.dir));
+}
+
+document.getElementById("scope").addEventListener("change", e => { pref.scope = e.target.value; save(PREF, pref); buildQueue(); });
+document.getElementById("cat").addEventListener("change", e => { pref.cat = e.target.value; save(PREF, pref); buildQueue(); });
+for (const b of document.querySelectorAll(".seg button")) {
+  b.addEventListener("click", () => {
+    pref.dir = b.dataset.dir; save(PREF, pref);
+    for (const x of document.querySelectorAll(".seg button")) x.setAttribute("aria-pressed", String(x === b));
+    revealed = false; render();
+  });
+}
+document.getElementById("reset").addEventListener("click", () => {
+  if (!confirm("このブラウザに保存した単語カードの進み具合を消します。よろしいですか？")) return;
+  progress = {}; save(KEY, progress); buildQueue();
+});
+
+Promise.all([
+  fetch("glossary.json", { cache: "no-store" }).then(r => r.json()),
+  fetch("data.json", { cache: "no-store" }).then(r => r.json()).catch(() => ({})),
+]).then(([g, d]) => {
+  terms = Array.isArray(g.terms) ? g.terms : [];
+  cats = Array.isArray(g.categories) ? g.categories : [];
+  currentUnit = (d.plan && d.plan.currentUnit) || ORDER[0];
+  renderControls();
+  buildQueue();
+}).catch(() => { terms = []; render(); });
+</script>
+</body>
+</html>
