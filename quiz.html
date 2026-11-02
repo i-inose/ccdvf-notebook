@@ -157,6 +157,14 @@ summary { cursor: pointer; font-size: 14px; color: var(--accent); font-weight: 5
 .pill.new { background: var(--accent-soft); color: var(--accent); }
 .pill.doing { background: var(--amber-soft); color: var(--amber); }
 .pill.sent { background: var(--green-soft); color: var(--green); }
+.group { display: grid; gap: 8px; }
+.group h2 { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin: 0; }
+.group .sub { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.group.today h2 { color: var(--accent); }
+.later summary { cursor: pointer; font-weight: 700; font-size: 15px; }
+.later .day { display: grid; gap: 6px; margin-top: 10px; }
+.later .day b { font-size: 13px; }
+.timer { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); }
 
 .score { font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: 1.1; font-variant-numeric: tabular-nums; margin: 0; }
 .score small { font-size: 16px; font-weight: 500; color: var(--ink-soft); margin-left: 6px; }
@@ -192,6 +200,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 const REPO = "i-inose/ccdvf-notebook";
 const TODAY = new Date().toLocaleDateString("sv-SE");
 let quiz = { sets: [] };
+let schedule = [];
 let cur = null;     // いま解いているセット
 let sel = new Set();
 let conf = null;
@@ -240,18 +249,45 @@ function renderSets() {
       "Mac で Claude に「スマホ用の問題を作って」と頼むと、ここに追加されます。")));
     return;
   }
-  const list = el("div", { class: "sets" });
-  for (const s of quiz.sets) {
+  const setButton = s => {
     const st = setStatus(s);
     const btn = el("button", { class: "set", type: "button" },
       el("span", { class: "top" }, el("span", { class: "name", text: s.label }), el("span", { class: "pill " + st.cls, text: st.text })),
-      el("span", { class: "muted", text: `${s.lecture ? "講義＋" : ""}${s.questions.length}問・作成 ${s.createdAt || ""}` }));
+      el("span", { class: "muted", text: `${s.lecture ? "講義＋" : ""}${s.questions.length}問${s.timeLimitMin ? `・目安${s.timeLimitMin}分` : ""}` }));
     btn.addEventListener("click", () => openSet(s));
-    list.append(btn);
-  }
+    return btn;
+  };
+  // 計画（data.json の plan.schedule）で、セットを「今日・明日・この先・いつでも」に分ける
+  const today = new Date().toLocaleDateString("sv-SE");
+  const t = new Date(); t.setDate(t.getDate() + 1);
+  const tomorrow = t.toLocaleDateString("sv-SE");
+  const md = d => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
+  const dayOf = {}, titleOf = {};
+  for (const day of schedule) { titleOf[day.date] = day.title; for (const id of day.sets || []) dayOf[id] = day.date; }
+  const inGroup = f => quiz.sets.filter(s => f(dayOf[s.id]));
+  const todays = inGroup(d => d && d <= today);
+  const tomorrows = inGroup(d => d === tomorrow);
+  const later = inGroup(d => d && d > tomorrow);
+  const anytime = inGroup(d => !d);
+  const group = (cls, title, sub, sets) => sets.length
+    ? el("section", { class: "group " + cls }, el("h2", { text: title }), sub ? el("p", { class: "sub", text: sub }) : null,
+        el("div", { class: "sets" }, ...sets.map(setButton)))
+    : null;
+  const overdue = todays.some(s => dayOf[s.id] < today);
+  const laterDays = [...new Set(later.map(s => dayOf[s.id]))].sort();
+  const parts = schedule.length ? [
+    todays.length
+      ? group("today", `今日やる分（${md(today)}）`, (titleOf[today] || "") + (overdue ? "　※前の日に残った分も入っています" : ""), todays)
+      : el("section", { class: "group today" }, el("h2", { text: `今日やる分（${md(today)}）` }), el("p", { class: "sub", text: "今日の分は終わっています。余裕があれば明日の分か、下の「いつでも」へ。" })),
+    group("", `明日の分（${md(tomorrow)}・先にやってもOK）`, titleOf[tomorrow] || "", tomorrows),
+    group("", "いつでも：追加の練習", "終わった単元の残りのセットです。時間があるときや、苦手な単元を見直すときに。", anytime),
+    laterDays.length ? el("details", { class: "later" }, el("summary", { text: `この先の予定（${laterDays.length}日分）` }),
+      ...laterDays.map(d => el("div", { class: "day" }, el("b", { text: `${md(d)}　${titleOf[d] || ""}` }),
+        el("div", { class: "sets" }, ...later.filter(s => dayOf[s.id] === d).map(setButton))))) : null,
+  ] : [el("div", { class: "sets" }, ...quiz.sets.map(setButton))];
   show(el("div", { class: "panel" },
-    el("p", { class: "muted", text: "上から順に解くのがおすすめです。解き終わったら結果を GitHub に送ると、次に Mac で Claude がノートに取り込みます。" }),
-    list));
+    el("p", { class: "muted", text: "解き終わったら結果を GitHub に送り、開いた画面で「Create」まで押してください。次に Mac で Claude がノートに取り込みます。" }),
+    ...parts));
 }
 
 function openSet(s) {
@@ -289,8 +325,16 @@ function renderLecture() {
 }
 
 function progressNode(i, n) {
+  // 模試など timeLimitMin のあるセットは、最初の問題を開いた時刻からの経過を出す
+  let timer = null;
+  if (cur.timeLimitMin) {
+    const p = loadProgress(cur.id);
+    if (!p.startedAt) { p.startedAt = Date.now(); saveProgress(cur.id, p); }
+    const min = Math.floor((Date.now() - p.startedAt) / 60000);
+    timer = el("span", { class: "timer", text: `経過 ${min}分 / 目安 ${cur.timeLimitMin}分` });
+  }
   return el("div", { class: "progress" },
-    el("div", { class: "row" }, el("span", { text: `Q${i + 1} / ${n}` }), el("span", { text: cur.label })),
+    el("div", { class: "row" }, el("span", { text: `Q${i + 1} / ${n}` }), timer, el("span", { text: cur.label })),
     el("div", { class: "bar" }, el("span", { style: `width:${Math.round(i / n * 100)}%` })));
 }
 
@@ -460,10 +504,14 @@ function renderDone() {
 
 document.getElementById("to-sets").addEventListener("click", e => { e.preventDefault(); renderSets(); });
 
-fetch("quiz.json", { cache: "no-store" })
-  .then(r => r.ok ? r.json() : { sets: [] })
-  .then(d => { quiz = d && Array.isArray(d.sets) ? d : { sets: [] }; renderSets(); })
-  .catch(() => renderSets());
+Promise.all([
+  fetch("quiz.json", { cache: "no-store" }).then(r => r.ok ? r.json() : { sets: [] }).catch(() => ({ sets: [] })),
+  fetch("data.json", { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+]).then(([q, d]) => {
+  quiz = q && Array.isArray(q.sets) ? q : { sets: [] };
+  schedule = (d.plan && Array.isArray(d.plan.schedule)) ? d.plan.schedule : [];
+  renderSets();
+});
 </script>
 </body>
 </html>

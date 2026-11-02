@@ -90,6 +90,12 @@ h2 { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin
 .dom .weight { font-size: 12px; color: var(--ink-soft); }
 
 .history { overflow-x: auto; }
+.daily { margin: 0 0 10px; font-size: 14px; }
+table.plan td { white-space: normal; vertical-align: top; }
+table.plan td:first-child, table.plan td:last-child { white-space: nowrap; }
+table.plan tr.today td { background: var(--accent-soft); }
+table.plan tr.past td { color: var(--ink-soft); }
+table.plan .snote { display: block; font-size: 12px; color: var(--ink-soft); }
 table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
 th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { color: var(--ink-soft); font-weight: 500; }
@@ -166,6 +172,12 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
       <a href="cards.html">単語カード（用語の暗記）</a>
     </nav>
   </header>
+
+  <section class="panel" aria-labelledby="h-sched" hidden>
+    <h2 id="h-sched">受験までの計画</h2>
+    <p class="daily" id="daily"></p>
+    <div class="history" id="schedule"></div>
+  </section>
 
   <section class="panel" aria-labelledby="h-plan">
     <h2 id="h-plan">進め方</h2>
@@ -255,6 +267,23 @@ function filtered() {
       (state.kind === "all" || n.result === state.kind) &&
       (state.unit == null || n.unit === state.unit))
     .sort((a, b) => (a.nextReview || "").localeCompare(b.nextReview || "") || a.no - b.no);
+}
+
+// 受験までの日ごとの計画（data.json の plan.schedule）。今日の行を強調する
+function renderSchedule() {
+  const box = document.getElementById("schedule");
+  const days = state.plan.schedule || [];
+  box.closest("section").hidden = !days.length;
+  if (!days.length) return;
+  const md = d => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
+  const wd = d => "日月火水木金土"[new Date(d + "T00:00:00").getDay()];
+  const head = el("tr", {}, el("th", { text: "日" }), el("th", { text: "やること" }), el("th", { text: "量" }));
+  const rows = days.map(d => el("tr", { class: d.date === TODAY ? "today" : d.date < TODAY ? "past" : "" },
+    el("td", { text: `${md(d.date)}（${wd(d.date)}）` }),
+    el("td", {}, el("b", { text: d.title }), d.note ? el("span", { class: "snote", text: d.note }) : null),
+    el("td", { text: d.load || "" })));
+  box.replaceChildren(el("table", { class: "plan" }, el("thead", {}, head), el("tbody", {}, ...rows)));
+  document.getElementById("daily").textContent = state.plan.daily || "";
 }
 
 function renderPlan() {
@@ -368,9 +397,13 @@ function renderCard(n) {
 }
 
 function render() {
-  const left = Math.round((new Date(EXAM_BEFORE) - new Date(TODAY)) / 86400000);
-  document.getElementById("exam").textContent = ` 受験は ${EXAM_BEFORE} より前（あと ${left} 日）。`;
+  const examDate = state.plan.examDate || EXAM_BEFORE;
+  const left = Math.round((new Date(examDate) - new Date(TODAY)) / 86400000);
+  document.getElementById("exam").textContent = state.plan.examDate
+    ? ` 受験予定は ${examDate}（あと ${left} 日）。`
+    : ` 受験は ${EXAM_BEFORE} より前（あと ${left} 日）。`;
   renderPlan();
+  renderSchedule();
   renderUnits();
   renderHistory();
   for (const b of document.querySelectorAll("[data-status]")) b.setAttribute("aria-pressed", String(b.dataset.status === state.status));
