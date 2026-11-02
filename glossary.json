@@ -49,16 +49,25 @@
     "Models API"
    ],
    "units": [
+    "1-2",
+    "2-1",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "2-6",
     "5-1",
     "5-2",
     "5-3",
     "6-1",
     "6-2",
-    "8-1"
+    "7-1",
+    "7-2",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 35,
+   "count": 56,
    "verified": true,
    "sources": [
     {
@@ -153,8 +162,13 @@
     "ステートレス"
    ],
    "units": [
+    "1-2",
+    "2-1",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
@@ -162,9 +176,14 @@
     "6-1",
     "6-2",
     "6-3",
-    "8-1"
+    "7-1",
+    "7-2",
+    "7-4",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 89,
+   "count": 112,
    "verified": true,
    "sources": [
     {
@@ -226,11 +245,12 @@
     "HTTP 529"
    ],
    "units": [
+    "4-1",
     "5-1",
     "5-2",
     "6-3"
    ],
-   "count": 9,
+   "count": 8,
    "verified": true,
    "sources": [
     {
@@ -270,9 +290,10 @@
     "2-3",
     "2-4",
     "5-1",
-    "5-2"
+    "5-2",
+    "8-2"
    ],
-   "count": 24,
+   "count": 26,
    "verified": true,
    "sources": [
     {
@@ -305,15 +326,17 @@
    "units": [
     "2-3",
     "2-4",
-    "5-1",
+    "4-1",
     "5-2",
     "5-3",
     "6-1",
     "6-2",
     "6-3",
-    "8-1"
+    "7-1",
+    "8-1",
+    "8-2"
    ],
-   "count": 28,
+   "count": 36,
    "verified": true,
    "sources": [
     {
@@ -346,10 +369,12 @@
    "units": [
     "2-3",
     "2-4",
+    "4-1",
     "6-2",
-    "6-3"
+    "6-3",
+    "7-1"
    ],
-   "count": 6,
+   "count": 8,
    "verified": true,
    "sources": [
     {
@@ -409,9 +434,10 @@
     "curl"
    ],
    "units": [
-    "5-2"
+    "5-2",
+    "7-2"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -475,16 +501,26 @@
     "Python SDK"
    ],
    "units": [
+    "1-2",
+    "2-1",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "3-1",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
     "5-4",
     "6-3",
-    "8-1"
+    "7-3",
+    "7-4",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 48,
+   "count": 72,
    "verified": true,
    "sources": [
     {
@@ -517,16 +553,29 @@
     "ブラウザ"
    ],
    "units": [
+    "1-2",
+    "1-3",
+    "2-1",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "2-6",
+    "3-1",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
     "6-1",
     "6-3",
-    "8-1"
+    "7-1",
+    "7-2",
+    "7-4",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 38,
+   "count": 78,
    "verified": true,
    "sources": [
     {
@@ -555,6 +604,7 @@
     "text_stream"
    ],
    "units": [
+    "1-2",
     "2-3",
     "2-4",
     "5-1",
@@ -595,9 +645,12 @@
     "event: error"
    ],
    "units": [
-    "5-2"
+    "1-2",
+    "5-2",
+    "7-2",
+    "8-2"
    ],
-   "count": 4,
+   "count": 8,
    "verified": true,
    "sources": [
     {
@@ -627,9 +680,10 @@
     "WebSocket"
    ],
    "units": [
-    "5-2"
+    "5-2",
+    "8-2"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -661,11 +715,14 @@
     "with_options"
    ],
    "units": [
+    "1-3",
     "2-4",
     "5-2",
-    "8-1"
+    "7-3",
+    "8-1",
+    "8-2"
    ],
-   "count": 11,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -696,8 +753,10 @@
    "units": [
     "2-3",
     "2-4",
+    "4-1",
     "5-1",
-    "5-2"
+    "5-2",
+    "7-4"
    ],
    "count": 15,
    "verified": true,
@@ -732,13 +791,15 @@
     "非同期"
    ],
    "units": [
+    "1-2",
     "2-3",
     "2-4",
     "5-1",
     "5-2",
-    "5-3"
+    "5-3",
+    "5-4"
    ],
-   "count": 10,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -771,11 +832,16 @@
     "ANTHROPIC_LOG"
    ],
    "units": [
+    "2-2",
     "2-4",
+    "2-6",
+    "4-1",
     "5-2",
-    "8-1"
+    "7-4",
+    "8-1",
+    "8-3"
    ],
-   "count": 8,
+   "count": 14,
    "verified": true,
    "sources": [
     {
@@ -807,13 +873,15 @@
     "遅延"
    ],
    "units": [
+    "1-1",
+    "2-2",
     "5-1",
     "5-3",
     "6-1",
     "6-2",
     "8-1"
    ],
-   "count": 10,
+   "count": 12,
    "verified": true,
    "sources": [
     {
@@ -967,9 +1035,10 @@
     "ロードバランサー"
    ],
    "units": [
-    "2-3"
+    "2-3",
+    "8-2"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -1054,9 +1123,11 @@
    "units": [
     "2-3",
     "2-4",
+    "3-1",
+    "7-2",
     "8-1"
    ],
-   "count": 9,
+   "count": 11,
    "verified": true,
    "sources": [
     {
@@ -1083,12 +1154,18 @@
     "公開リポジトリ"
    ],
    "units": [
+    "1-2",
     "2-4",
+    "2-5",
+    "2-6",
+    "3-1",
     "5-4",
     "6-1",
-    "8-1"
+    "7-2",
+    "8-1",
+    "8-3"
    ],
-   "count": 8,
+   "count": 26,
    "verified": true,
    "sources": [
     {
@@ -1115,9 +1192,12 @@
    ],
    "units": [
     "2-4",
+    "2-5",
+    "2-6",
+    "3-1",
     "6-1"
    ],
-   "count": 5,
+   "count": 11,
    "verified": true,
    "sources": [
     {
@@ -1144,9 +1224,10 @@
     "チェックアウト"
    ],
    "units": [
-    "2-4"
+    "2-4",
+    "2-6"
    ],
-   "count": 5,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -1238,13 +1319,19 @@
     "レビュー"
    ],
    "units": [
+    "1-2",
+    "2-1",
     "2-3",
     "2-4",
+    "2-5",
+    "2-6",
+    "3-1",
     "5-1",
     "5-2",
-    "5-4"
+    "5-4",
+    "7-2"
    ],
-   "count": 13,
+   "count": 23,
    "verified": true,
    "sources": [
     {
@@ -1304,12 +1391,14 @@
     "CI"
    ],
    "units": [
+    "1-2",
     "2-3",
     "2-4",
     "5-1",
-    "5-3"
+    "5-3",
+    "7-4"
    ],
-   "count": 11,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -1398,9 +1487,12 @@
     "リファクタリング"
    ],
    "units": [
-    "2-4"
+    "2-4",
+    "2-5",
+    "3-1",
+    "4-1"
    ],
-   "count": 3,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -1423,13 +1515,20 @@
     "テストケース"
    ],
    "units": [
+    "1-1",
+    "1-3",
+    "2-1",
     "2-4",
+    "2-6",
+    "3-1",
+    "4-1",
     "5-1",
     "5-3",
     "6-1",
-    "6-2"
+    "6-2",
+    "8-3"
    ],
-   "count": 13,
+   "count": 23,
    "verified": false,
    "sources": [
     {
@@ -1456,9 +1555,13 @@
     "sed"
    ],
    "units": [
-    "2-4"
+    "1-2",
+    "2-4",
+    "3-1",
+    "7-2",
+    "7-3"
    ],
-   "count": 2,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -1488,11 +1591,24 @@
     "Claude Code"
    ],
    "units": [
+    "1-1",
+    "1-2",
+    "2-1",
     "2-4",
+    "2-5",
+    "2-6",
+    "3-1",
+    "4-1",
     "5-4",
-    "6-1"
+    "6-1",
+    "6-2",
+    "7-2",
+    "7-3",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 11,
+   "count": 50,
    "verified": true,
    "sources": [
     {
@@ -1518,9 +1634,15 @@
     "CLAUDE.md"
    ],
    "units": [
-    "2-4"
+    "1-2",
+    "2-4",
+    "2-5",
+    "2-6",
+    "3-1",
+    "4-1",
+    "7-2"
    ],
-   "count": 4,
+   "count": 20,
    "verified": true,
    "sources": [
     {
@@ -1548,9 +1670,11 @@
     "/code-review"
    ],
    "units": [
-    "2-4"
+    "2-4",
+    "3-1",
+    "6-1"
    ],
-   "count": 4,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -1573,10 +1697,14 @@
    "analogy": "工事を始める前に、設計図だけを見せてもらう段階。",
    "exam": "「大きな変更の前に、編集せず計画を見たい」場面で選ぶ。同時作業の編集衝突を防ぐ手段ではなく、「片方が終わるまでもう片方は plan mode にする」は誤り。衝突を避けるのは worktree。",
    "keywords": [
-    "plan mode"
+    "plan mode",
+    "plan モード"
    ],
-   "units": [],
-   "count": 0,
+   "units": [
+    "1-2",
+    "3-1"
+   ],
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -1636,9 +1764,10 @@
     "チェックポイント"
    ],
    "units": [
-    "2-4"
+    "2-4",
+    "6-1"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -1700,9 +1829,13 @@
     "stream-json"
    ],
    "units": [
-    "2-4"
+    "1-2",
+    "2-4",
+    "2-5",
+    "3-1",
+    "4-1"
    ],
-   "count": 3,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -1793,12 +1926,18 @@
     "fork"
    ],
    "units": [
+    "1-1",
+    "1-2",
+    "1-3",
     "2-4",
+    "2-5",
+    "2-6",
+    "3-1",
     "5-3",
     "5-4",
     "6-1"
    ],
-   "count": 8,
+   "count": 25,
    "verified": true,
    "sources": [
     {
@@ -1808,6 +1947,493 @@
     {
      "title": "Manage costs effectively（Claude Code）",
      "url": "https://code.claude.com/docs/en/costs"
+    }
+   ]
+  },
+  {
+   "id": "built-in-tools",
+   "cat": "dev",
+   "name": "組み込みのツール（built-in tools）",
+   "yomi": "くみこみのツール",
+   "short": "Claude Code に最初から入っている、ファイル操作・検索・実行・Web のツール",
+   "detail": "Claude Code は、ファイルの読み書きと編集、パターンや正規表現での検索、シェルのコマンドの実行（テストや git を含む）、Web の検索と取得を、最初から持つツールで行う。公式は、ふつうのコーディング作業はこの組み込みのツールでまかなえるとし、その上に Skills・MCP・hooks・サブエージェントを拡張として重ねると説明している。",
+   "analogy": "家に備え付けの台所。まずそれで作れるかを考え、ない道具だけを買い足す。",
+   "exam": "組み込みのツールと同じことをする MCP サーバーを作っても、保守とツールの数が増えるだけ。同じ手順を何度も貼っているなら Skill、Claude から見えない外部のシステムのデータを写しているなら MCP を足す。",
+   "keywords": [
+    "組み込みのツール"
+   ],
+   "units": [
+    "1-2",
+    "4-1",
+    "8-3"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "How Claude Code works",
+     "url": "https://code.claude.com/docs/en/how-claude-code-works"
+    },
+    {
+     "title": "Extend Claude Code",
+     "url": "https://code.claude.com/docs/en/features-overview"
+    }
+   ]
+  },
+  {
+   "id": "agent-teams",
+   "cat": "dev",
+   "name": "エージェントチーム（agent teams）",
+   "yomi": "エージェントチーム",
+   "short": "Claude Code の複数のセッションが、リードと仲間に分かれて直接やり取りしながら協力する実験的な機能",
+   "detail": "1つのセッションがリードとして作業を配り、結果をまとめる。仲間（teammate）はそれぞれ自分のコンテキストで動き、共有のタスク一覧で作業を取り、互いに直接メッセージを送れる。サブエージェントが結果を呼び出し元に返すだけなのに対し、仲間どうしで発見を共有して反論し合える。実験的な機能で、既定では無効。",
+   "analogy": "報告だけを返す外注先（サブエージェント）ではなく、互いに議論しながら進めるプロジェクトチーム。",
+   "exam": "競合する仮説の並行検証、複数観点のレビュー、層をまたぐ変更の分担に向く。各仲間が別の Claude のインスタンスなのでトークンは多くかかる。順番に依存する作業、同じファイルの編集、依存の多い作業では、1つのセッションかサブエージェントのほうが効果的。",
+   "keywords": [
+    "エージェントチーム"
+   ],
+   "units": [
+    "1-1"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Orchestrate teams of Claude Code sessions",
+     "url": "https://code.claude.com/docs/en/agent-teams"
+    }
+   ]
+  },
+  {
+   "id": "strands-agents",
+   "cat": "dev",
+   "name": "Strands Agents（ストランズ・エージェント）",
+   "yomi": "ストランズ・エージェント",
+   "short": "AWS 発のオープンソースの、Python と TypeScript でエージェントを作るための SDK",
+   "detail": "モデルを呼び、ツールを求められたら実行してまた呼ぶ、というエージェントループを中心に、ターン数やトークンの上限、会話管理、複数エージェントの型（agents as tools・Graph・Swarm・Workflow）などを部品として持つ。既定のモデル提供元は Amazon Bedrock で、Anthropic などにも切り替えられる。",
+   "analogy": "エージェントの組み立てキット。ループや記憶の部品はそろっているが、既定の動きを知らないと思わぬところで困る。",
+   "exam": "ループの上限は渡さない限りかからない。会話管理を指定しないと、決まった数の新しいメッセージだけを残すスライディングウィンドウが既定になる。複数エージェントの型は「実行の道筋を誰が決めるか」で選ぶ（Graph は開発者が節と辺を決め、Swarm はエージェントが次の担当を決め、Workflow は依存関係で固定）。",
+   "keywords": [
+    "Strands Agents",
+    "Swarm"
+   ],
+   "units": [
+    "1-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Agent loop（Strands Agents）",
+     "url": "https://strandsagents.com/docs/user-guide/sdk/agents/agent-loop/"
+    },
+    {
+     "title": "Conversation management（Strands Agents）",
+     "url": "https://strandsagents.com/docs/user-guide/sdk/agents/conversation-management/"
+    },
+    {
+     "title": "Multi-agent patterns（Strands Agents）",
+     "url": "https://strandsagents.com/docs/user-guide/sdk/multi-agent/multi-agent-patterns/"
+    }
+   ]
+  },
+  {
+   "id": "langgraph",
+   "cat": "dev",
+   "name": "LangGraph とチェックポインター（checkpointer）・ストア（store）",
+   "yomi": "ラングラフ",
+   "short": "状態を持つ長時間のエージェントを作るための、低レベルのオーケストレーションの基盤",
+   "detail": "処理を節（ノード）と辺でつないだグラフとして書き、決まった手順と LLM が判断する手順を1つのグラフに混ぜられる。チェックポインターは、各段のグラフの状態をスレッドごとに保存し、会話の継続、人の承認での中断と再開（interrupt）、失敗からの再開に使う。ストアは、スレッドをまたいで使う長期の記憶（利用者の好みなど）を置く場所。",
+   "analogy": "チェックポインターはゲームのセーブデータ、ストアはどのセーブデータからも見られる共通の手帳。",
+   "exam": "interrupt で止めると、状態を保存して再開まで無期限に待つ。本番では、再起動で消えないデータベースなどの永続的なチェックポインターを使う。新しいスレッドは空の状態から始まるので、会話をまたぐ情報はストアに置く。",
+   "keywords": [
+    "LangGraph",
+    "チェックポインター",
+    "interrupt"
+   ],
+   "units": [
+    "1-3"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "LangGraph overview",
+     "url": "https://docs.langchain.com/oss/python/langgraph/overview"
+    },
+    {
+     "title": "Persistence（LangGraph）",
+     "url": "https://docs.langchain.com/oss/python/langgraph/persistence"
+    },
+    {
+     "title": "Interrupts（LangGraph）",
+     "url": "https://docs.langchain.com/oss/python/langgraph/interrupts"
+    }
+   ]
+  },
+  {
+   "id": "pydantic-ai",
+   "cat": "dev",
+   "name": "Pydantic AI（パイダンティック AI）",
+   "yomi": "パイダンティック エーアイ",
+   "short": "Pydantic が提供する、Python のオープンソースのエージェントフレームワーク",
+   "detail": "生成 AI の本番アプリを作りやすくするための Python のエージェントフレームワーク。モデルの提供元を文字列1つで切り替えられる。複数エージェントの作り方を、単一のエージェント・委任（ツールの中で別のエージェントを呼ぶ）・プログラムによる引き継ぎ（アプリのコードや人が次のエージェントを決める）・グラフによる制御・Deep Agents の段階で説明している。",
+   "analogy": "必要な分だけ道具を足していく工具箱。ハンマーで済むところに釘打ち機（グラフ）は要らない。",
+   "exam": "利用者の選択など、アプリや人が次のエージェントを決める流れはプログラムによる引き継ぎ。グラフは最も複雑な場合のための手段で、公式も「良い考えか自信がないなら、たぶん不要」としている。",
+   "keywords": [
+    "Pydantic AI"
+   ],
+   "units": [
+    "1-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Multi-agent Applications（Pydantic AI）",
+     "url": "https://pydantic.dev/docs/ai/guides/multi-agent-applications/"
+    },
+    {
+     "title": "Graphs（Pydantic AI）",
+     "url": "https://pydantic.dev/docs/ai/graph/graph/"
+    }
+   ]
+  },
+  {
+   "id": "hooks",
+   "cat": "dev",
+   "name": "フック（hooks）",
+   "yomi": "フック",
+   "short": "決まった時点で、Claude の判断と関係なく自分の処理を動かす仕組み",
+   "detail": "ツールの実行前（PreToolUse）・実行後（PostToolUse）、要約の前（PreCompact）、セッションの開始や終了などの決まった時点で、自分で用意した処理を動かす仕組み。Claude Code では settings.json にシェルのコマンドなどを書き、Agent SDK ではコールバック関数を options の hooks に渡す。CLAUDE.md やプロンプトの指示と違い、Claude が守るかどうかに左右されない。",
+   "analogy": "工場の出口のセンサー。作業員が忘れても、通るたびに記録が残る。",
+   "exam": "毎回必ず行う記録・整形などは、プロンプトや CLAUDE.md ではなくフックにする。prompt 型・agent 型のフックは別のモデルが判断するので決定的ではなく、確実に動かすならコード（command 型やコールバック）で書く。matcher が Write|Edit のフックは、Bash で書き換えたファイルには反応しない。",
+   "keywords": [
+    "フック",
+    "PostToolUse",
+    "PreCompact"
+   ],
+   "units": [
+    "1-2",
+    "2-5",
+    "3-1",
+    "7-3"
+   ],
+   "count": 9,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Intercept and control agent behavior with hooks",
+     "url": "https://code.claude.com/docs/en/agent-sdk/hooks"
+    },
+    {
+     "title": "Automate actions with hooks",
+     "url": "https://code.claude.com/docs/en/hooks-guide"
+    },
+    {
+     "title": "Best practices for Claude Code",
+     "url": "https://code.claude.com/docs/en/best-practices"
+    }
+   ]
+  },
+  {
+   "id": "permission-modes",
+   "cat": "dev",
+   "name": "権限モード（permission mode: default / acceptEdits / plan / auto / dontAsk / bypassPermissions）",
+   "yomi": "けんげんモード",
+   "short": "ツールを実行する前に確認するかどうかの、基本の設定",
+   "detail": "Claude Code と Agent SDK で、ツールの呼び出しをどこまで確認なしで進めるかを決める設定。default（Manual）は読み取り以外を確認、acceptEdits はファイルの編集とよく使うファイル操作を自動で許可、plan は調べて計画するだけ、auto は別の分類器のモデルが1件ずつ確かめて許可や拒否をする、dontAsk は事前に許可したもの以外を確認なしで拒否、bypassPermissions はすべての確認を飛ばす。claude -p と Agent SDK は、指定しなければ default で始まる。",
+   "analogy": "部下に渡す委任状。どこまで自分の判断で進めてよいかを、あらかじめ決めておく。",
+   "exam": "bypassPermissions は隔離したコンテナや VM でだけ使い、allowed_tools を付けても絞られない。無人で読み取りに絞るなら allowed_tools と dontAsk、コマンドを並べきれない無人の実行なら auto。auto は確認を減らすが安全を保証しない。",
+   "keywords": [
+    "bypassPermissions",
+    "dontAsk",
+    "acceptEdits",
+    "--permission-mode auto",
+    "permission_mode"
+   ],
+   "units": [
+    "1-2",
+    "2-4",
+    "3-1",
+    "7-3"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Choose a permission mode",
+     "url": "https://code.claude.com/docs/en/permission-modes"
+    },
+    {
+     "title": "Configure permissions (Agent SDK)",
+     "url": "https://code.claude.com/docs/en/agent-sdk/permissions"
+    }
+   ]
+  },
+  {
+   "id": "auto-memory",
+   "cat": "dev",
+   "name": "自動メモリ（auto memory）とサブエージェントのメモリ",
+   "yomi": "じどうメモリ",
+   "short": "Claude が訂正や好みを自分で書き留め、次のセッションでも読むメモ",
+   "detail": "Claude Code で、Claude が利用者の訂正や好み、コードからはわからない事情などを、リポジトリごとのフォルダ（~/.claude/projects/<project>/memory/）に書き留める仕組み。索引の MEMORY.md の先頭が毎回のセッションで読み込まれる。マシンの中だけに置かれ、ほかのマシンとは共有されない。サブエージェントは memory フィールドで自分専用の記憶を持て、user（全プロジェクト）・project（リポジトリに置き、Git で共有）・local（リポジトリに置くが共有しない）から範囲を選ぶ。",
+   "analogy": "自分のノートに書く覚え書き。自分の机では見返せるが、ほかの人の机には届かない。",
+   "exam": "チームでそろえる指示はリポジトリの CLAUDE.md に書く（自動メモリは共有されない）。メインの会話の自動メモリはサブエージェントには読み込まれない。サブエージェントの記憶をチームで共有するなら memory: project。",
+   "keywords": [
+    "自動メモリ",
+    "memory: project"
+   ],
+   "units": [
+    "1-2",
+    "3-1"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "How Claude remembers your project",
+     "url": "https://code.claude.com/docs/en/memory"
+    },
+    {
+     "title": "Create custom subagents",
+     "url": "https://code.claude.com/docs/en/sub-agents"
+    }
+   ]
+  },
+  {
+   "id": "agents-md",
+   "cat": "dev",
+   "name": "AGENTS.md",
+   "yomi": "エージェンツ エムディー",
+   "short": "複数のコーディングツールで共有できる、プロジェクトの指示のファイル",
+   "detail": "ほかのコーディングエージェントでも使われる、プロジェクトの指示を書いたファイル。Claude Code は、作業ディレクトリかその上に CLAUDE.md や CLAUDE.local.md がなければ AGENTS.md を読む。CLAUDE.md がある場合は、既定では CLAUDE.md だけを読む。共通の指示を AGENTS.md の1か所に置いたまま Claude 専用の指示を足すには、CLAUDE.md に @AGENTS.md と書いて取り込み、その下に書く。",
+   "analogy": "複数の部署で共有する共通の手順書。自部署だけの注意は、共通の手順書を綴じ込んだうえで、別紙に足す。",
+   "exam": "CLAUDE.md を置くと、既定では AGENTS.md が読まれなくなる。CLAUDE.md に「AGENTS.md を読むこと」と文で書いても、Claude がファイルを開くと判断したときしか読まれないので、@AGENTS.md で取り込む。",
+   "keywords": [
+    "AGENTS.md",
+    "@AGENTS.md"
+   ],
+   "units": [
+    "3-1"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "How Claude remembers your project（AGENTS.md）",
+     "url": "https://code.claude.com/docs/en/memory"
+    }
+   ]
+  },
+  {
+   "id": "plugin-marketplace",
+   "cat": "dev",
+   "name": "プラグイン（plugin）とマーケットプレイス（marketplace）",
+   "yomi": "プラグイン／マーケットプレイス",
+   "short": "Claude Code にスキル・エージェント・フック・MCP サーバーなどを1つの単位で入れる仕組みと、その一覧（カタログ）",
+   "detail": "プラグインは、スキル・サブエージェント・フック・MCP サーバーなどの部品を入れたディレクトリで、.claude-plugin/plugin.json に名前や版を書く。マーケットプレイスは、プラグインの一覧と取得先を書いた .claude-plugin/marketplace.json を置いたリポジトリなどで、追加すると名前でプラグインを入れられる。入れるときは user・project・local のスコープを選ぶ。有効なプラグインは、使わないセッションにも部品の名前と説明がコンテキストに入り、フックや MCP サーバーも動く。",
+   "analogy": "工具セットと、それを載せた通販カタログ。カタログの出版社の名前は、箱の中身の安全を保証しない。",
+   "exam": "入れたプラグインは、入れた人の権限でコードを動かせる。フック・モニター・MCP サーバーはサンドボックスの外で動き、権限のルールは Claude のツール呼び出しにしか効かないので、入れる前に hooks.json・.mcp.json・bin/ を読む。マーケットプレイスの名前は一覧を出す人を示すだけ。複数の部品をまとめてチームに版付きで配るときに使う。",
+   "keywords": [
+    "プラグイン",
+    "マーケットプレイス"
+   ],
+   "units": [
+    "2-5",
+    "2-6"
+   ],
+   "count": 6,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Plugins overview",
+     "url": "https://code.claude.com/docs/en/plugins/overview"
+    },
+    {
+     "title": "Plugin security and trust",
+     "url": "https://code.claude.com/docs/en/plugins/security"
+    }
+   ]
+  },
+  {
+   "id": "settings-json-scopes",
+   "cat": "dev",
+   "name": "settings.json（設定ファイル）とスコープ",
+   "yomi": "セッティングス ジェイソン",
+   "short": "Claude Code の動きを決める JSON の設定ファイル。置く場所で効く範囲が決まる",
+   "detail": "使うモデル・確認なしに実行してよいコマンド・hooks・環境変数などを書く。~/.claude/settings.json（自分のすべてのプロジェクト）、.claude/settings.json（コミットしてチームで共有）、.claude/settings.local.json（自分だけ、このプロジェクトだけ）、組織が配る管理設定がある。同じキーが複数にあれば、管理設定 → コマンドライン → 自分用のプロジェクト → 共有プロジェクト → ユーザーの順に上の値が使われる。",
+   "analogy": "会社の規程・部署のルール・自分のメモ。食い違えば、上の規程が勝つ。",
+   "exam": "自分だけの上書きは settings.local.json。permissions.allow のようなリストは結合される。ANTHROPIC_MODEL などの環境変数は層の外にあり、どのファイルの model より先に読まれる。",
+   "keywords": [
+    "settings.json",
+    "settings.local.json"
+   ],
+   "units": [
+    "2-4",
+    "2-6",
+    "7-2"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Settings files and precedence",
+     "url": "https://code.claude.com/docs/en/settings"
+    }
+   ]
+  },
+  {
+   "id": "managed-settings",
+   "cat": "dev",
+   "name": "管理設定（managed settings）",
+   "yomi": "かんりせってい",
+   "short": "組織が配る Claude Code の設定。利用者の設定では上書きできない",
+   "detail": "claude.ai の管理画面のサーバー管理設定、MDM、managed-settings.json のどれかで配る。設定の層の最上位で、利用者のファイルやコマンドラインでは変えられない。サーバー管理設定は組織の全員に一律で、Amazon Bedrock などサードパーティの接続先を使うセッションには届かない。",
+   "analogy": "建物の防火設備。住人が自分の部屋で設定を変えても、止めることはできない。",
+   "exam": "CLAUDE.md は指針で強制ではないので、必ず止めたい操作は管理設定（permissions.deny など）に置く。使えるモデルを絞る availableModels や、新しい版を止める deniedModels も管理設定から読む。",
+   "keywords": [
+    "管理設定"
+   ],
+   "units": [
+    "2-1",
+    "2-6",
+    "7-2"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Code Docs: Settings files and precedence",
+     "url": "https://code.claude.com/docs/en/settings"
+    },
+    {
+     "title": "Claude Code Docs: Configure server-managed settings",
+     "url": "https://code.claude.com/docs/en/server-managed-settings"
+    }
+   ]
+  },
+  {
+   "id": "sandbox",
+   "cat": "dev",
+   "name": "サンドボックス（sandboxed Bash tool）",
+   "yomi": "サンドボックス",
+   "short": "Claude Code が動かすシェルコマンドと子プロセスの、ファイルと通信先を OS のレベルで制限する仕組み",
+   "detail": "Claude Code のサンドボックスは、Bash・PowerShell などのコマンドと、その子プロセスが読み書きできる場所と通信できるドメインを、OS の仕組み（Linux の bubblewrap、macOS の Seatbelt）で制限する。通信はプロキシを通り、許可したドメインにだけ出る。権限ルール（permissions）は Claude のツール呼び出しに対する判定で、Bash のルールはコマンドの文字列に当てるため、Python スクリプトの中からの通信などは止められない。Read や WebFetch などの組み込みのツールには、サンドボックスではなく権限ルールが効く。",
+   "analogy": "権限ルールが受付での入館の審査なら、サンドボックスは建物の壁と扉。書類をごまかして受付を通っても、壁は通り抜けられない。",
+   "exam": "どんな書き方のコマンドでも必ず守らせたい制限（通信先・読ませないファイル）はサンドボックスで行い、権限ルールと重ねる（defense-in-depth）。組織で強制するなら管理設定の sandbox.network.allowManagedDomainsOnly などを使う。",
+   "keywords": [
+    "サンドボックス"
+   ],
+   "units": [
+    "1-1",
+    "1-2",
+    "2-2",
+    "2-5",
+    "7-2",
+    "8-1"
+   ],
+   "count": 9,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Configure the sandboxed Bash tool",
+     "url": "https://code.claude.com/docs/en/sandboxing"
+    },
+    {
+     "title": "Configure permissions",
+     "url": "https://code.claude.com/docs/en/permissions"
+    }
+   ]
+  },
+  {
+   "id": "claude-apps-gateway",
+   "cat": "dev",
+   "name": "Claude apps gateway（Claude Code のゲートウェイ）",
+   "yomi": "クロード・アップス・ゲートウェイ",
+   "short": "開発者の Claude Code とモデルの提供元の間に、自社で立てるゲートウェイ",
+   "detail": "claude コマンドに含まれる、自社で動かすゲートウェイのサーバー。開発者は社内の IdP（SSO）でサインインして短期のトークンを受け取り、上流（Amazon Bedrock、Claude Platform on AWS、Google Cloud、Microsoft Foundry、Anthropic API）の認証情報はゲートウェイだけが持つ。IdP のグループごとにモデルの許可リストと管理設定を当て、許されていないモデルの要求はサーバー側で拒む。利用状況は OTLP で自社の監視基盤に送れる。",
+   "analogy": "社員証で入る社内の購買窓口。社員は取引先の口座を知らず、窓口が部署ごとに買えるものを決め、記録も社内に残す。",
+   "exam": "推論を自社のクラウドに通す・SSO でサインインさせる・部署ごとにモデルを分ける、という要件がそろえば候補になる。IdP で無効にした社員は、セッションの寿命（既定1時間）のうちに使えなくなる。自社のクラウドを通す要件がなければ、Claude Enterprise のほうが合うこともある。",
+   "keywords": [
+    "Claude apps gateway"
+   ],
+   "units": [
+    "2-1",
+    "2-6"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude apps gateway",
+     "url": "https://code.claude.com/docs/en/claude-apps-gateway"
+    }
+   ]
+  },
+  {
+   "id": "trace-span",
+   "cat": "dev",
+   "name": "トレースとスパン（trace / span）",
+   "yomi": "トレース、スパン",
+   "short": "1つのリクエストの処理の全体の記録（トレース）と、その中の1段階（スパン）",
+   "detail": "トレースは1つのリクエストがシステムを通る全体の記録で、スパンはその中の1段階（モデルへのリクエストやツールの実行など）。Claude の SDK は CLIENT のスパン（再試行を含むリクエスト全体）を、API は SERVER のスパン（モデルの実行・サーバーツールなど）を出す。Agent SDK では claude_code.interaction・llm_request・tool のスパンが出て、tool の下は許可待ちと実行に分かれる。",
+   "analogy": "宅配の追跡記録。お店の記録と配送センターの記録を並べると、どこで時間がかかったかが分かる。",
+   "exam": "遅さや失敗の原因が、モデル・ツール・承認待ち・再試行のどこにあるかを、スパンの時間と属性（stop_reason、error.type、再送の回数など）で分ける。",
+   "keywords": [
+    "スパン",
+    "トレース"
+   ],
+   "units": [
+    "1-3",
+    "2-2",
+    "4-1",
+    "5-2",
+    "8-1"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "OpenTelemetry tracing for the Claude API",
+     "url": "https://platform.claude.com/docs/en/manage-claude/opentelemetry"
+    },
+    {
+     "title": "OpenTelemetry span reference",
+     "url": "https://platform.claude.com/docs/en/api/opentelemetry/spans"
+    },
+    {
+     "title": "Observability with OpenTelemetry (Agent SDK)",
+     "url": "https://code.claude.com/docs/en/agent-sdk/observability"
+    }
+   ]
+  },
+  {
+   "id": "context-command",
+   "cat": "dev",
+   "name": "/context（読み込まれた中身の確認）",
+   "yomi": "スラッシュ・コンテキスト",
+   "short": "Claude Code で、今の文脈に何がどれだけ入っているかを見るコマンド",
+   "detail": "/context は、システムプロンプト・ツール・MCP のツール・サブエージェント・CLAUDE.md などのメモリ・スキル・会話を、種類ごとに分けて表示する。設定した CLAUDE.md や規則、スキルの説明が読み込まれているかを、最初に確かめるのに使う。サブディレクトリの CLAUDE.md は、その場所のファイルを読むまで読み込まれない。",
+   "analogy": "薬を飲んだかを、記憶ではなく薬箱の残りで確かめる。",
+   "exam": "指示が守られないときは、まず /context で読み込まれたかを確かめる。読み込まれているのに守られないなら、あいまい・食い違い・長すぎる（目安は1ファイル200行未満）など書き方の問題として直す。",
+   "keywords": [
+    "/context"
+   ],
+   "units": [
+    "3-1",
+    "4-1"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Debug your configuration",
+     "url": "https://code.claude.com/docs/en/debug-your-config"
+    },
+    {
+     "title": "How Claude remembers your project",
+     "url": "https://code.claude.com/docs/en/memory"
     }
    ]
   },
@@ -1826,16 +2452,25 @@
     "Claude API"
    ],
    "units": [
+    "1-2",
+    "2-1",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "2-6",
     "5-1",
     "5-2",
     "5-3",
     "6-1",
     "6-2",
-    "8-1"
+    "7-1",
+    "7-2",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 33,
+   "count": 53,
    "verified": true,
    "sources": [
     {
@@ -1868,14 +2503,16 @@
    "units": [
     "2-3",
     "2-4",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
     "6-1",
     "6-2",
-    "8-1"
+    "8-1",
+    "8-2"
    ],
-   "count": 21,
+   "count": 23,
    "verified": true,
    "sources": [
     {
@@ -1903,11 +2540,17 @@
     "最上位の system"
    ],
    "units": [
+    "1-2",
+    "2-2",
+    "2-5",
+    "4-1",
     "5-1",
     "5-3",
-    "6-1"
+    "6-1",
+    "7-2",
+    "7-4"
    ],
-   "count": 13,
+   "count": 23,
    "verified": true,
    "sources": [
     {
@@ -1936,13 +2579,21 @@
     "シークレットマネージャー"
    ],
    "units": [
+    "1-2",
+    "2-1",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "4-1",
     "5-2",
     "5-4",
-    "6-1"
+    "6-1",
+    "7-2",
+    "7-4",
+    "8-2"
    ],
-   "count": 20,
+   "count": 30,
    "verified": true,
    "sources": [
     {
@@ -1975,9 +2626,10 @@
    ],
    "units": [
     "2-4",
+    "4-1",
     "5-2"
    ],
-   "count": 7,
+   "count": 8,
    "verified": true,
    "sources": [
     {
@@ -2067,13 +2719,17 @@
     "ワークスペース"
    ],
    "units": [
+    "2-2",
     "2-3",
     "2-4",
+    "2-6",
+    "4-1",
     "5-2",
     "5-4",
-    "6-1"
+    "6-1",
+    "7-4"
    ],
-   "count": 19,
+   "count": 25,
    "verified": true,
    "sources": [
     {
@@ -2106,7 +2762,9 @@
     "cache_read_input_tokens"
    ],
    "units": [
+    "1-2",
     "2-3",
+    "3-1",
     "5-1",
     "5-2",
     "5-3",
@@ -2187,6 +2845,7 @@
    ],
    "units": [
     "2-3",
+    "4-1",
     "5-1",
     "5-2",
     "6-1"
@@ -2221,7 +2880,7 @@
     "5-1",
     "5-2"
    ],
-   "count": 6,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -2257,7 +2916,7 @@
     "5-3",
     "5-4"
    ],
-   "count": 15,
+   "count": 14,
    "verified": true,
    "sources": [
     {
@@ -2345,8 +3004,10 @@
    "units": [
     "2-3",
     "2-4",
+    "4-1",
     "5-1",
-    "5-2"
+    "5-2",
+    "7-4"
    ],
    "count": 14,
    "verified": true,
@@ -2376,11 +3037,13 @@
     "10分"
    ],
    "units": [
+    "1-3",
     "2-4",
     "5-2",
+    "7-3",
     "8-1"
    ],
-   "count": 10,
+   "count": 11,
    "verified": true,
    "sources": [
     {
@@ -2445,11 +3108,13 @@
     "ANTHROPIC_LOG"
    ],
    "units": [
+    "2-2",
     "2-4",
+    "4-1",
     "5-2",
     "8-1"
    ],
-   "count": 8,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -2541,7 +3206,7 @@
    "units": [
     "2-3"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -2563,9 +3228,10 @@
     "OpenTelemetry"
    ],
    "units": [
+    "4-1",
     "5-2"
    ],
-   "count": 1,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -2592,9 +3258,10 @@
     "ワークスペースキー"
    ],
    "units": [
-    "5-2"
+    "5-2",
+    "7-4"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -2669,9 +3336,10 @@
     "Usage and Cost Analytics API"
    ],
    "units": [
+    "2-2",
     "5-4"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -2698,9 +3366,10 @@
     "Rate Limits API"
    ],
    "units": [
-    "5-2"
+    "5-2",
+    "7-4"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -2762,6 +3431,110 @@
    ]
   },
   {
+   "id": "zdr",
+   "cat": "api",
+   "name": "ZDR（ゼロデータ保持、zero data retention）",
+   "yomi": "ゼットディーアール",
+   "short": "API の応答を返したあと、Anthropic がプロンプトと応答を保存しない取り決め",
+   "detail": "組織ごとに営業窓口を通して有効にする。対象は、表で対象とされた機能だけで、Message Batches API・Files API・code execution・Managed Agents などは対象外。ZDR では対象外の機能を使っても API は止めず、そのデータにはその機能の保存の扱いが適用される。",
+   "analogy": "「話した内容をメモに残さない」と約束した相談窓口。ただし、書類を預ける窓口は別の扱いになる。",
+   "exam": "個人情報を残さない条件なら、対象外の機能に流していないかを自分で確かめる。対象外の機能を 400 で止めるのは HIPAA readiness の組織。",
+   "keywords": [
+    "ZDR"
+   ],
+   "units": [
+    "1-2",
+    "2-1",
+    "2-2",
+    "7-1"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "API and data retention",
+     "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+    }
+   ]
+  },
+  {
+   "id": "hipaa-phi",
+   "cat": "api",
+   "name": "HIPAA readiness と PHI（医療の個人情報）",
+   "yomi": "ヒッパ レディネス / ピーエイチアイ",
+   "short": "医療の個人情報（PHI）を Claude API で扱うための、組織単位の取り決め",
+   "detail": "BAA を結び、組織で有効にする。有効にすると戻せず、対象外の機能を使うリクエストは API が 400 で止める。PHI はメッセージの中身や添付ファイルに置き、structured outputs などの JSON スキーマ（プロパティ名・enum・const・pattern）には入れない。スキーマはメッセージとは別にキャッシュされ、同じ保護を受けないため。",
+   "analogy": "医療情報を入れる金庫。金庫に入れてよい場所と、入れてはいけない場所が決まっている。",
+   "exam": "PHI を扱うなら HIPAA readiness を使い、ZDR を重ねる必要はない。HIPAA の対象は Messages API に直接送る PDF で、Files API は対象外。HIPAA が要る用途と一般の用途は、組織を分ける。",
+   "keywords": [
+    "HIPAA",
+    "PHI"
+   ],
+   "units": [
+    "2-1",
+    "7-1"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "API and data retention",
+     "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+    }
+   ]
+  },
+  {
+   "id": "workspace-roles",
+   "cat": "api",
+   "name": "ワークスペースの役割（Workspace User / Limited Developer / Developer / Admin）",
+   "yomi": "ワークスペース・ロール",
+   "short": "Console のワークスペースごとに、メンバーが何をできるかを決める役割",
+   "detail": "Workspace User はプレイグラウンドだけを使える。Workspace Limited Developer と Workspace Developer は API キーの作成・管理と API の利用ができ、Limited Developer は Console の Managed Agents の画面などで一部の操作ができない。Workspace Admin はワークスペースの設定とメンバーを管理できる。組織の admin はすべてのワークスペースで自動的に Workspace Admin になり、組織の user と developer は各ワークスペースに手で追加する。",
+   "analogy": "社内の会議室ごとの入館権限。見学だけの人、機材を使える人、部屋の鍵を管理する人を、部屋ごとに分けて渡す。",
+   "exam": "プロンプトを試すだけの人には Workspace User を、必要なワークスペースにだけ与える。組織の admin にすると全ワークスペースに入れてしまう。メンバーは定期的に見直す。",
+   "keywords": [
+    "Workspace User",
+    "Workspace Limited Developer"
+   ],
+   "units": [
+    "7-4"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Workspaces",
+     "url": "https://platform.claude.com/docs/en/manage-claude/workspaces"
+    }
+   ]
+  },
+  {
+   "id": "otel-content-mode",
+   "cat": "api",
+   "name": "トレースの内容モード（Metadata only / Full content）",
+   "yomi": "メタデータ・オンリー、フル・コンテント",
+   "short": "OpenTelemetry のスパンに、プロンプトと応答そのものを入れるかどうかの設定",
+   "detail": "Metadata only（SDK では metadata_only）は既定で、スパンには ID・時間・状態・トークン数や、エージェントやツールの名前などが入る。Full content（SDK では content）にすると、プロンプトと応答も入り、失敗や遅さの理由を読めて、実際の通信から評価を作れる。1スパンの内容は既定で 0.75MB までで、超えると短く切られる。",
+   "analogy": "宅配の追跡記録に、時刻と場所だけを載せるか、荷物の中身の写真まで載せるかの違い。",
+   "exam": "Full content の内容は送り先の監視基盤が自分のアクセス権と保存期間で保存するので、組織の要件に合うかを確かめる。ZDR の組織でも使える。HIPAA などの取り決めがある組織では、送り先にはメタデータだけが送られる。",
+   "keywords": [
+    "Full content",
+    "Metadata only"
+   ],
+   "units": [
+    "2-2",
+    "4-1"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "OpenTelemetry tracing for the Claude API",
+     "url": "https://platform.claude.com/docs/en/manage-claude/opentelemetry"
+    }
+   ]
+  },
+  {
    "id": "message-batches-api",
    "cat": "feature",
    "name": "Message Batches API（メッセージ・バッチ API）",
@@ -2777,15 +3550,18 @@
     "Batch API"
    ],
    "units": [
+    "2-1",
     "2-3",
     "2-4",
     "5-1",
     "5-2",
     "5-3",
+    "5-4",
     "6-1",
-    "6-3"
+    "6-3",
+    "8-2"
    ],
-   "count": 24,
+   "count": 28,
    "verified": true,
    "sources": [
     {
@@ -2813,15 +3589,20 @@
     "ワークスペース"
    ],
    "units": [
+    "2-1",
     "2-3",
     "2-4",
+    "2-6",
     "5-2",
     "5-3",
     "5-4",
     "6-1",
-    "8-1"
+    "7-1",
+    "7-4",
+    "8-1",
+    "8-3"
    ],
-   "count": 24,
+   "count": 31,
    "verified": true,
    "sources": [
     {
@@ -2845,10 +3626,11 @@
     "capabilities.image_input"
    ],
    "units": [
+    "2-2",
     "5-2",
     "6-2"
    ],
-   "count": 5,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -2881,7 +3663,7 @@
     "5-3",
     "5-4"
    ],
-   "count": 10,
+   "count": 9,
    "verified": true,
    "sources": [
     {
@@ -2931,12 +3713,15 @@
     "document ブロック"
    ],
    "units": [
+    "2-1",
     "2-3",
     "5-2",
     "6-1",
-    "6-3"
+    "6-3",
+    "7-1",
+    "8-3"
    ],
-   "count": 9,
+   "count": 15,
    "verified": true,
    "sources": [
     {
@@ -2964,16 +3749,20 @@
     "ツール定義"
    ],
    "units": [
+    "1-2",
     "2-3",
+    "2-5",
+    "3-1",
     "5-1",
     "5-2",
     "5-3",
     "5-4",
     "6-1",
     "6-3",
-    "8-1"
+    "8-1",
+    "8-3"
    ],
-   "count": 31,
+   "count": 32,
    "verified": true,
    "sources": [
     {
@@ -3005,6 +3794,7 @@
     "tool_use"
    ],
    "units": [
+    "1-2",
     "2-3",
     "5-1",
     "5-2",
@@ -3012,9 +3802,11 @@
     "5-4",
     "6-1",
     "6-2",
-    "8-1"
+    "7-1",
+    "8-1",
+    "8-3"
    ],
-   "count": 32,
+   "count": 35,
    "verified": true,
    "sources": [
     {
@@ -3041,9 +3833,9 @@
    ],
    "units": [
     "2-3",
-    "5-1",
     "5-3",
-    "6-2"
+    "6-2",
+    "8-1"
    ],
    "count": 4,
    "verified": true,
@@ -3072,13 +3864,16 @@
    "units": [
     "2-3",
     "2-4",
+    "4-1",
     "5-1",
     "5-3",
     "6-2",
     "6-3",
-    "8-1"
+    "7-1",
+    "8-1",
+    "8-2"
    ],
-   "count": 17,
+   "count": 21,
    "verified": true,
    "sources": [
     {
@@ -3101,7 +3896,10 @@
     "cache_control"
    ],
    "units": [
+    "1-2",
+    "1-3",
     "2-3",
+    "2-5",
     "5-1",
     "5-2",
     "5-3",
@@ -3109,9 +3907,10 @@
     "6-1",
     "6-2",
     "6-3",
-    "8-1"
+    "8-1",
+    "8-3"
    ],
-   "count": 37,
+   "count": 44,
    "verified": true,
    "sources": [
     {
@@ -3143,9 +3942,10 @@
     "5-4",
     "6-1",
     "6-2",
-    "8-1"
+    "8-1",
+    "8-3"
    ],
-   "count": 14,
+   "count": 15,
    "verified": true,
    "sources": [
     {
@@ -3168,14 +3968,17 @@
     "1時間"
    ],
    "units": [
+    "1-3",
     "2-3",
     "2-4",
+    "2-5",
     "5-4",
     "6-1",
     "6-3",
-    "8-1"
+    "8-1",
+    "8-3"
    ],
-   "count": 11,
+   "count": 14,
    "verified": true,
    "sources": [
     {
@@ -3240,7 +4043,7 @@
     "6-2",
     "8-1"
    ],
-   "count": 12,
+   "count": 10,
    "verified": true,
    "sources": [
     {
@@ -3271,11 +4074,13 @@
     "AnthropicBedrock"
    ],
    "units": [
+    "2-1",
     "2-3",
+    "2-6",
     "5-2",
     "5-3"
    ],
-   "count": 5,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -3339,10 +4144,18 @@
     "Agent SDK"
    ],
    "units": [
+    "1-2",
+    "2-1",
+    "2-5",
+    "3-1",
+    "4-1",
     "5-2",
-    "5-4"
+    "5-4",
+    "7-3",
+    "7-4",
+    "8-3"
    ],
-   "count": 2,
+   "count": 25,
    "verified": true,
    "sources": [
     {
@@ -3368,11 +4181,18 @@
     "コンテナ"
    ],
    "units": [
+    "1-2",
+    "2-1",
+    "2-5",
+    "3-1",
     "5-2",
     "6-1",
-    "8-1"
+    "7-2",
+    "7-4",
+    "8-1",
+    "8-3"
    ],
-   "count": 8,
+   "count": 19,
    "verified": true,
    "sources": [
     {
@@ -3430,9 +4250,10 @@
    ],
    "units": [
     "2-3",
-    "6-1"
+    "6-1",
+    "8-2"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -3458,11 +4279,10 @@
    ],
    "units": [
     "2-3",
-    "5-1",
     "5-4",
     "8-1"
    ],
-   "count": 7,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -3514,11 +4334,19 @@
     "MCP"
    ],
    "units": [
+    "1-2",
     "2-3",
     "2-4",
-    "8-1"
+    "2-5",
+    "2-6",
+    "3-1",
+    "4-1",
+    "7-1",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 4,
+   "count": 27,
    "verified": true,
    "sources": [
     {
@@ -3544,10 +4372,12 @@
     "compaction"
    ],
    "units": [
+    "1-2",
+    "1-3",
     "5-1",
     "6-1"
    ],
-   "count": 3,
+   "count": 6,
    "verified": true,
    "sources": [
     {
@@ -3607,9 +4437,10 @@
     "Agent Skills"
    ],
    "units": [
-    "5-2"
+    "5-2",
+    "8-3"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -3636,12 +4467,14 @@
    ],
    "units": [
     "2-4",
+    "2-5",
     "5-2",
     "5-3",
     "6-3",
+    "7-1",
     "8-1"
    ],
-   "count": 11,
+   "count": 13,
    "verified": true,
    "sources": [
     {
@@ -3672,7 +4505,7 @@
     "6-2",
     "8-1"
    ],
-   "count": 6,
+   "count": 7,
    "verified": true,
    "sources": [
     {
@@ -3727,9 +4560,10 @@
     "task_budget"
    ],
    "units": [
+    "1-2",
     "5-4"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -3775,11 +4609,12 @@
     "ハーネス"
    ],
    "units": [
+    "1-2",
     "6-1",
     "6-2",
     "8-1"
    ],
-   "count": 4,
+   "count": 5,
    "verified": true,
    "sources": [
     {
@@ -3901,9 +4736,10 @@
     "/memories"
    ],
    "units": [
+    "1-3",
     "6-1"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -3929,9 +4765,10 @@
     "input_examples"
    ],
    "units": [
+    "2-5",
     "8-1"
    ],
-   "count": 3,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -4005,9 +4842,10 @@
     "ツールランナー"
    ],
    "units": [
+    "1-2",
     "8-1"
    ],
-   "count": 3,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -4030,9 +4868,10 @@
     "always_ask"
    ],
    "units": [
+    "7-1",
     "8-1"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -4099,6 +4938,451 @@
    ]
   },
   {
+   "id": "mcp-connector",
+   "cat": "feature",
+   "name": "MCP connector（mcp_servers と mcp_toolset）",
+   "yomi": "エムシーピー・コネクター",
+   "short": "Messages API から、MCP クライアントを作らずにリモートの MCP サーバーのツールを使う機能（ベータ）",
+   "detail": "リクエストの mcp_servers にサーバーの URL（https）と名前を書き、tools に同じ名前の mcp_toolset を1つ置くと、そのサーバーのツールを Claude が呼べる。呼び出しの結果は応答の mcp_tool_use・mcp_tool_result ブロックに入り、アプリはツールを実行しない。default_config と configs で、ツールごとに有効・無効や defer_loading を決められる。",
+   "analogy": "取引先との連絡を代行サービスに任せるようなもの。手軽だが、扱えるのは電話（ツール）だけで、相手が公開の番号を持っていないとつながらない。",
+   "exam": "扱えるのはツールだけで、resources・prompts は使えない。サーバーは HTTP で公開されている必要があり、ローカルの stdio のサーバーには直接つなげない。OAuth のトークンはアプリが取って更新し、authorization_token で渡す。Message Batches API でも使える。ZDR・HIPAA の対象外。stdio のサーバーや resources・prompts を使うなら、自分で MCP クライアントを動かし、SDK の MCP 用ヘルパーで変換する。",
+   "keywords": [
+    "MCP connector",
+    "mcp_servers"
+   ],
+   "units": [
+    "8-2",
+    "8-3"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "MCP connector",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector"
+    },
+    {
+     "title": "API and data retention",
+     "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+    }
+   ]
+  },
+  {
+   "id": "mcp-primitives",
+   "cat": "feature",
+   "name": "MCP サーバーの tools・resources・prompts",
+   "yomi": "ツールズ・リソーシズ・プロンプツ",
+   "short": "MCP サーバーが出せる3つの機能。誰が使うときを決めるかで分ける",
+   "detail": "tools は Claude（モデル）が判断して呼ぶ関数で、検索・作成・送信など変更を伴う操作もできる。resources は URI で識別する読み取り用のデータ（ファイル・スキーマ・資料など）で、アプリが文脈に入れるかを決める。prompts は引数を取れる定型の指示で、利用者が明示的に選んで使う。",
+   "analogy": "店の厨房（tools）は注文に応じて料理を作る。棚の資料（resources）は店が必要に応じて出す。セットメニュー（prompts）は客が自分で選ぶ。",
+   "exam": "tools は model-controlled、resources は application-driven、prompts は user-controlled。Claude に勝手に始めさせたくない定型の依頼は prompts、読むだけのデータは resources、変更を伴う操作は tools にする。Claude Code では prompts が / のコマンドになり、resources は @ で参照できる。",
+   "keywords": [
+    "resources",
+    "prompts"
+   ],
+   "units": [
+    "8-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Understanding MCP servers",
+     "url": "https://modelcontextprotocol.io/docs/learn/server-concepts"
+    },
+    {
+     "title": "Prompts (MCP specification 2026-07-28)",
+     "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/prompts"
+    },
+    {
+     "title": "Resources (MCP specification 2026-07-28)",
+     "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/resources"
+    }
+   ]
+  },
+  {
+   "id": "mcp-transports",
+   "cat": "feature",
+   "name": "MCP のトランスポート（stdio / Streamable HTTP）",
+   "yomi": "エスティーディーアイオー・ストリーマブル・エイチティーティーピー",
+   "short": "MCP のメッセージ（JSON-RPC）を運ぶ方式。ローカルは stdio、リモートは Streamable HTTP",
+   "detail": "stdio は、クライアントがサーバーを子プロセスとして起動し、stdin と stdout で1行に1つの JSON-RPC をやり取りする。サーバーは stdout に MCP のメッセージ以外を書いてはいけず、ログは stderr に出す。Streamable HTTP は、サーバーが1つの HTTP の窓口を持ち、クライアントが要求ごとに POST し、サーバーが JSON か SSE で返す。古い HTTP+SSE は非推奨。",
+   "analogy": "stdio は隣の同僚と紙を手渡しする。Streamable HTTP は窓口に書類を出して返事を受け取る。手渡しの紙に落書きを混ぜると、相手は読めなくなる。",
+   "exam": "stdio のサーバーで print() などを stdout に出すと通信が壊れる。リモートで公開するなら Streamable HTTP。ローカルで HTTP のサーバーを動かすなら 127.0.0.1 で待ち受け、Origin ヘッダーを検証して DNS リバインディングを防ぐ。Claude Code では、要求に答えるだけのサーバーは OAuth が使える HTTP にし、WebSocket はサーバーから押し出す用途に使う。",
+   "keywords": [
+    "stdio",
+    "Streamable HTTP",
+    "stderr"
+   ],
+   "units": [
+    "2-5",
+    "7-3",
+    "8-2"
+   ],
+   "count": 7,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Transports (MCP specification 2026-07-28)",
+     "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports"
+    },
+    {
+     "title": "stdio (MCP specification 2026-07-28)",
+     "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio"
+    },
+    {
+     "title": "Streamable HTTP (MCP specification 2026-07-28)",
+     "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http"
+    },
+    {
+     "title": "Connect Claude Code to tools via MCP",
+     "url": "https://code.claude.com/docs/en/mcp"
+    }
+   ]
+  },
+  {
+   "id": "workflow-vs-agent",
+   "cat": "feature",
+   "name": "ワークフロー（workflow）とエージェント（agent）",
+   "yomi": "ワークフロー／エージェント",
+   "short": "道筋をコードで決めるのがワークフロー、道筋を LLM が自分で決めるのがエージェント",
+   "detail": "Anthropic は、LLM とツールをあらかじめ決めたコードの道筋で動かす仕組みをワークフロー、LLM が手順とツールの使い方を自分で決めながら進める仕組みをエージェントと呼び分けている。ワークフローには、プロンプトの連鎖・ルーティング・並列化・orchestrator-workers・evaluator-optimizer などの型がある。エージェントは、ツールの結果という環境からの事実を見ながら、ループの中でツールを使い続ける LLM。",
+   "analogy": "ワークフローは手順書どおりに進める定型業務。エージェントは、目的だけ伝えて調べ方を任せる調査の依頼。",
+   "exam": "まず最も単純な解（検索と例で最適化した1回の呼び出し）を探し、必要なときだけ複雑にする。手順が決まった仕事はワークフローで予測しやすさと一貫性を得る。手順の数を予測できない自由度の高い問題はエージェント。エージェントは遅延・費用・誤りの積み重なりが増えるので、停止条件やサンドボックスでの試験を用意する。",
+   "keywords": [
+    "ワークフロー",
+    "自律エージェント"
+   ],
+   "units": [
+    "1-1",
+    "2-4",
+    "6-1",
+    "7-1"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Building effective agents",
+     "url": "https://www.anthropic.com/engineering/building-effective-agents"
+    }
+   ]
+  },
+  {
+   "id": "orchestrator-workers",
+   "cat": "feature",
+   "name": "オーケストレーター・ワーカー（orchestrator-workers）とマルチエージェント（multi-agent system）",
+   "yomi": "オーケストレーター・ワーカー／マルチエージェント",
+   "short": "指揮役の LLM が作業をその場で分けてワーカーに配り、結果をまとめる形",
+   "detail": "中心の LLM（指揮役・リードエージェント）が入力を見て作業を分解し、ワーカー（サブエージェント）に配って、返ってきた結果をまとめる。並列化と形は似ているが、作業が前もって決まっておらず、入力に応じて指揮役が決める点が違う。Anthropic の調査機能は、リードエージェントが並列のサブエージェントに調べさせるマルチエージェント構成で作られている。",
+   "analogy": "編集長が企画を見てから記者の担当を決め、集まった原稿を1本の記事にまとめる。",
+   "exam": "要る作業を前もって予測できない仕事（変更するファイル数が毎回違うコード修正、複数の情報源の調査）に向く。マルチエージェントは、独立した方向を同時に追う調査や1つのコンテキストに入らない情報に強いが、チャットの約15倍のトークンを使い、文脈の共有や依存が多い仕事には向かない。単純な質問で使いすぎないよう、規模の目安をリードのプロンプトに書く。",
+   "keywords": [
+    "指揮役",
+    "マルチエージェント",
+    "リードエージェント"
+   ],
+   "units": [
+    "1-1",
+    "1-3",
+    "5-3",
+    "6-1"
+   ],
+   "count": 9,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Building effective agents",
+     "url": "https://www.anthropic.com/engineering/building-effective-agents"
+    },
+    {
+     "title": "How we built our multi-agent research system",
+     "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+    }
+   ]
+  },
+  {
+   "id": "setting-sources",
+   "cat": "feature",
+   "name": "settingSources（Agent SDK が読むファイルの設定）",
+   "yomi": "セッティング・ソーシズ",
+   "short": "Agent SDK が、どの範囲の設定ファイルや CLAUDE.md を読み込むかを決めるオプション",
+   "detail": "Agent SDK の query() に渡すオプションで、user（~/.claude/）・project（作業ディレクトリの .claude/ や CLAUDE.md）・local（CLAUDE.local.md や settings.local.json）のどれをファイルから読むかを選ぶ。省くと3つすべてを読み、[] にするとどれも読まず、コードで渡した設定だけで動く。Python では setting_sources と書く。",
+   "analogy": "新しく来た職人に、会社の掲示板・部署の手順書・個人のメモのどれを見せるかを決める。",
+   "exam": "1つのコンテナで複数の顧客を扱うなら [] にし、自動メモリも CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 で止める。管理者のポリシー設定や自動メモリは settingSources と関係なく読まれる。長いセッションで守らせたい規約は、毎回入り直す CLAUDE.md に置いて読み込ませる。",
+   "keywords": [
+    "settingSources"
+   ],
+   "units": [
+    "1-2"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Use Claude Code features in the SDK",
+     "url": "https://code.claude.com/docs/en/agent-sdk/claude-code-features"
+    },
+    {
+     "title": "Hosting the Agent SDK",
+     "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+    }
+   ]
+  },
+  {
+   "id": "streaming-input-mode",
+   "cat": "feature",
+   "name": "ストリーミング入力モード（streaming input mode）と単一メッセージ入力",
+   "yomi": "ストリーミングにゅうりょくモード",
+   "short": "Agent SDK のセッションに、利用者の入力を順に流し込み続ける使い方",
+   "detail": "Agent SDK の入力の渡し方は2つある。ストリーミング入力モードは、長く動くプロセスとして入力を受け取り続ける方式で、公式が勧める使い方。画像の添付、メッセージを続けて送ること（キュー）、途中の割り込み、権限の確認の表示に対応する。単一メッセージ入力は1回で終わる問い合わせで、Lambda のような状態を持たない環境に向くが、画像の直接の添付・キュー・リアルタイムの割り込みには対応しない。",
+   "analogy": "電話をつないだまま話し続けるか、手紙を1通ずつ出すか。",
+   "exam": "画像を受け取り、作業中に指示を足したり止めたりしたいならストリーミング入力モード。Messages API の stream: true は応答を少しずつ受け取る出力側の仕組みで、別物。",
+   "keywords": [
+    "ストリーミング入力モード",
+    "単一メッセージ"
+   ],
+   "units": [
+    "1-2"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Streaming Input",
+     "url": "https://code.claude.com/docs/en/agent-sdk/streaming-vs-single-mode"
+    }
+   ]
+  },
+  {
+   "id": "agent-sdk-sessions",
+   "cat": "feature",
+   "name": "Agent SDK のセッション（continue・resume）",
+   "yomi": "セッション／コンティニュー／リジューム",
+   "short": "Agent SDK が保存した会話の履歴と、それに戻って続ける方法",
+   "detail": "セッションは、プロンプト・ツール呼び出し・ツールの結果・応答を含む会話の履歴で、SDK が自動でディスクに書く。continue は今のディレクトリで最も新しいセッションを続け、resume は session_id で指定したセッションに戻る。session_id は結果メッセージにある。fork は元の会話の写しから新しいセッションを作る。セッションが保存するのは会話で、ファイルの状態ではない。",
+   "analogy": "continue は窓口で「さっきの続きを」と言うこと、resume は受付番号で呼び出すこと。客が何人もいれば番号が要る。",
+   "exam": "複数の利用者がいるアプリは、利用者ごとに session_id を保存して resume を使う。セッションのファイルは作ったマシンに残るので、別のホストで続けるなら SessionStore で写すか、要る結果をアプリで保存して新しいセッションに渡す。",
+   "keywords": [
+    "resume",
+    "continue: true",
+    "session_id"
+   ],
+   "units": [
+    "1-2",
+    "2-5",
+    "3-1",
+    "4-1",
+    "5-4"
+   ],
+   "count": 8,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Work with sessions",
+     "url": "https://code.claude.com/docs/en/agent-sdk/sessions"
+    }
+   ]
+  },
+  {
+   "id": "claude-code-preset",
+   "cat": "feature",
+   "name": "claude_code プリセット（Agent SDK のシステムプロンプト）",
+   "yomi": "クロード・コード・プリセット",
+   "short": "Agent SDK で、Claude Code の CLI と同じシステムプロンプトを使う指定",
+   "detail": "Agent SDK で systemPrompt を指定しないと、ツール呼び出しだけを扱う最小のプロンプトになり、安全の指示なども入らない（claude -p は既定で Claude Code のプロンプトを使う）。claude_code プリセットを指定すると、ツールの使い方と安全の指示を含む CLI のプロンプトになり、append で自分の指示を末尾に足せる。文字列を渡すと、その文字列だけが使われる。",
+   "analogy": "本店のマニュアルをそのまま渡し、店ごとの注意は付箋（append）で足す。白紙から自分で書くなら、安全の注意も自分で書く必要がある。",
+   "exam": "人が見ながら進めるコーディングツールならプリセット（append で足すのが最も影響が小さい）。表示先・名乗る名前・権限の前提が違う、コーディング以外のエージェントなら独自の文字列にし、必要な安全の指示を自分で書く。CLAUDE.md を読むかどうかは settingSources で決まる。",
+   "keywords": [
+    "claude_code プリセット",
+    "append"
+   ],
+   "units": [
+    "2-5"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Modifying system prompts",
+     "url": "https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts"
+    }
+   ]
+  },
+  {
+   "id": "memory-store",
+   "cat": "feature",
+   "name": "メモリストア（memory store）",
+   "yomi": "メモリ・ストア",
+   "short": "Managed Agents で、セッションをまたいで情報を持ち越すための文書の集まり",
+   "detail": "ワークスペース単位の文書の集まりで、セッションに付けるとサンドボックスの中の /mnt/memory/ の下にディレクトリとしてマウントされ、エージェントがファイルの道具で読み書きする。access は read_write（既定）か read_only で、read_only はファイルシステムの段階で書き込みを拒む。変更のたびに版が残る。1つのセッションに付けられるのは8つまで、1つの記憶は 100 kB まで。",
+   "analogy": "部署の書類棚。個人の棚は自由に書き込めるが、規程集の棚は閲覧だけにして鍵をかける。",
+   "exam": "所有者やアクセスの決まりが違う記憶は別のストアにする（利用者ごと・共有の参照資料・プロジェクトごと）。エージェントが書き換えなくてよい参照資料は read_only にする。大きなファイルより小さなファイルを多数にする。",
+   "keywords": [
+    "メモリストア",
+    "read_only",
+    "read_write"
+   ],
+   "units": [
+    "2-5"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Using agent memory",
+     "url": "https://platform.claude.com/docs/en/managed-agents/memory"
+    }
+   ]
+  },
+  {
+   "id": "managed-agents",
+   "cat": "feature",
+   "name": "Claude Managed Agents（マネージドエージェント）",
+   "yomi": "クロード・マネージド・エージェンツ",
+   "short": "エージェントのループとツールの実行環境を Anthropic 側で用意する、設定して使うハーネス（ベータ）",
+   "detail": "モデル・システムプロンプト・ツール・MCP サーバー・スキルを決めたエージェント（agent）、動かす場所の環境（environment。Anthropic が管理するクラウドのサンドボックスか、自社の基盤の self-hosted サンドボックス）、実行中のセッション（session）、アプリとやり取りするイベント（events）の4つで組み立てる。イベントの履歴はサーバー側に保存される。",
+   "analogy": "厨房と調理道具がそろった貸しキッチン。レシピ（エージェントの設定）を持ち込めば、設備を自分で用意せずに料理を始められる。",
+   "exam": "長く動く作業や非同期の作業、自前でループやサンドボックスを作りたくないときに向く。細かく制御したい自前のループには Messages API、自分の環境で動かすなら Agent SDK を選ぶ。",
+   "keywords": [
+    "Managed Agents"
+   ],
+   "units": [
+    "1-2",
+    "2-1",
+    "2-2",
+    "2-5",
+    "2-6",
+    "4-1",
+    "7-4",
+    "8-1",
+    "8-2"
+   ],
+   "count": 15,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Claude Managed Agents overview",
+     "url": "https://platform.claude.com/docs/en/managed-agents/overview"
+    }
+   ]
+  },
+  {
+   "id": "agent-sdk-session-patterns",
+   "cat": "feature",
+   "name": "Agent SDK のセッションの型（ephemeral / long-running / hybrid）と SessionStore",
+   "yomi": "エフェメラル、ロングランニング、ハイブリッド、セッションストア",
+   "short": "Agent SDK を動かすコンテナの寿命と、セッションの関係の型",
+   "detail": "ephemeral は作業ごとにコンテナを作って捨てる型で、1回で終わる作業に向く。long-running はコンテナを動かし続け、常に流れてくる処理に向く。hybrid は待機中はコンテナを止め、起動時に SessionStore から状態を戻して更新を書き戻す型で、間が空いて何度も続く作業に向く。セッションの記録は既定でコンテナのローカルディスクにあり、再起動や縮退で消える。",
+   "analogy": "使い捨ての紙コップ、店に置きっぱなしのマグカップ、使うたびに棚から出して洗って戻すマイカップ。",
+   "exam": "再開できることと、使っていない間の費用を抑えることの両方が要るなら hybrid と SessionStore。CLAUDE.md や作業ディレクトリの成果物は SessionStore では戻らないので、ボリュームなどで別に残す。",
+   "keywords": [
+    "SessionStore",
+    "hybrid",
+    "ephemeral",
+    "long-running"
+   ],
+   "units": [
+    "2-1",
+    "2-5",
+    "5-4",
+    "6-1"
+   ],
+   "count": 4,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Hosting the Agent SDK",
+     "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+    }
+   ]
+  },
+  {
+   "id": "agent-sdk-result-message",
+   "cat": "feature",
+   "name": "ResultMessage と subtype（Agent SDK の結果）",
+   "yomi": "リザルトメッセージ、サブタイプ",
+   "short": "Agent SDK のループの最後に届き、どう終わったかと結果・費用・session_id を伝えるメッセージ",
+   "detail": "ResultMessage の subtype は success、error_max_turns（ターンの上限）、error_max_budget_usd（予算の上限）、error_during_execution（途中の中断）、error_max_structured_output_retries（構造化出力が検証に通らない）のどれか。result（最後の文章）は success のときだけ入る。どの subtype にも total_cost_usd・usage・num_turns・session_id が入るので、エラーの後でも費用を数え、セッションを再開できる。",
+   "analogy": "試合の終わり方の記録。勝ち・時間切れ・予算切れ・中断で、次にすることが違う。",
+   "exam": "error_max_turns なら session_id で再開して上限を上げる。success でも structured_output がないことがあるので、subtype と structured_output の両方を確かめる。1回きりの query() はエラーの結果を返した後に例外を投げる。",
+   "keywords": [
+    "ResultMessage",
+    "error_max_turns"
+   ],
+   "units": [
+    "1-2",
+    "4-1",
+    "5-4"
+   ],
+   "count": 3,
+   "verified": true,
+   "sources": [
+    {
+     "title": "How the agent loop works",
+     "url": "https://code.claude.com/docs/en/agent-sdk/agent-loop"
+    },
+    {
+     "title": "Troubleshoot the Agent SDK",
+     "url": "https://code.claude.com/docs/en/agent-sdk/troubleshooting"
+    }
+   ]
+  },
+  {
+   "id": "fine-grained-tool-streaming",
+   "cat": "feature",
+   "name": "fine-grained tool streaming（eager_input_streaming）",
+   "yomi": "ファイングレインド ツール ストリーミング",
+   "short": "ツールの入力を、API 側でバッファや検証をせず、生成と同時に断片で流す設定",
+   "detail": "通常のツール使用のストリーミングでは、API が各パラメータの値をバッファし、JSON として検証してから流すので、長い本文やコードのような大きな値は生成が終わるまで届かない。自作ツールの定義に eager_input_streaming: true を付け、リクエストでストリーミングを有効にすると、そのツールの入力は Claude が書いた瞬間から input_json_delta で届く。その代わり検証をしないので、つないだ結果が正しい JSON とは限らない。content_block_stop で解析を試し、失敗したらツールを実行せず、元の文字列を JSON で包んで is_error: true の tool_result で返す。max_tokens で途中に切れることもあるので stop_reason も確かめる。",
+   "analogy": "検品を済ませてから箱ごと届く配送ではなく、作った順にベルトコンベアで流れてくる部品を、最後に組み上がったか自分で確かめる形。",
+   "exam": "大きなツール引数の表示が遅い（最後にまとめて届く）ときの解決策。速さと引き換えに、壊れた JSON を受け取る前提で解析を守る必要がある。max_tokens を上げても、断片ごとに解析しても、表示の遅れは直らない。",
+   "keywords": [
+    "eager_input_streaming"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Fine-grained tool streaming",
+     "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming"
+    }
+   ]
+  },
+  {
+   "id": "bounding-box-coordinates",
+   "cat": "feature",
+   "name": "境界ボックス（bounding box）とピクセル座標",
+   "yomi": "きょうかいボックス",
+   "short": "画像の中の部分（表・記入欄・UI 部品など）を囲む四角形を、左上と右下のピクセル座標で表したもの",
+   "detail": "Claude は画像の中の部分の位置を [x1, y1, x2, y2]（左上と右下）のような座標で返せる。原点は画像の左上で、x は右へ、y は下へ増える。返す座標は、モデルの上限（高解像度の段階では長辺 2,576 px・画像トークン 4,784）に合わせて縮小した後の画像でのピクセル位置なので、大きな画像では元の画像とずれる。公式は、自分で縮小してから送り座標をそのまま使うのが最も確実で、縮小できないときは縮小後の大きさで割って戻すとしている。0〜1000 のような正規化した座標を頼むとうまく働かないので、ピクセル座標で受け取り、必要なら自分のコードで正規化する。PDF はサーバー側で画像にされる大きさが決められないので、座標を使うなら自分で画像にしてから送る。",
+   "analogy": "縮小コピーした地図に書き込んだ位置を、元の大きさの地図に写すときは、縮小率で戻さないと場所がずれる。",
+   "exam": "枠が右下ほどずれるなら、縮小後の座標をそのまま使っている。直し方は「送る前に自分で縮小する」か「縮小後の大きさで戻す」で、形式はピクセル座標を明示して頼む。正規化した座標を頼む、PDF のまま送る、は誤り。",
+   "keywords": [
+    "境界ボックス",
+    "bounding box",
+    "ピクセル座標"
+   ],
+   "units": [
+    "2-3"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Coordinates and bounding boxes",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/vision-coordinates"
+    },
+    {
+     "title": "Vision",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+    }
+   ]
+  },
+  {
    "id": "claude-models",
    "cat": "model",
    "name": "Claude のモデル（Opus・Sonnet・Haiku）",
@@ -4115,8 +5399,14 @@
     "Haiku 5.5"
    ],
    "units": [
+    "1-1",
+    "1-3",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "2-6",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
@@ -4124,9 +5414,12 @@
     "6-1",
     "6-2",
     "6-3",
-    "8-1"
+    "7-1",
+    "7-2",
+    "8-1",
+    "8-3"
    ],
-   "count": 122,
+   "count": 134,
    "verified": true,
    "sources": [
     {
@@ -4157,10 +5450,11 @@
     "claude-sonnet-4-6"
    ],
    "units": [
+    "2-6",
     "5-3",
     "6-2"
    ],
-   "count": 2,
+   "count": 3,
    "verified": true,
    "sources": [
     {
@@ -4187,11 +5481,12 @@
     "旧 ID"
    ],
    "units": [
+    "2-2",
     "5-2",
     "5-3",
     "6-2"
    ],
-   "count": 3,
+   "count": 4,
    "verified": true,
    "sources": [
     {
@@ -4222,7 +5517,7 @@
    "units": [
     "5-1"
    ],
-   "count": 3,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -4248,17 +5543,26 @@
     "入力トークン"
    ],
    "units": [
+    "1-1",
+    "1-3",
+    "2-2",
     "2-3",
     "2-4",
+    "2-5",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
     "5-4",
     "6-1",
     "6-2",
-    "8-1"
+    "7-1",
+    "7-4",
+    "8-1",
+    "8-2",
+    "8-3"
    ],
-   "count": 91,
+   "count": 108,
    "verified": true,
    "sources": [
     {
@@ -4291,8 +5595,11 @@
     "context rot"
    ],
    "units": [
+    "1-1",
+    "1-3",
     "2-3",
     "2-4",
+    "2-5",
     "5-1",
     "5-2",
     "5-3",
@@ -4326,8 +5633,12 @@
     "128k"
    ],
    "units": [
+    "1-1",
+    "1-2",
+    "1-3",
     "2-3",
     "2-4",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
@@ -4337,7 +5648,7 @@
     "6-3",
     "8-1"
    ],
-   "count": 56,
+   "count": 57,
    "verified": true,
    "sources": [
     {
@@ -4373,8 +5684,12 @@
     "model_context_window_exceeded"
    ],
    "units": [
+    "1-1",
+    "1-2",
+    "1-3",
     "2-3",
     "2-4",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
@@ -4382,9 +5697,11 @@
     "6-1",
     "6-2",
     "6-3",
-    "8-1"
+    "7-1",
+    "8-1",
+    "8-3"
    ],
-   "count": 77,
+   "count": 84,
    "verified": true,
    "sources": [
     {
@@ -4412,14 +5729,18 @@
     "temperature を 0"
    ],
    "units": [
+    "1-3",
     "2-4",
+    "2-5",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
     "6-2",
-    "6-3"
+    "6-3",
+    "8-3"
    ],
-   "count": 23,
+   "count": 27,
    "verified": true,
    "sources": [
     {
@@ -4493,7 +5814,7 @@
     "5-3",
     "6-2"
    ],
-   "count": 10,
+   "count": 9,
    "verified": true,
    "sources": [
     {
@@ -4526,7 +5847,7 @@
     "5-2",
     "6-2"
    ],
-   "count": 9,
+   "count": 8,
    "verified": true,
    "sources": [
     {
@@ -4554,17 +5875,25 @@
     "xhigh"
    ],
    "units": [
+    "1-1",
+    "1-3",
     "2-3",
     "2-4",
+    "2-5",
+    "4-1",
     "5-1",
     "5-2",
     "5-3",
+    "5-4",
     "6-1",
     "6-2",
     "6-3",
-    "8-1"
+    "7-1",
+    "7-2",
+    "8-1",
+    "8-3"
    ],
-   "count": 56,
+   "count": 64,
    "verified": true,
    "sources": [
     {
@@ -4599,9 +5928,10 @@
     "5-2",
     "5-3",
     "6-2",
-    "6-3"
+    "6-3",
+    "8-1"
    ],
-   "count": 16,
+   "count": 15,
    "verified": true,
    "sources": [
     {
@@ -4631,12 +5961,13 @@
     "2.5 倍"
    ],
    "units": [
+    "1-3",
     "2-3",
     "5-1",
     "5-3",
     "8-1"
    ],
-   "count": 19,
+   "count": 21,
    "verified": true,
    "sources": [
     {
@@ -4793,12 +6124,16 @@
     "評価で"
    ],
    "units": [
+    "1-3",
+    "2-1",
+    "2-2",
     "2-3",
+    "2-5",
     "5-1",
     "5-3",
     "6-2"
    ],
-   "count": 9,
+   "count": 15,
    "verified": true,
    "sources": [
     {
@@ -4856,7 +6191,8 @@
     "5-2",
     "5-3",
     "6-1",
-    "6-2"
+    "6-2",
+    "8-1"
    ],
    "count": 16,
    "verified": true,
@@ -4946,9 +6282,10 @@
     "幻覚"
    ],
    "units": [
+    "2-5",
     "6-3"
    ],
-   "count": 1,
+   "count": 2,
    "verified": true,
    "sources": [
     {
@@ -5030,6 +6367,55 @@
     {
      "title": "Prompting best practices",
      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+    }
+   ]
+  },
+  {
+   "id": "jailbreak",
+   "cat": "model",
+   "name": "ジェイルブレイク（jailbreak）",
+   "yomi": "ジェイルブレイク",
+   "short": "利用者が細工した入力で、Claude にガードレールや指示を破らせようとする攻撃",
+   "detail": "利用者自身が攻撃者になる型で、直接のプロンプトインジェクションと同じ脅威として扱われる。Claude はもともとこうした攻撃に強いが、アプリ側でも対策を重ねる。",
+   "analogy": "受付の係員を、客が言葉巧みに言いくるめて、規則外のことをさせようとする。",
+   "exam": "対策は、軽いモデル（Haiku 5.5 など）での入力の事前の審査（refusal が返ったら有害の判定）、既知の攻撃の型での入力の検査、拒否の仕方を書いた system、くり返す利用者への警告・回数の制限・利用停止。",
+   "keywords": [
+    "ジェイルブレイク"
+   ],
+   "units": [
+    "7-1"
+   ],
+   "count": 1,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Mitigate jailbreaks and prompt injections",
+     "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+    }
+   ]
+  },
+  {
+   "id": "llm-based-grading-rubric",
+   "cat": "model",
+   "name": "LLM による採点（LLM-based grading）とルーブリック（rubric）",
+   "yomi": "エルエルエム による さいてん／ルーブリック",
+   "short": "正解が1つに決まらない出力を、判定の基準表（ルーブリック）を渡した別のモデルに採点させる方法",
+   "detail": "出力の確かめ方には、コードでの採点（完全一致や正規表現。速く確実だが細かな判断には向かない）、人の採点（質は高いが遅く高い）、LLM による採点（速く柔軟で、複雑な判断にも向く）がある。LLM で採点するときは、何を満たせば合格かを具体的に書いたルーブリックを渡し、「correct」「incorrect」だけや1〜5の尺度のように決まった形で答えさせる。採点役には thinking を有効にしたモデルを使うと複雑な判断で精度が上がり、採点は生成したものとは別のモデルで行うのが一般によい。想定外の値が返ったら異常として扱い、まず信頼できるかを試してから大量に使う。",
+   "analogy": "答案の採点を、模範解答と採点基準を配った別の先生に頼み、点数欄には決まった記号だけを書いてもらうようなもの。",
+   "exam": "決まった語の有無で判定できるならコードで採点する。言い回しが毎回違い判断が要るなら、ルーブリックと別のモデルで採点し、合否や尺度だけを返させる。生成したモデル自身の確信度や、自由記述の講評だけでは大量の点検にならない。",
+   "keywords": [
+    "ルーブリック"
+   ],
+   "units": [
+    "6-2",
+    "6-3"
+   ],
+   "count": 2,
+   "verified": true,
+   "sources": [
+    {
+     "title": "Define success and build evaluations",
+     "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
     }
    ]
   }
