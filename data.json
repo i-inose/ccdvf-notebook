@@ -1,11 +1,11 @@
 {
   "plan": {
-    "currentUnit": "2-4",
+    "currentUnit": "2-3",
     "stages": {
       "5-1": "learning",
       "5-2": "learning",
       "2-4": "learning",
-      "2-3": "todo",
+      "2-3": "learning",
       "5-3": "todo",
       "5-4": "todo",
       "6-2": "todo",
@@ -282,6 +282,34 @@
       "correct": 7,
       "byUnit": {
         "5-2": [
+          7,
+          10
+        ]
+      }
+    },
+    {
+      "order": 10,
+      "date": "2026-11-03",
+      "label": "単元2-4 セットA（スマホ）",
+      "focus": "2-4",
+      "total": 10,
+      "correct": 4,
+      "byUnit": {
+        "2-4": [
+          4,
+          10
+        ]
+      }
+    },
+    {
+      "order": 11,
+      "date": "2026-11-03",
+      "label": "単元2-4 セットB（スマホ）",
+      "focus": "2-4",
+      "total": 10,
+      "correct": 7,
+      "byUnit": {
+        "2-4": [
           7,
           10
         ]
@@ -1977,6 +2005,476 @@
       "streak": 0,
       "addedAt": "2026-11-02",
       "nextReview": "2026-11-04"
+    },
+    {
+      "topic": "一覧 API のページ送り（after_id・has_more）/ limit・first_id",
+      "choices": [
+        "A. limit=1000 を付けて、1回の呼び出しで全件を受け取る",
+        "B. 戻り値の first_id を after_id に渡し、次のページを取る",
+        "C. 件数が20件未満になるまで、offset を増やして呼び直す",
+        "D. 戻り値を for 文で回し、次のページの取得を SDK に任せる"
+      ],
+      "why": "一覧 API は1ページ既定20件で、has_more が true なら last_id を after_id に渡して次を取るカーソル方式です。SDK の戻り値を for 文で回すと、この次ページの取得を必要に応じて自動で行います。",
+      "whyNot": {
+        "A": "limit の上限は1000で、それを超える件数があれば1回では取り切れない。",
+        "B": "first_id は前のページを取る before_id に使う値。次のページには last_id を使う。",
+        "C": "この API で使えるのは after_id・before_id のカーソルと limit で、offset で位置を指定する方式ではない。"
+      },
+      "example": "管理画面のバッチ一覧は、async for batch in client.messages.batches.list(limit=100) で全件を回して集計する。",
+      "sources": [
+        {
+          "title": "List Message Batches",
+          "url": "https://platform.claude.com/docs/en/api/messages/batches/list"
+        },
+        {
+          "title": "Python SDK",
+          "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+        }
+      ],
+      "question": "Python SDK で client.messages.batches.list() を呼び、戻り値の .data だけを読んで、ワークスペースのバッチを全件集計しています。何度実行しても20件で止まります。REST のページ送りの仕組みを踏まえて、最も適切な直し方はどれですか？",
+      "myAnswer": "A",
+      "correct": "D",
+      "explanation": "SDK は REST の一覧エンドポイントを包んでいます。ページ単位で細かく扱いたいときは has_next_page() や get_next_page() を使います。",
+      "no": 47,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "長い処理の非同期ジョブ（202 Accepted と状態確認）/ timeout・ストリーミング",
+      "choices": [
+        "A. SDK の timeout を15分に延ばし、同じ接続で完了まで待つ",
+        "B. 202 とジョブ ID をすぐ返し、裏で生成して状態を確かめさせる",
+        "C. Message Batches API に送り、終わったら結果を画面に出す",
+        "D. stream: true で受け取り、ゲートウェイ越しに少しずつ返す"
+      ],
+      "why": "ゲートウェイが60秒で切るので、1つの HTTP 接続で完了を待つ設計は通りません。リクエストには 202 Accepted とジョブ ID ですぐ返し、サーバー側のワーカーで Claude を呼び、画面は状態確認の URL を問い合わせます。",
+      "whyNot": {
+        "A": "クライアント側の timeout を延ばしても、前段のゲートウェイが60秒で接続を切る。",
+        "C": "多くは1時間以内に終わるが最大24時間かかりうるので、10分以内という条件を守れない。",
+        "D": "ストリーミングはアイドル接続を切るネットワークへの対策になるが、開始から60秒で必ず切る場合は防げない。"
+      },
+      "example": "POST /reports が 202 と {\"jobId\": \"r-123\"} を返し、画面は GET /reports/r-123 を数秒おきに確かめる。",
+      "sources": [
+        {
+          "title": "202 Accepted - MDN Web Docs",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/202"
+        },
+        {
+          "title": "Claude API errors",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        },
+        {
+          "title": "Batch processing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+        }
+      ],
+      "question": "社内 Web アプリで、Claude に報告書を書かせる処理が3〜8分かかります。前段のゲートウェイは接続を開始から60秒で必ず切り、設定は変えられません。結果は10分以内に見せたく、利用者は待つ間もほかの画面を使いたいです。最も適切な設計はどれですか？",
+      "myAnswer": "D",
+      "correct": "B",
+      "explanation": "202 は「受け付けたが処理は終わっていない」ことを示すコードで、別のプロセスやバッチで処理する場面で使います（MDN）。ジョブ方式を選ぶのは Claude の公式ドキュメントの指示ではなく、設計上の判断です。Claude の公式は、10分を超えるような長いリクエストにはストリーミングか Message Batches API を勧めています。",
+      "no": 48,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "構造化出力のスキーマ制約（minimum・maximum）/ SDK の変換と検証",
+      "choices": [
+        "A. minimum・maximum を消し、範囲の確認は別の関数に書く",
+        "B. strict: true のツールに移し、minimum を使えるようにする",
+        "C. Pydantic モデルを messages.parse に渡し、変換と検証を任せる",
+        "D. additionalProperties を true にして、スキーマの制約を緩める"
+      ],
+      "why": "構造化出力は minimum・maximum などの数値の制約に対応しておらず、送ると 400 になります。messages.parse に Pydantic モデルを渡すと、SDK が制約を説明文に移したスキーマを送り、応答は元の制約で検証するので、制約をモデル1か所に保てます。",
+      "whyNot": {
+        "A": "400 は避けられるが、範囲の定義がモデルと関数の2か所に分かれ、条件に合わない。",
+        "B": "strict: true のツールも同じ JSON Schema の制限に従うので、minimum は使えない。",
+        "D": "オブジェクトの additionalProperties は false にする決まりで、true にすると別の 400 になる。"
+      },
+      "example": "quantity: int = Field(ge=1, le=100) のモデルを output_format に渡し、parsed_output の値を使う。",
+      "sources": [
+        {
+          "title": "Structured outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        },
+        {
+          "title": "Strict tool use",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+        }
+      ],
+      "question": "Python で注文メールから数量を構造化出力で取り出します。数量は1〜100の整数で、この制約はコードの Pydantic モデル1か所で管理したいです。minimum・maximum を書いた JSON スキーマをそのまま output_config.format に送ると、400 になりました。どう直しますか？",
+      "myAnswer": "D",
+      "correct": "C",
+      "explanation": "TypeScript では Zod のスキーマを zodOutputFormat() で包んで client.messages.parse() に渡します。素の JSON スキーマを渡す jsonSchemaOutputFormat() は、既定でスキーマを変換して送りますが応答を検証しないので、minimum の違反を見逃します。",
+      "no": 49,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "push 済みの共有ブランチの rebase / --force-with-lease・別ブランチへの付け替え",
+      "choices": [
+        "A. push 済みのコミットは rebase せず、そのまま merge で取り込む",
+        "B. rebase -i でまとめ、--force-with-lease で安全に push する",
+        "C. rebase -i でまとめて --force で push し、同僚に取り直してもらう",
+        "D. まとめた結果を別名のブランチに push し、元のブランチを消す"
+      ],
+      "why": "Git の公式（Pro Git）は「リポジトリの外にあり、ほかの人が作業の土台にしたかもしれないコミットは rebase しない」としています。rebase は既存のコミットを捨てて似た別のコミットを作るので、同僚は作業を合わせ直すことになり、同じ変更が二重に現れます。",
+      "whyNot": {
+        "B": "--force-with-lease は、見ていない他人の push を消す事故は防ぐが、公開済みの履歴を書き換える点は同じで、同僚は作業を合わせ直すことになる。",
+        "C": "--force は確認なしにリモートの履歴を置き換え、同僚の作業の土台になったコミットが消える。",
+        "D": "同僚の作業は元のコミットの上にあるので、新しいブランチと合わせるときに同じ変更が二重に現れる。"
+      },
+      "example": "rebase -i での整理は push する前の手元のコミットだけに使い、push 済みのコミットは PR のマージでそのまま取り込む。",
+      "sources": [
+        {
+          "title": "Git Branching - Rebasing (Pro Git)",
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+        },
+        {
+          "title": "git-push Documentation",
+          "url": "https://git-scm.com/docs/git-push"
+        }
+      ],
+      "question": "Claude Code に、push 済みの feature ブランチの細かいコミットを整理するよう頼むと、git rebase -i でまとめて force push する案が出ました。このブランチは同僚がすでに取り込み、その上で作業を続けています。履歴を壊さずに進めるには、どうしますか？",
+      "myAnswer": "B",
+      "correct": "A",
+      "explanation": "Pro Git の結論は「push する前の手元の変更は rebase で整えてよいが、どこかへ push したものは rebase しない」です。--force-with-lease は、リモートが想定どおりの状態のときだけ上書きする安全装置で、履歴の書き換えそのものを防ぐものではありません。",
+      "no": 50,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "バッチ結果の .jsonl と custom_id / 順番・課金されない結果",
+      "choices": [
+        "A. 結果は送った順に並ぶので、行の番号で元の問い合わせと結ぶ",
+        "B. 結果の .jsonl を1行ずつ読み、custom_id で元の行と結び付ける",
+        "C. 結果ファイル全体を、1つの JSON 配列として json.loads で読む",
+        "D. errored と expired は課金されないので、直して送り直す対象にまとめる",
+        "E. processing_status が in_progress の間も、届いた結果から読む"
+      ],
+      "why": "結果は1行に1つの JSON がある .jsonl 形式で、送った順とは限らないので custom_id で結び付けます。errored・canceled・expired の要求は課金されないので、結果の種類で振り分けて送り直します。",
+      "whyNot": {
+        "A": "結果の順番は送った順と一致しないことがあると公式が明記している。",
+        "C": ".jsonl は行ごとに独立した JSON で、ファイル全体は1つの配列ではない。",
+        "E": "results_url は処理が終わる（ended）まで null で、それまで結果は読めない。"
+      },
+      "example": "custom_id に問い合わせ ID（例: inq-000123）を入れて送り、結果を読むときにその ID で DB の行を更新する。",
+      "sources": [
+        {
+          "title": "Batch processing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+        },
+        {
+          "title": "List Message Batches",
+          "url": "https://platform.claude.com/docs/en/api/messages/batches/list"
+        }
+      ],
+      "question": "（2つ選択）毎晩5,000件の問い合わせの分類を Message Batches API で処理し、結果を元の問い合わせ ID と結び付けて DB に保存しています。結果を読む処理として正しいものはどれですか？",
+      "myAnswer": "DE",
+      "correct": "BD",
+      "explanation": "errored の原因には不正なリクエストもあるので、送り直す前にエラーの中身を確かめます。結果は量が多くなりうるので、まとめてダウンロードせずストリームで読むのが推奨です。",
+      "no": 51,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "Promise.all と Promise.allSettled / SDK の自動リトライ後の失敗",
+      "choices": [
+        "A. maxRetries を大きくして、529 で失敗しないようにする",
+        "B. Promise.allSettled に替え、成功と失敗を分けて扱う",
+        "C. 20件を for 文で1件ずつ await し、失敗したら止める",
+        "D. Promise.race に替え、最初に返った要約から表示する"
+      ],
+      "why": "Promise.all は1つでも失敗するとすぐ失敗として返るので、成功した結果も受け取れません。Promise.allSettled なら、すべてが終わるのを待って、成功（fulfilled）と失敗（rejected）を1件ずつ返します。",
+      "whyNot": {
+        "A": "失敗は減るが、再試行しても通らないときは同じことが起き、待ち時間も延びる。",
+        "C": "並行の速さを失ううえ、失敗した時点で残りの要約も出せない。",
+        "D": "最初に決着した1件しか受け取れず、残りの結果を扱えない。"
+      },
+      "example": "results.filter((r) => r.status === \"fulfilled\") を表示し、rejected の位置に再実行ボタンを出す。",
+      "sources": [
+        {
+          "title": "Promise.allSettled() - MDN Web Docs",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+        },
+        {
+          "title": "Claude API errors",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        },
+        {
+          "title": "Coroutines and Tasks - Python documentation",
+          "url": "https://docs.python.org/3/library/asyncio-task.html"
+        }
+      ],
+      "question": "TypeScript の SDK で、20件のレビューの要約を Promise.all で並行に送っています。SDK が既定の再試行をしても1件が 529 で失敗すると、成功した19件も画面に出ません。成功分は表示し、失敗分にだけ再実行ボタンを出したいです。どう直しますか？",
+      "myAnswer": "D",
+      "correct": "B",
+      "explanation": "公式 SDK は 529 などの一時的なエラーを既定で2回、指数バックオフで再試行し、それでも失敗したときに例外（Promise の reject）になります。Python の asyncio.gather では return_exceptions=True が近い扱いです。",
+      "no": 52,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "ワークツリーの準備（.worktreeinclude・依存のインストール）/ node_modules のコピー",
+      "choices": [
+        "A. .env をリポジトリにコミットし、どのチェックアウトにも入れる",
+        "B. .env を .worktreeinclude に書き、作るたびにコピーさせる",
+        "C. node_modules も .worktreeinclude に書き、まとめてコピーする",
+        "D. 依存のインストール手順を CLAUDE.md に書き、最初に実行させる",
+        "E. ワークツリーをやめ、同じフォルダで2つのセッションを並べる"
+      ],
+      "why": "ワークツリーは新しいチェックアウトなので、gitignore 対象の .env も依存パッケージもありません。小さなファイルは .worktreeinclude でコピーし、依存は CLAUDE.md に書いたインストール手順を Claude に実行させます。",
+      "whyNot": {
+        "A": "秘密情報をリポジトリに入れることになり、漏えいの原因になる。",
+        "C": ".worktreeinclude はリンクではなくコピーなので、ワークツリーごとに node_modules 全体を複製することになる。",
+        "E": "同じフォルダで並行して編集すると、変更がぶつかる。"
+      },
+      "example": "リポジトリ直下の .worktreeinclude に .env と .env.local を書き、CLAUDE.md に「新しいチェックアウトでは最初に pnpm install」と書く。",
+      "sources": [
+        {
+          "title": "Best practices for Claude Code",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "title": "Run parallel sessions with worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        }
+      ],
+      "question": "（2つ選択）Claude Code で claude -w feature-x を実行し、新しいワークツリー（worktree）で作業させるとテストが失敗します。原因は .env がないことと、依存パッケージが入っていないことでした。毎回の手作業をなくすのに適切なものはどれですか？",
+      "myAnswer": "AC",
+      "correct": "BD",
+      "explanation": "大きなディレクトリは、worktree.symlinkDirectories の設定でコピーせずにリンクする方法もあります。",
+      "no": 53,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "Claude の push で CI が走らない（GITHUB_TOKEN）/ 権限の追加",
+      "choices": [
+        "A. permissions に contents: write を足し、push の権限を広げる",
+        "B. github_token の指定を外し、Claude GitHub App として認証させる",
+        "C. CI のトリガーを schedule に変え、一定の間隔でテストを走らせる",
+        "D. claude_args に --max-turns を足し、Claude にテストも実行させる"
+      ],
+      "why": "GITHUB_TOKEN で行った push などのイベントは、新しいワークフローの実行を起こしません。github_token を外すと Claude GitHub App として認証するので、その push で CI が動きます（独自の GitHub App のトークンを渡す方法もあります）。",
+      "whyNot": {
+        "A": "push はすでにできている。問題は権限ではなく、どのトークンで push したか。",
+        "C": "定期的には走るが、commit ごとにテストするという条件に合わない。",
+        "D": "ターン数の上限を決めるだけで、CI のワークフローが起動しない原因は変わらない。"
+      },
+      "example": "claude.yml の with: から github_token の行を消し、Claude の push で pull_request の CI が起動することを確かめる。",
+      "sources": [
+        {
+          "title": "Claude Code GitHub Actions",
+          "url": "https://code.claude.com/docs/en/github-actions"
+        },
+        {
+          "title": "GITHUB_TOKEN - GitHub Docs",
+          "url": "https://docs.github.com/en/actions/concepts/security/github_token"
+        }
+      ],
+      "question": "Claude Code GitHub Actions で @claude に修正を頼むと、Claude がブランチに push しますが、その commit では CI のテストが走りません。ワークフローでは github_token: ${{ secrets.GITHUB_TOKEN }} を渡しています。各 commit でテストを走らせるにはどうしますか？",
+      "myAnswer": "B",
+      "correct": "B",
+      "explanation": "GitHub の仕様では、GITHUB_TOKEN によるイベントのうち workflow_dispatch と repository_dispatch は例外的にワークフローを起動します。pull_request の opened・synchronize・reopened は、承認待ちの状態で実行が作られます。",
+      "no": 54,
+      "unit": "2-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "長く有効な認証情報を置かない（ワークロード ID 連携・OIDC）/ Secrets の削除",
+      "choices": [
+        "A. 毎月 API キーを作り直し、Secrets の値を差し替える",
+        "B. Secrets から API キーを消せば、そのキーも使えなくなる",
+        "C. claude setup-token のトークンに替え、API キーを使わない",
+        "D. ワークロード ID 連携（OIDC）に移し、旧キーは Console で消す"
+      ],
+      "why": "ワークロード ID 連携では、ワークフローの GitHub OIDC トークンを Claude Console のサービスアカウントの権限に交換するので、長く有効な秘密を保存しません。Secrets から消してもキー自体は有効なままなので、Console で削除します。",
+      "whyNot": {
+        "A": "漏れたときの影響は短くなるが、長く有効なキーを CI に保存し続けることに変わりはない。",
+        "B": "Secrets を消してもキーは有効なまま。止めるには Console でキーを無効化（Disable）するか削除する。",
+        "C": "サブスクリプションの長期トークンを保存するだけで、条件を満たさない。作った人のサブスクリプションに結び付くので共有にも向かない。"
+      },
+      "example": "ワークフローに permissions: id-token: write を付け、anthropic_federation_rule_id と anthropic_organization_id を渡す。",
+      "sources": [
+        {
+          "title": "Claude Code GitHub Actions",
+          "url": "https://code.claude.com/docs/en/github-actions"
+        }
+      ],
+      "question": "組織の GitHub Actions の Secrets に置いた Claude API キーで claude-code-action を動かしています。セキュリティ部門から「CI に長く有効な認証情報を保存しない」よう求められ、Claude API の利用は続けます。最も適切な対応はどれですか？",
+      "myAnswer": "A",
+      "correct": "D",
+      "explanation": "有効期限を Never にした API キーは、Console で無効化（Disable）か削除をするまで使える長期の認証情報です。Amazon Bedrock などのクラウド経由で使う場合も、OIDC で一時的な認証情報を受け取る形にできます。",
+      "no": 55,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "CI での claude -p と --bare / リポジトリの hooks・MCP の設定",
+      "choices": [
+        "A. --bare を付け、必要な設定はフラグで明示して渡す",
+        "B. --bare を付けず、リポジトリの CLAUDE.md と hooks を読ませる",
+        "C. --permission-mode auto を付け、危ない操作は分類器に止めさせる",
+        "D. --output-format json を付け、結果をスクリプトで機械的に読む"
+      ],
+      "why": "--bare を付けない -p の実行は、信頼していないフォルダでもプロジェクトの hooks を動かし、.mcp.json のサーバーにつなぎます。--bare はそれらと CLAUDE.md の自動読み込みを省くので、必要なものだけをフラグで渡せば、どこでも同じ動きになります。",
+      "whyNot": {
+        "B": "PR 側で書き換えられた hooks や MCP サーバーがそのまま動き、実行環境ごとに結果も変わる。",
+        "C": "権限モードは Claude のツール呼び出しの許可を決めるもので、プロジェクトの hooks や .mcp.json の読み込みは変わらない。",
+        "D": "結果は読みやすくなるが、設定を読み込むかどうかは変わらない。"
+      },
+      "example": "claude --bare -p \"この差分をレビューして\" --allowedTools \"Read\" --append-system-prompt-file review-rules.md のように、必要なものだけを渡す。",
+      "sources": [
+        {
+          "title": "Run Claude Code programmatically",
+          "url": "https://code.claude.com/docs/en/headless"
+        },
+        {
+          "title": "Best practices for Claude Code",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        }
+      ],
+      "question": "社外からの PR も来るリポジトリで、CI が PR のブランチをチェックアウトし、claude -p でレビューさせます。どの実行環境でも同じ結果にしたく、PR 側の .claude/settings.json の hooks や .mcp.json は動かしたくありません。どう実行しますか？",
+      "myAnswer": "A",
+      "correct": "A",
+      "explanation": "--bare では claude.ai のログインを使わないので、ANTHROPIC_API_KEY などで認証します。公式は --bare をスクリプトや SDK からの実行に勧めており、将来 -p の既定になる予定です。選択肢 C の誤りは、権限モードがツール呼び出しの許可の仕組みであることからの判断です。",
+      "no": 56,
+      "unit": "2-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "GitLab の MR を自動レビュー（GitLab CI/CD）/ Code Review・/install-github-app",
+      "choices": [
+        "A. Owner に Code Review を有効にしてもらい、MR を対象にする",
+        "B. /install-github-app を実行し、レビューのワークフローを入れる",
+        "C. REVIEW.md を置き、各開発者が /code-review で読ませる",
+        "D. .gitlab-ci.yml に、MR のイベントで claude -p を動かすジョブを足す"
+      ],
+      "why": "Code Review と /install-github-app は GitHub のリポジトリ向けです。GitLab では、Claude Code GitLab CI/CD のように .gitlab-ci.yml のジョブで MR のイベントを受け、claude -p を動かします。",
+      "whyNot": {
+        "A": "Code Review の対象は GitHub（GitHub Enterprise Server を含む）のリポジトリだけ。",
+        "B": "github.com のリポジトリでしか使えず、GitLab では案内を出して終了する。",
+        "C": "手動なので自動にならないうえ、/code-review は CLAUDE.md を読み、REVIEW.md は読まない。"
+      },
+      "example": "rules に $CI_PIPELINE_SOURCE == \"merge_request_event\" を書き、ANTHROPIC_API_KEY はマスクした CI/CD 変数に置く。",
+      "sources": [
+        {
+          "title": "Claude Code GitLab CI/CD",
+          "url": "https://code.claude.com/docs/en/gitlab-ci-cd"
+        },
+        {
+          "title": "Code Review",
+          "url": "https://code.claude.com/docs/en/code-review"
+        },
+        {
+          "title": "Claude Code GitHub Actions",
+          "url": "https://code.claude.com/docs/en/github-actions"
+        },
+        {
+          "title": "Customize Code Review",
+          "url": "https://code.claude.com/docs/en/code-review-customize"
+        }
+      ],
+      "question": "会社のリポジトリは GitLab.com にあり、組織は Claude の Team プランです。すべてのマージリクエスト（MR）に、作られたときに自動で Claude のレビューを付けたいです。最も適切な方法はどれですか？",
+      "myAnswer": "A",
+      "correct": "D",
+      "explanation": "Claude Code GitLab CI/CD はベータで、GitLab が保守しています。レビューの観点はリポジトリの CLAUDE.md に書くと反映されます。",
+      "no": 57,
+      "unit": "2-4",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "多数ファイルの機械的な移行（claude -p のループ）/ 全件を一度に流す",
+      "choices": [
+        "A. 3ファイルほどで試し、うまくいかない点を見てプロンプトを直す",
+        "B. 全ファイルを並列で一度に流し、失敗したものだけ後で直す",
+        "C. --max-turns を外し、どのファイルも途中で止まらないようにする",
+        "D. --allowedTools に Bash を丸ごと入れ、確認で止まらないようにする"
+      ],
+      "why": "公式は、ループで多数のファイルを処理する前に3ファイルほどで試し、何がうまくいかないかを見てプロンプトを直してから残りを流すよう勧めています。プロンプトの欠点が2,000回繰り返されるのを防げます。",
+      "whyNot": {
+        "B": "プロンプトに欠点があると、同じ失敗を全ファイルで繰り返し、コストと手戻りが最大になる。",
+        "C": "ターン数の上限は暴走の歯止めで、外すと1ファイルの作業が長引いたときにコストを止められない。",
+        "D": "必要なのは git add・git commit などに絞った許可で、Bash 全体を許すのは広すぎる。"
+      },
+      "example": "--allowedTools \"Read,Edit,Bash(git add *),Bash(git commit *)\" と --max-turns 20 を付け、files.txt の先頭3件だけで回して結果を見る。",
+      "sources": [
+        {
+          "title": "Best practices for Claude Code",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "title": "Run Claude Code programmatically",
+          "url": "https://code.claude.com/docs/en/headless"
+        }
+      ],
+      "question": "2,000個のテストファイルを新しいアサーションライブラリへ移行します。CI のジョブから claude -p をファイルごとにループで呼び、1ファイルずつコミットさせる計画です。コストと手戻りを抑えたいとき、最初にすべきことはどれですか？",
+      "myAnswer": "A",
+      "correct": "A",
+      "explanation": "同じ種類の大きな機械的変更は、/batch で5〜30の単位に分け、単位ごとにワークツリーで実行して PR を開く方法もあります。",
+      "no": 58,
+      "unit": "2-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
     }
   ]
 }

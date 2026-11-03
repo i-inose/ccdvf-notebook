@@ -497,6 +497,173 @@
           "addedAt": "2026-11-02"
         }
       ]
+    },
+    {
+      "unit": "2-4",
+      "title": "Software Engineering Foundations",
+      "terms": [
+        {
+          "name": "REST API と HTTP ステータスコード（HTTP status code）",
+          "meaning": "決まった URL に HTTP で要求を送り、結果を番号（ステータスコード）付きで受け取る仕組み。Claude の Messages API は POST /v1/messages で呼ぶ。",
+          "analogy": "レストランの注文票。注文（リクエスト）を出すと、厨房から「200: できました」「401: 会員証が無効です」「529: 今は満席です」と番号付きの返事が来る。400番台は注文票の書き方が悪い（客側の問題）、500番台は厨房側の問題。",
+          "exam": "400 invalid_request_error・401 authentication_error・403 permission_error は送る側を直す。429 rate_limit_error・500 api_error・529 overloaded_error は時間をおいて再試行する。エラー本文は JSON で、error.type と request_id が入る。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "JSON と構造化出力（structured outputs）",
+          "meaning": "Claude の応答を、指定した JSON スキーマどおりの形に制約する機能。output_config.format に type: json_schema とスキーマを渡す。",
+          "analogy": "役所の申請書の記入欄。白紙に「名前とメールを書いて」と頼むと人によって書き方がばらばらだが、欄が決まった申請書なら必ず同じ場所に同じ種類の値が入る。",
+          "exam": "スキーマに合う JSON が返り、JSON.parse の失敗や再試行が要らなくなる。ただし stop_reason が refusal や max_tokens のときはスキーマに合わないことがある。オブジェクトの additionalProperties は false にする必要がある。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Structured outputs",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "非同期処理（async/await）と AsyncAnthropic",
+          "meaning": "返事を待つ間に処理を止めず、ほかの要求も進める書き方。Python SDK では AsyncAnthropic を使い、await client.messages.create(...) と書く。",
+          "analogy": "洗濯機・炊飯器・電子レンジを同時に回す家事。1台ずつ終わるのを前で待つ（同期）と時間が足し算になるが、全部スタートさせてから終わった順に取り出す（非同期）と、いちばん長い1台ぶんの時間で済む。",
+          "exam": "複数の文書を同時に要約するような、互いに待つ必要のない API 呼び出しを並行させる場面で選ぶ。同期クライアント（Anthropic）と非同期クライアント（AsyncAnthropic）は同じ書き方で使える。並行させすぎると 429 が出るので、同時に送る数は絞る。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "指数バックオフ（exponential backoff）とリトライ",
+          "meaning": "一時的なエラーのとき、待ち時間を 1秒→2秒→4秒 のように倍々に延ばしながら再試行する方法。公式 SDK は接続エラー・429・5xx を既定で2回、指数バックオフで自動再試行し、retry-after ヘッダーがあれば従う。",
+          "analogy": "混んでいる電話窓口にかけ直すとき。話し中ですぐかけ直し続けると、みんなが同じことをしてますます繋がらない。1分後、2分後、4分後と間を空けると、窓口が空いたときに繋がりやすい。",
+          "exam": "再試行してよいのは一時的なエラー（429・500・529 など）だけ。401 や 400 は何度送っても同じ結果になる。月の利用上限に達した 429 には retry-after がなく、再試行しても回復しない。SDK の再試行回数は max_retries で変えられる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            },
+            {
+              "title": "Rate limits",
+              "url": "https://platform.claude.com/docs/en/api/rate-limits"
+            },
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "Git のブランチとワークツリー（git worktree）",
+          "meaning": "ブランチは作業の枝分かれ、ワークツリーは1つのリポジトリから別の作業用フォルダを作る仕組み。Claude Code は claude --worktree <名前> で、別のチェックアウトで並行セッションを動かせる。",
+          "analogy": "1冊のレシピノートをコピーして、料理人2人に1冊ずつ渡す。同じノートに2人で同時に書き込むと字が重なるが、別々のコピーに書けばぶつからず、あとで良い変更だけ本体に書き写せる。",
+          "exam": "機能追加とバグ修正のように、同時に進める作業の編集をぶつけたくない場面で選ぶ。ワークツリーは新しいチェックアウトなので、.env のような gitignore 対象のファイルや依存パッケージは入っていない（.worktreeinclude でコピーを指定できる）。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Common workflows",
+              "url": "https://code.claude.com/docs/en/common-workflows"
+            },
+            {
+              "title": "Best practices for Claude Code",
+              "url": "https://code.claude.com/docs/en/best-practices"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "SDLC への組み込み（CI/CD）と Claude Code GitHub Actions",
+          "meaning": "開発の流れ（設計→実装→テスト→レビュー→リリース）の中に Claude を組み込むこと。GitHub Actions で anthropics/claude-code-action を使うと、@claude のメンションや PR の作成などのイベントで Claude Code が動く。",
+          "analogy": "工場のベルトコンベアに検査係を立たせる。製品（PR）が流れてくるたびに自動で見てもらえるので、誰かが思い出して呼びに行く必要がない。ただし検査係に金庫の鍵（API キー）をむき出しで渡してはいけない。",
+          "exam": "API キーはリポジトリに直接書かず GitHub の Secrets に入れる。ワークフローには必要な権限だけ与え、Claude の変更はマージ前に人が見る。CI の中では claude -p（非対話モード）で動かし、--output-format json で結果を機械的に読む。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Claude Code GitHub Actions",
+              "url": "https://code.claude.com/docs/en/github-actions"
+            },
+            {
+              "title": "Run Claude Code programmatically",
+              "url": "https://code.claude.com/docs/en/headless"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "コードレビュー（code review）と Claude の Code Review",
+          "meaning": "書いたコードを別の目で読み、不具合や危険を見つける工程。Claude の Code Review は、複数のエージェントが PR を調べ、検証ステップで誤検知を落としてから、重大度順にインラインコメントを付ける。",
+          "analogy": "作文を書いた本人は、自分の思い込みで読み飛ばすので誤字に気づきにくい。書いた過程を見ていない友だちに読んでもらうと、すぐに見つかる。",
+          "exam": "Code Review は PR を承認もブロックもせず、マージの判断はチームに残る。/code-review は会話を見ていない新しいサブエージェントでレビューするので、書いたときの理屈に引きずられない。/code-review が従うのは CLAUDE.md で、REVIEW.md は読まない。REVIEW.md は Code Review（GitHub の PR を自動でレビューするサービス）の観点を調整するファイル。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Code Review",
+              "url": "https://code.claude.com/docs/en/code-review"
+            },
+            {
+              "title": "Best practices for Claude Code",
+              "url": "https://code.claude.com/docs/en/best-practices"
+            },
+            {
+              "title": "Review locally with /code-review",
+              "url": "https://code.claude.com/docs/en/code-review-local"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "リファクタリング（refactoring）の小規模と大規模",
+          "meaning": "外から見た振る舞いを変えずに、コードの中身を読みやすく・直しやすく整えること。1ファイルの整理が小規模、多数のファイルにまたがる一斉の置き換えが大規模。",
+          "analogy": "家具の配置替え。部屋の使い方（振る舞い）はそのままで、使いやすく並べ直す。1部屋なら自分で少しずつ動かして確かめればよいが、家全体なら部屋ごとに担当を分けて、1部屋ずつ終わらせる。",
+          "exam": "Claude Code に頼むときは「振る舞いを保ったまま」と伝え、小さくテストできる単位で進め、最後にテストを走らせる。多数のファイルへの機械的な変更には /batch があり、作業を5〜30の単位に分けて、単位ごとにワークツリーで実行し PR を開く。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Common workflows",
+              "url": "https://code.claude.com/docs/en/common-workflows"
+            },
+            {
+              "title": "Best practices for Claude Code",
+              "url": "https://code.claude.com/docs/en/best-practices"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "回帰テスト（regression test）で振る舞いを固定する【解説】",
+          "meaning": "直したり整理したりした後も、前と同じ結果が出るかを確かめるテスト。テストのない古いコードは、リファクタリングの前に今の振る舞いをテストで固定しておく。",
+          "analogy": "模様替えの前に部屋の写真を撮っておく。終わったあとに写真と見比べれば、大事な物がなくなっていないかすぐ分かる。",
+          "exam": "AI が書き換えたコードが「動いていそう」かではなく、テストの結果という証拠で判断する。テストがないままの大きな書き換えは選ばない。",
+          "verified": false,
+          "sources": [],
+          "addedAt": "2026-11-03"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "直して送り直すエラー（400・401・403）と、待って再試行するエラー（429・500・529）",
+          "text": "400・401・403 は、リクエストの中身や API キー・権限が原因なので、送る側を直さない限り何度送っても失敗する。\n429・500・529 は、混雑やサーバー側の一時的な問題なので、指数バックオフで待って再試行すれば通ることが多い。\nただし 429 でも月の利用上限（enforced_spend_limit_reached）は例外で、retry-after がなく、上限を見直すまで回復しない。",
+          "addedAt": "2026-11-03"
+        },
+        {
+          "title": "Claude Code のチェックポイント（/rewind）と Git のコミット",
+          "text": "チェックポイントは、Claude が自分のファイル編集ツールで変えたファイルを、会話の前の時点に戻せる仕組み。\nBash コマンドだけで変わったファイルは対象外で、Git の代わりにはならず、Git と一緒に使う。\nGit のコミットは、チーム全体で共有・レビュー・取り消しができる正式な変更の記録。",
+          "addedAt": "2026-11-03"
+        }
+      ]
     }
   ]
 }
