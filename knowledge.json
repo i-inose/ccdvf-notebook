@@ -664,6 +664,83 @@
           "addedAt": "2026-11-03"
         }
       ]
+    },
+    {
+      "unit": "2-3",
+      "title": "Claude API Mechanics",
+      "terms": [
+        {
+          "name": "メッセージの構造（role・content blocks・system）",
+          "meaning": "Messages API は状態を持たず、毎回 user と assistant の会話履歴（content blocks の配列）を全部送り、最初から効く指示は最上位の system に書く。",
+          "analogy": "毎回まっさらな記憶で来る通訳さんに、これまでのやり取りの議事録を全部渡してから次の質問をする感じ。",
+          "exam": "「前の発言を覚えていない」は履歴を送っていないのが原因。system は messages の先頭ではなく最上位のパラメータに書く（system ロールのメッセージは messages の先頭に置けない）。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Using the Messages API",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "ツール使用（tool_use と tool_result）",
+          "meaning": "tools に name・description・input_schema を渡すと、Claude が stop_reason \"tool_use\" と tool_use ブロックで呼び出しを返し、アプリが実行して tool_result で結果を返す。",
+          "analogy": "料理長（Claude）が「冷蔵庫の在庫を見てきて」とメモを出し、見習い（アプリ）が見てきてメモ番号付きで報告する流れ。",
+          "exam": "tool_result は tool_use の直後の user メッセージに入れ、content の先頭に置く（テキストは後ろ）。失敗は is_error: true で返す。ツール選択の精度を一番左右するのは description の詳しさ。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Tool use with Claude",
+              "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+            },
+            {
+              "title": "Handle tool calls",
+              "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+            },
+            {
+              "title": "Define tools",
+              "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "ストリーミング（streaming / server-sent events）",
+          "meaning": "\"stream\": true で、応答を server-sent events（message_start → content_block_start/delta/stop → message_delta → message_stop）として少しずつ受け取る。",
+          "analogy": "手紙が書き上がるまで待つのではなく、電話で話しながら聞いていくようなもの。",
+          "exam": "message_delta の usage は累積値なので足し合わせない。ストリーム途中でも overloaded_error などの error イベントが来る。max_tokens が大きいと SDK はタイムアウト回避のためストリーミングを求める。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Streaming messages",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "ビジョン（vision / 画像入力）",
+          "meaning": "user メッセージに image ブロック（base64・url・Files API の file）を入れて画像を読ませる。JPEG・PNG・GIF・WebP に対応する。",
+          "analogy": "質問の紙の上に写真をクリップで留めて渡すイメージ。",
+          "exam": "画像は文章より前に置くと良い。画像が多いと上限（1リクエストの画像数・サイズ）に当たるので、Files API の file_id で送ったり縮小したりする。画像1枚のコストは 28×28 ピクセルのパッチ数で決まる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Vision",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "クライアントツールとサーバーツール",
+          "text": "クライアントツール（自作のツールや bash・text_editor）はアプリ側で実行し、tool_result を自分で返す。\nサーバーツール（web_search・web_fetch・code_execution など）は Anthropic 側で実行され、結果が同じ応答に入る。\n「tool_result を返す処理を書く必要があるか」で見分ける。",
+          "addedAt": "2026-11-03"
+        }
+      ]
     }
   ]
 }

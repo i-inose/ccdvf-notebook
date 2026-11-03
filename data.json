@@ -314,6 +314,34 @@
           10
         ]
       }
+    },
+    {
+      "order": 12,
+      "date": "2026-11-03",
+      "label": "単元2-3 セットA（スマホ）",
+      "focus": "2-3",
+      "total": 10,
+      "correct": 3,
+      "byUnit": {
+        "2-3": [
+          3,
+          10
+        ]
+      }
+    },
+    {
+      "order": 13,
+      "date": "2026-11-03",
+      "label": "出し直し セットB（スマホ）",
+      "focus": 0,
+      "total": 10,
+      "correct": 3,
+      "byUnit": {
+        "5-1": [
+          3,
+          10
+        ]
+      }
     }
   ],
   "notes": [
@@ -798,7 +826,8 @@
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "思考ブロックの改変 → エラー",
@@ -827,12 +856,13 @@
       "explanation": "",
       "no": 15,
       "unit": "5-1",
-      "result": "guess",
+      "result": "wrong",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "1回の出力上限 128k / ウィンドウ 1M",
@@ -864,9 +894,10 @@
       "result": "wrong",
       "confidence": "high",
       "status": "active",
-      "streak": 0,
+      "streak": 1,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-10",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "task budgets / context awareness（自動の残量タグ）",
@@ -895,12 +926,13 @@
       "explanation": "",
       "no": 17,
       "unit": "5-1",
-      "result": "guess",
-      "confidence": "low",
+      "result": "wrong",
+      "confidence": "high",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "入力＋max_tokens 超過（4.5以降は受け付け）/ 自動で削る誤解",
@@ -930,11 +962,12 @@
       "no": 18,
       "unit": "5-1",
       "result": "wrong",
-      "confidence": "high",
+      "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-10-29",
-      "nextReview": "2026-10-31"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "高速モードと Batch API の併用",
@@ -963,12 +996,13 @@
       "explanation": "",
       "no": 19,
       "unit": "5-1",
-      "result": "wrong",
+      "result": "guess",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-11-01",
-      "nextReview": "2026-11-03"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "高速モードの 429 と標準速度への切り替え / キャッシュ",
@@ -999,11 +1033,12 @@
       "no": 20,
       "unit": "5-1",
       "result": "wrong",
-      "confidence": "high",
+      "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-11-01",
-      "nextReview": "2026-11-03"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "single-shot の例のクセ / 例の多様さ",
@@ -1037,7 +1072,8 @@
       "status": "active",
       "streak": 0,
       "addedAt": "2026-11-01",
-      "nextReview": "2026-11-03"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "長い文書と例の並べ方 / 長文のプロンプト",
@@ -1066,12 +1102,13 @@
       "explanation": "複数の文書は <document> タグで囲み、<source> などのメタデータを付けると扱いやすい。",
       "no": 22,
       "unit": "5-1",
-      "result": "wrong",
+      "result": "guess",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-11-01",
-      "nextReview": "2026-11-03"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "高速モードの 429 から標準速度へ切り替える / max_retries・キャッシュ",
@@ -1101,12 +1138,13 @@
       "explanation": "max_retries を 0 にすると、529 や 500 などほかの一時的なエラーの再試行も止まる。公式の例は、そうしたエラーのときは既定の再試行で元のリクエストを送り直している。高速モードのレート制限は、標準の Opus のレート制限とは別枠。",
       "no": 23,
       "unit": "5-1",
-      "result": "guess",
+      "result": "wrong",
       "confidence": "low",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-11-01",
-      "nextReview": "2026-11-03"
+      "nextReview": "2026-11-05",
+      "lastReviewed": "2026-11-03"
     },
     {
       "topic": "思考中の空白とストリーミング / display summarized・高速モード",
@@ -2471,6 +2509,265 @@
       "unit": "2-4",
       "result": "guess",
       "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "並列のツール呼び出し / 結果を1つの user メッセージで返す",
+      "choices": [
+        "A. 1件ずつ順に実行し、tool_result を別々の user メッセージで返す",
+        "B. tool_choice に disable_parallel_tool_use: true を付け、1件ずつ呼ばせる",
+        "C. asyncio.gather で並行に実行し、結果3つを1つの user メッセージで返す",
+        "D. 3件を並行に実行し、結果を1つの text ブロックにまとめて返す"
+      ],
+      "why": "API は実行の順番を決めないので、互いに独立した読み取りは asyncio.gather などで並行に実行でき、待ち時間は約2秒で済みます。結果は tool_use_id で対応づけた tool_result を、1つの user メッセージにまとめて返します。",
+      "whyNot": {
+        "A": "別々の user メッセージで返すと、Claude に並列呼び出しを避けるよう「教えて」しまいます（公式のトラブルシューティングの最初の項目）。順に実行するので約6秒かかります。",
+        "B": "並列呼び出しを止める設定で、「並列で呼ばせ続けたい」に反します。副作用や順番があるツールなら選択肢になります。",
+        "D": "tool_use ごとに tool_use_id 付きの tool_result が必要です。対応する tool_result がないと API がエラーを返します。"
+      },
+      "example": "在庫・為替・天気など、互いに依存しない読み取り系の API を Promise.all や asyncio.gather で同時に呼ぶ。",
+      "sources": [
+        {
+          "title": "Parallel tool use",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use"
+        },
+        {
+          "title": "Server tools",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools"
+        },
+        {
+          "title": "Coroutines and Tasks (asyncio.gather) - Python docs",
+          "url": "https://docs.python.org/3/library/asyncio-task.html"
+        }
+      ],
+      "question": "旅行アシスタントで、Claude が1回の応答で3都市分の天気取得ツールを tool_use で呼びました。ツールは外部の天気 API を呼び、1件に約2秒かかります。待ち時間を短くし、この先も Claude に並列で呼ばせ続けたいです。アプリ側の処理として最も適切なのはどれですか？",
+      "myAnswer": "D",
+      "correct": "C",
+      "explanation": "書き込みや順番に意味があるツールは、順に実行するほうが安全です（公式も、副作用や共有の状態があるツールは順に実行するとよいと書いています）。実行しなかった呼び出しにも、is_error: true の tool_result を返します。",
+      "no": 59,
+      "unit": "2-3",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "PDF の document ブロックと citations / ページ番号付きの根拠を示す",
+      "choices": [
+        "A. 約款の document ブロックに citations: {\"enabled\": true} を付けて送る",
+        "B. 応答の citations にある page_location のページ番号で根拠を示す",
+        "C. output_config.format で JSON を返させ、根拠のページも項目に入れる",
+        "D. system に「根拠のページと原文を引用して書く」と指示して本文から拾う",
+        "E. PDF から文字だけを抽出し、text ブロックにして送る"
+      ],
+      "why": "document ブロックで citations を有効にすると、応答の text ブロックに根拠の文（cited_text）と PDF のページ範囲（page_location、1始まり）が付きます。API が解析して返すので文書を指す位置は有効なものに限られ、cited_text は出力トークンに数えられません。",
+      "whyNot": {
+        "C": "citations と structured outputs は併用できず、document で citations を有効にしたまま output_config.format を付けると 400 になります。JSON に書かせたページ番号が正しい保証もありません。",
+        "D": "プロンプトだけの引用は、指す位置が正しい保証がなく、引用した文がそのまま出力トークンになります。公式は、citations のほうが関連の高い箇所を引用しやすいとしています。",
+        "E": "文字だけにすると図表の情報が落ち、ページ番号付きの引用にもなりません（プレーンテキストの引用は文字の位置 char_location）。"
+      },
+      "example": "社内規程・約款・マニュアルの Q&A で、回答の各文に「p.12」のような根拠の表示を付け、押すと原文のページを開く。",
+      "sources": [
+        {
+          "title": "Citations",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        },
+        {
+          "title": "PDF support",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/pdf-support"
+        }
+      ],
+      "question": "（2つ選択）保険会社が、図表を含む約80ページの約款 PDF をもとに質問へ答えるアシスタントを作ります。回答の根拠を「何ページのどの文か」で画面に示し、利用者が原文を確かめられるようにしたいです。出力トークンの費用も増やしたくありません。設計として適切なものはどれですか？",
+      "myAnswer": "BD",
+      "correct": "AB",
+      "explanation": "PDF は各ページの画像と抽出した文字の両方で読まれるので、図表についての質問にも答えられます。ただし引用できるのは文字だけで、PDF の中の画像は引用できません。1リクエストに複数の文書があるときは、全部で有効にするか、どれも有効にしないかのどちらかです。PDF は1リクエスト600ページまで（コンテキストウィンドウが 1M 未満なら100ページ）です。",
+      "no": 60,
+      "unit": "2-3",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "ストリーミング中のツール入力 / input_json_delta は部分的な JSON",
+      "choices": [
+        "A. partial_json を index ごとに連結し、content_block_stop で解析する",
+        "B. stream をやめて、完成した応答の tool_use の input だけを読む",
+        "C. max_tokens を増やし、1回の delta に JSON 全体が入るようにする",
+        "D. ツールに eager_input_streaming: true を付け、検証済みの JSON で受け取る"
+      ],
+      "why": "tool_use の delta は部分的な JSON の文字列で、完成した input だけがオブジェクトです。公式は文字列を連結し、content_block_stop を受けてから解析するよう勧めています（SDK のストリーミング補助を使ってもよい）。",
+      "whyNot": {
+        "B": "エラーは消えますが、「ストリーミングはやめたくない」に合いません。途中経過を見せる必要がなければ選べます。",
+        "C": "max_tokens は出力全体の上限で、delta の区切り方は変わりません。",
+        "D": "eager_input_streaming（fine-grained tool streaming）はサーバー側のバッファと検証を省いて早く流す設定で、受け取る JSON はむしろ壊れている可能性があります。"
+      },
+      "example": "コード生成ツールの引数を画面に流しつつ、ブロックが閉じた時点で JSON として解析して実行する。",
+      "sources": [
+        {
+          "title": "Streaming messages",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+        },
+        {
+          "title": "Fine-grained tool streaming",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming"
+        }
+      ],
+      "question": "社内エージェントの画面をストリーミングで作っています。ツール呼び出しの引数を早く表示しようと、input_json_delta が届くたびに partial_json を json.loads したところ、JSONDecodeError が頻発しました。ストリーミングはやめたくありません。どう直すのが最も適切ですか？",
+      "myAnswer": "D",
+      "correct": "A",
+      "explanation": "Python・TypeScript の SDK のストリーミング補助を使うと、組み立て途中の input を参照できます。fine-grained tool streaming でも、連結して content_block_stop で解析する手順は同じで、解析に失敗したら is_error: true で Claude に返します。",
+      "no": 61,
+      "unit": "2-3",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "途中で切れたストリームの再開 / Claude 4.6 以降は user メッセージで続きを頼む",
+      "choices": [
+        "A. 受け取った文章を assistant メッセージの末尾に置き、続きを生成させる",
+        "B. 同じリクエストを最初から送り直し、全文を生成し直させる",
+        "C. 受け取った文章を user メッセージに入れ、中断箇所から続けるよう頼む",
+        "D. 切れた応答の message id を付けて、同じストリームにつなぎ直す"
+      ],
+      "why": "公式の再開手順では、Claude 4.6 以降のモデルは受け取った部分を user メッセージに入れ、「中断したところから続けて」と頼みます。最初から作り直さずに済みます。",
+      "whyNot": {
+        "A": "Claude 4.5 以前のモデルの再開方法です。4.6 以降は assistant の先出し（プリフィル）が 400 になります。",
+        "B": "確実ですが、最初から生成し直すので「時間も費用も抑えたい」に合いません。",
+        "D": "公式の再開手順は新しいリクエストを作る方法で、message id で同じストリームにつなぎ直す手順はありません。"
+      },
+      "example": "長い報告書の生成中に回線が切れたとき、届いた本文を保存しておき、続きを頼む新しいリクエストを送る。",
+      "sources": [
+        {
+          "title": "Streaming messages",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+        },
+        {
+          "title": "Using the Messages API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+        }
+      ],
+      "question": "Claude Opus 5.5 で長い技術文書をストリーミングで生成していたところ、ネットワークが切れて本文の途中で止まりました。最初から作り直すと時間も費用もかかるため、受け取った部分を生かして続きを書かせたいです。次に送るリクエストとして最も適切なのはどれですか？",
+      "myAnswer": "D",
+      "correct": "C",
+      "explanation": "途中から再開できるのは text ブロックです。tool_use や thinking のブロックは途中から再開できません。公式は SDK のメッセージ組み立てやエラー処理の機能を使うことも勧めています。",
+      "no": 62,
+      "unit": "2-3",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "複数画像の比較 / 「Image 1:」のラベルと画像を先に置く並び",
+      "choices": [
+        "A. 2枚を左右に並べた1枚の画像に合成し、その後に質問を書く",
+        "B. 各画像の前に「Image 1:」などのラベルを置き、質問は最後に書く",
+        "C. 質問文を先頭に書き、その後ろに2枚の画像を続けて並べる",
+        "D. 画像を1枚ずつ別のリクエストで送り、返ってきた説明どうしを比べさせる"
+      ],
+      "why": "公式は、複数の画像を送るときは「Image 1:」「Image 2:」のような短いラベルを付け、プロンプトや後のターンで名前で指せるようにすることを勧めています。画像は文章より前に置くと最もよく働きます。",
+      "whyNot": {
+        "A": "合成した画像が長辺の上限を超えると全体が縮小され、細部が落ちやすくなります。ラベルもないので「2枚目」と指せません。",
+        "C": "動きますが、公式は画像を先・文章を後にする並びを勧めています。名前で指すためのラベルもありません。",
+        "D": "Messages API はステートレスなので、別々のリクエストでは2枚を同時に見比べられません。説明文どうしの比較になり、細部が落ちます。"
+      },
+      "example": "改修前後の画面のスクリーンショットや、2つの版の図面の違いを洗い出させる。",
+      "sources": [
+        {
+          "title": "Vision",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/vision"
+        }
+      ],
+      "question": "設備点検アプリで、同じ配電盤の先月と今月の写真を1つのリクエストで Claude に渡し、違いを挙げさせます。次のターンでは「2枚目の右上は？」のように画像を名前で指して質問を続けたいです。user メッセージの組み立てとして最も適切なのはどれですか？",
+      "myAnswer": "A",
+      "correct": "B",
+      "explanation": "1リクエストの画像が20枚を超えると、1枚ごとの大きさの上限が厳しくなります（各辺 3,000 px 以内にすれば全プラットフォームで安全）。",
+      "no": 63,
+      "unit": "2-3",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "ツールが多すぎるとき / tool search tool と defer_loading",
+      "choices": [
+        "A. tool search tool を加え、主な数個以外を defer_loading にする",
+        "B. ツール定義の末尾に cache_control を付け、定義を毎回キャッシュから読み出させる",
+        "C. 使いそうな20個だけを残し、残りの定義はリクエストから外す",
+        "D. 1M のコンテキストウィンドウに収まるので、全部の定義を送り続ける"
+      ],
+      "why": "tool search tool を使うと、defer_loading を付けた定義は最初はコンテキストに入らず、Claude が検索して必要な数個だけを読み込みます。公式は、ツールが30〜50個を超えると選ぶ精度が落ちること、複数の MCP サーバーで約5.5万トークンになる例で85%以上減らせることを挙げています。",
+      "whyNot": {
+        "B": "キャッシュは費用と速さを改善しますが、180個の定義は毎回プロンプトに入ったままで、取り違えは減りません。",
+        "C": "精度は戻りますが、外したツールが使えなくなり「どのツールも使える状態は残したい」に合いません。",
+        "D": "定義が多いほどツールを選ぶ精度が落ちます。ウィンドウに収まっても、詰め込むと精度が下がります（5-1 の context rot）。"
+      },
+      "example": "複数の MCP サーバーをまとめて使う社内エージェントで、よく使う3〜5個だけを常に読み込み、残りは検索で見つけさせる。",
+      "sources": [
+        {
+          "title": "Tool search tool",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool"
+        }
+      ],
+      "question": "社内エージェントに GitHub・Slack・Jira など5つの MCP サーバーのツールを合計180個渡したところ、ツール定義だけで約5万トークンを使い、似たツールの取り違えも増えました。どのツールも使える状態は残したいです。最も適切な対策はどれですか？",
+      "myAnswer": "B",
+      "correct": "A",
+      "explanation": "defer_loading を付けた定義も、リクエストの tools には毎回すべて入れます（検索と展開に使うため）。tool search tool 自身にも付けるなどして全部を後回しにすると 400 になります。",
+      "no": 64,
+      "unit": "2-3",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-03",
+      "nextReview": "2026-11-05"
+    },
+    {
+      "topic": "サーバーツールの pause_turn / 応答をそのまま返して続ける",
+      "choices": [
+        "A. server_tool_use の id に対する tool_result を作り、user で返す",
+        "B. max_tokens を大きくして、最初のリクエストを送り直す",
+        "C. エラーとして扱い、利用者にもう一度質問してもらう",
+        "D. 応答を assistant メッセージとしてそのまま加え、同じ tools で送る"
+      ],
+      "why": "pause_turn は、サーバー側で回している検索のループが長くなり一時停止したことを示します。公式は、止まった応答をそのまま次のリクエストに入れ、同じツールを付けて送れば続きから再開すると説明しています。",
+      "whyNot": {
+        "A": "サーバーツールは Anthropic 側で実行されるので tool_result は返しません。tool_result を返すのは自分で実行するクライアントツールのときです。",
+        "B": "max_tokens で止まったわけではありません（その場合の stop_reason は \"max_tokens\"）。最初から送り直すと検索の費用もまたかかります。",
+        "C": "エラーではなく途中での一時停止で、続きを送れば再開できます。"
+      },
+      "example": "Web 検索を何度も重ねる調査で、pause_turn が返るたびに応答を履歴に足して送り直し、別の stop_reason になるまで続ける。",
+      "sources": [
+        {
+          "title": "Server tools",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools"
+        }
+      ],
+      "question": "市場調査アシスタントで web_search（サーバーツール）を使っています。調べる範囲が広いと stop_reason が \"pause_turn\" の応答が返り、回答が途中で止まります。検索をやり直さずに、Claude にそのまま調査を続けさせたいです。アプリ側の処理として最も適切なのはどれですか？",
+      "myAnswer": "B",
+      "correct": "D",
+      "explanation": "続けた応答がまた pause_turn になることもあるので、stop_reason を毎回確かめ、繰り返す回数には上限を付けます。同じツールを付けずに送ると、まだ実行されていない server_tool_use があるときに検証エラーになります。",
+      "no": 65,
+      "unit": "2-3",
+      "result": "wrong",
+      "confidence": "high",
       "status": "active",
       "streak": 0,
       "addedAt": "2026-11-03",
