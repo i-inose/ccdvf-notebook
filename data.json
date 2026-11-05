@@ -414,6 +414,20 @@
           1
         ]
       }
+    },
+    {
+      "order": 18,
+      "date": "2026-11-05",
+      "label": "単元5-4 セットA（スマホ）",
+      "focus": "5-4",
+      "total": 10,
+      "correct": 7,
+      "byUnit": {
+        "5-4": [
+          7,
+          10
+        ]
+      }
     }
   ],
   "notes": [
@@ -3939,6 +3953,299 @@
       "streak": 0,
       "addedAt": "2026-11-04",
       "nextReview": "2026-11-06"
+    },
+    {
+      "topic": "月の費用の見積もり（Sonnet 5.5 のキャッシュ読み出しは0.05倍）/ 0.1倍・キャッシュなし・毎回の書き込み",
+      "choices": [
+        "A. 約 $15,000（キャッシュの読み出しを基本単価の0.1倍で計算）",
+        "B. 約 $87,000（キャッシュを数えず、全部を通常の入力で計算）",
+        "C. 約 $11,000（キャッシュの読み出しを基本単価の0.05倍で計算）",
+        "D. 約 $107,000（毎回キャッシュへの書き込みとして1.25倍で計算）"
+      ],
+      "why": "Sonnet 5.5 のキャッシュの読み出しは、基本の入力単価 $2/MTok の0.05倍（$0.10/MTok）です。読み出し4万×100万件＝4万 MTok で $4,000、キャッシュしない入力1,000 MTok で $2,000、出力500 MTok×$10 で $5,000、合計 $11,000 です。キャッシュは使うたびに無料で寿命が延びるので、常に読み出しになるという条件から書き込みは数えなくて済みます。",
+      "whyNot": {
+        "A": "0.1倍は多くのモデルの標準の倍率ですが、Opus 5.5 と Sonnet 5.5 は0.05倍です。Haiku 4.5 などなら0.1倍で計算します。",
+        "B": "キャッシュを使わない場合の金額です。共通の system を毎回そのまま送るなら、この値に近づきます。",
+        "D": "5分の書き込みは基本単価の1.25倍ですが、キャッシュが温まっている間は読み出しになります。書き込みになるのは最初と、内容が変わったときや寿命が切れたときです。"
+      },
+      "example": "月の予算を決めるとき、モデルごとのキャッシュの倍率と件数から費用を積み上げる。",
+      "sources": [
+        {
+          "title": "Pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+        },
+        {
+          "title": "Prompt caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ],
+      "question": "社内ヘルプデスクのボットを Sonnet 5.5 で動かします。共通の system は4万トークンでキャッシュし、問い合わせは数秒おきに来るので常に読み出しになります。1件あたり、キャッシュしない入力は1,000トークン、出力は500トークンです。月100万件の費用の見積もりとして最も適切なのはどれですか？",
+      "myAnswer": "D",
+      "correct": "C",
+      "explanation": "Pricing の表で Sonnet 5.5 は Base input $2、Cache hits $0.10（脚注: Opus 5.5 と Sonnet 5.5 は0.05倍）、Output $10/MTok です。Prompt caching に「The cache is refreshed for no additional cost each time the cached content is used」とあります。前の単元の料金表とキャッシュの倍率（2-3・5-3）の知識を使います。",
+      "no": 95,
+      "unit": "5-4",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
+    },
+    {
+      "topic": "毎回変わるブロックにブレークポイントを置く誤り / 自動キャッシュ・1h TTL・時刻を先頭へ",
+      "choices": [
+        "A. トップレベルの cache_control（自動キャッシュ）に切り替える",
+        "B. cache_control を、毎回変わらない system の末尾に移す",
+        "C. ttl を \"1h\" にして、キャッシュの寿命を1時間に延ばす",
+        "D. 現在時刻を system の先頭に移し、user には質問だけを置く"
+      ],
+      "why": "書き込みはブレークポイントの位置にだけ起こり、その位置までの全体のハッシュで照合します。時刻が入ったブロックに置くと毎回ハッシュが変わり、書き込みだけが続いて読み出しになりません。公式は、毎回同じ内容の最後のブロック（ここでは system の末尾）に置くよう勧めています。",
+      "whyNot": {
+        "A": "自動キャッシュは最後のキャッシュできるブロックに置くので、毎回変わる user ブロックに置かれ、同じ問題が起きます。会話が追記だけで伸びる場合なら良い出発点です。",
+        "C": "数十秒おきなので、寿命は原因ではありません。1時間の書き込みは基本単価の2倍で、かえって高くつきます。",
+        "D": "キャッシュは先頭からの完全な一致で効くので、先頭が毎回変わると system 全体が毎回別のプレフィックスになります。"
+      },
+      "example": "日時・リクエスト ID・利用者ごとの情報を、キャッシュしたい固定部分の後ろに置く設計。",
+      "sources": [
+        {
+          "title": "Prompt caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ],
+      "question": "Opus 5.5 の社内チャットで、system に2万トークンの規程を置き、最後の user ブロックに現在時刻と質問を入れて cache_control を付けています。数十秒おきに呼んでも、usage は毎回 cache_creation_input_tokens だけが大きく、読み出しが0です。最も適切な直し方はどれですか？",
+      "myAnswer": "B",
+      "correct": "B",
+      "explanation": "Prompt caching の「Common mistake: Breakpoint on content that changes every request」と「Key takeaway」が根拠です。原因の切り分けには、前後のリクエストの違いを API が教えるキャッシュ診断（cache diagnostics）も使えます。",
+      "no": 96,
+      "unit": "5-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
+    },
+    {
+      "topic": "20ブロックの遡りの範囲を超える伸び（2つ目のブレークポイント）/ 1h TTL・全ブロック・system だけ",
+      "choices": [
+        "A. ttl を \"1h\" にして、前のターンの書き込みを長く残す",
+        "B. 30個の text ブロックのそれぞれに、cache_control を付ける",
+        "C. cache_control を system の末尾だけに置き、履歴は毎回送る",
+        "D. 前のターンの末尾にも cache_control を置き、遡りの起点にする"
+      ],
+      "why": "読み出しは、ブレークポイントから最大20ブロックしか遡って探しません。1ターンで約30ブロック増えると、前回の書き込み位置が範囲の外になります。前のリクエストで書き込んだ位置にもブレークポイントを置くと、そこから2つ目の遡りが始まり、前回の書き込みが見つかります。",
+      "whyNot": {
+        "A": "原因は時間ではなく遡りの範囲です。寿命を延ばしても、範囲の外にある書き込みは見つかりません。",
+        "B": "ブレークポイントは1リクエストに4つまでしか置けません。",
+        "C": "system は読み出せますが、履歴は毎回通常の入力として払うので「履歴もキャッシュしたい」に合いません。"
+      },
+      "example": "1ターンに多くのブロック（文書の断片、多数の画像など）を足すチャットやエージェント。",
+      "sources": [
+        {
+          "title": "Prompt caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ],
+      "question": "契約書のレビュー画面で、利用者は毎ターン条文を1つずつ別の text ブロックにして約30個送ります。最後のブロックにだけ cache_control を付けていますが、履歴は追記だけで1分以内に送っても、2ターン目から読み出しが0です。履歴もキャッシュしたいです。最も適切な対応はどれですか？",
+      "myAnswer": "D",
+      "correct": "D",
+      "explanation": "Prompt caching の「The lookback window is 20 blocks」と、その例（Turn 3 で block 15 に2つ目のブレークポイントを足すと見つかる）が根拠です。公式は、1ターンで足すブロックが20未満なら最後のブロックだけで足りるとしています。並列のツール呼び出しで続く tool_use や tool_result は、まとめて1つの位置として数えます。",
+      "no": 97,
+      "unit": "5-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
+    },
+    {
+      "topic": "usage の内訳で費用を集計する（合計入力・書き込みの 5m/1h の内訳）/ input_tokens だけ・読み出しは無料・web 検索",
+      "choices": [
+        "A. 入力は input_tokens と2つの cache_*_input_tokens の和で数える",
+        "B. input_tokens にはキャッシュ分も含まれるので、そのまま合計とする",
+        "C. キャッシュから読んだトークンは課金されないので、集計から外す",
+        "D. web 検索の回数は usage に出ないので、請求明細から別に拾う",
+        "E. 書き込みは cache_creation の 5m と 1h の内訳ごとに倍率を掛ける"
+      ],
+      "why": "input_tokens は最後のブレークポイントより後ろの分だけで、合計の入力は cache_read_input_tokens・cache_creation_input_tokens・input_tokens の和です。書き込みは5分が1.25倍、1時間が2倍と単価が違うので、cache_creation の ephemeral_5m_input_tokens と ephemeral_1h_input_tokens に分けて掛けます。",
+      "whyNot": {
+        "B": "キャッシュを使うと、input_tokens は合計より大幅に小さくなります。キャッシュを使っていなければ、input_tokens が合計です。",
+        "C": "読み出しも課金されます。Opus 5.5 は基本単価の0.05倍（$0.20/MTok）です。",
+        "D": "web 検索の回数は usage.server_tool_use.web_search_requests に出ます。"
+      },
+      "example": "自前の費用ダッシュボードや、利用者ごとの使用量の記録を作るとき。",
+      "sources": [
+        {
+          "title": "Prompt caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "title": "Pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+        }
+      ],
+      "question": "（2つ選択）Opus 5.5 の費用ダッシュボードは、usage の input_tokens に $4、output_tokens に $20/MTok を掛けて集計しています。プロンプトキャッシュ（5分と1時間の両方）を入れた後、入力が急に9割減って見えます。請求に近づけるための直し方はどれですか？",
+      "myAnswer": "AD",
+      "correct": "AE",
+      "explanation": "Prompt caching の「Tracking cache performance」の式 total_input_tokens = cache_read_input_tokens + cache_creation_input_tokens + input_tokens と、「1-hour cache duration」の cache_creation の内訳が根拠です。前の単元の usage（5-2・2-3）と料金の倍率（2-3）の知識を使います。",
+      "no": 98,
+      "unit": "5-4",
+      "result": "wrong",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
+    },
+    {
+      "topic": "task_budget と max_tokens の組み合わせ（予算は実測の p99 から）/ 予算だけ・remaining を毎回減らす・max_tokens だけ",
+      "choices": [
+        "A. task_budget だけを指定し、超えたら API に打ち切らせる",
+        "B. 毎回のリクエストで remaining を自分で減らし、残りを正確に伝える",
+        "C. 実測の p99 で task_budget を決め、max_tokens を上限にする",
+        "D. max_tokens を小さくして、作業全体のトークンを抑える"
+      ],
+      "why": "task_budget は Claude に残量を見せて作業の配分とまとめを促す目安で、強制の上限ではありません。強制の上限は1リクエストごとの max_tokens です。公式は、まず task_budget なしで代表的なタスクを流して使用量を測り、p99 から始めて上下に調整するよう勧めています。",
+      "whyNot": {
+        "A": "task_budget は助言で、作業の途中なら超えることがあります。API が生成を打ち切るのは max_tokens に達したとき（stop_reason: max_tokens）です。",
+        "B": "残量は API が会話の中に入れて数えます。値を毎回変えるとプロンプトが変わり、キャッシュが外れます。remaining は、自分で履歴を圧縮したときに渡すものです。",
+        "D": "max_tokens は1リクエストの上限で、エージェントのループ全体の予算にはなりません。小さすぎると作業の途中で切れます。"
+      },
+      "example": "長いエージェント作業で、1件あたりの費用と時間に目安を設けたいとき。",
+      "sources": [
+        {
+          "title": "Task budgets",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/task-budgets"
+        }
+      ],
+      "question": "Opus 5.5 でリポジトリの脆弱性を調べるエージェントを作ります。予算が尽きそうなら途中で切れずに所見をまとめて終わってほしく、1回の生成が際限なく伸びることも防ぎたいです。1件に何トークン使うかはまだ分かりません。最も適切な進め方はどれですか？",
+      "myAnswer": "B",
+      "correct": "C",
+      "explanation": "Task budgets の「Task budgets are advisory, not enforced」「Choosing a budget」「Interaction with other parameters（Prompt caching）」が根拠です。最小値は20,000トークンで、Opus 5.5 ではベータ（task-budgets-2026-03-13）です。前の単元の max_tokens と stop_reason（5-1）、キャッシュ（2-3）の知識も使います。",
+      "no": 99,
+      "unit": "5-4",
+      "result": "wrong",
+      "confidence": "high",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
+    },
+    {
+      "topic": "TTL の組み合わせ（長い TTL を前に）/ 逆の順番・すべて 1h・すべて5分",
+      "choices": [
+        "A. 手順書の末尾は既定の5分、会話の末尾は ttl \"1h\" にする",
+        "B. 手順書の末尾は ttl \"1h\"、会話の末尾は既定の5分にする",
+        "C. 手順書の末尾も会話の末尾も、ttl \"1h\" にそろえる",
+        "D. どちらも既定の5分のまま、ブレークポイントを4つに増やす"
+      ],
+      "why": "5分より間隔が長く1時間より短い使われ方には1時間の TTL が向き、5分以内に続けて使う部分は5分の TTL のまま、読むたびに無料で寿命が延びます。1つのリクエストで両方を使うときは、長い TTL を短い TTL より前に置く決まりがあり、手順書（前）に1時間、会話（後ろ）に5分がこれに合います。",
+      "whyNot": {
+        "A": "長い TTL は短い TTL より前に置くという決まりに反します。手順書も5分で切れ、10〜30分おきの利用のたびに書き込みになります。",
+        "C": "会話は1〜2分おきに使われるので5分で足ります。1時間の書き込みは基本単価の2倍で、5分（1.25倍）より高くつきます。",
+        "D": "ブレークポイントを増やしても費用は変わりませんが、寿命も延びません。手順書が切れる問題が残ります。"
+      },
+      "example": "利用が数十分おきの社内ツールや、5分を超えて待つことがあるエージェント。",
+      "sources": [
+        {
+          "title": "Prompt caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "title": "Pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+        }
+      ],
+      "question": "社内の手順書 Q&A ボットは、4万トークンの手順書を system に置き、誰かが10〜30分おきに使います。使い始めた人は1〜2分おきに続けて質問します。書き込みと読み出しを合わせた費用を抑えたいです。キャッシュの設定として最も適切なのはどれですか？",
+      "myAnswer": "B",
+      "correct": "B",
+      "explanation": "Prompt caching の「When to use the 1-hour cache」「Mixing different TTLs」と、料金の倍率（5分の書き込み1.25倍、1時間の書き込み2倍）が根拠です。前の単元の料金表（2-3）の知識も使います。",
+      "no": 100,
+      "unit": "5-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
+    },
+    {
+      "topic": "全社展開前の費用の見積もり（少人数で試して基準を作る）/ 公開の平均をそのまま使う・展開後に決める・支出上限だけ",
+      "choices": [
+        "A. 公開されている1人1日あたりの平均の費用に、人数と日数を掛ける",
+        "B. 少人数で試して使用量を追跡し、その基準から全員分を見積もる",
+        "C. 先に全員に配り、最初の月の請求を見てから翌月の予算を決める",
+        "D. Claude Code のワークスペースに支出上限を設け、見積もりは作らない"
+      ],
+      "why": "公式は、開発者1人あたりの費用はモデルの選び方・コードベースの大きさ・使い方で大きく変わるとし、自分のチームの費用を見積もるには、少人数の試行で使用量を追跡して基準を作ってから広げるよう勧めています。チームごとの違いが大きいことと、展開の前に予算が要ることが決め手です。",
+      "whyNot": {
+        "A": "公開されている平均（企業での導入で、開発者1人・稼働1日あたり約 $13）は目安です。チームごとの違いが大きいという条件では、自分たちの使い方を反映しません。",
+        "C": "展開の前に予算を出すという条件に合いません。",
+        "D": "ワークスペースの支出上限は使いすぎを止める手段としては有効ですが、経理が求める予算の数字にはなりません。上限に達すると、開発者の作業も止まります。"
+      },
+      "example": "Claude Code や社内の Claude アプリを、多くの人に広げる前に予算を立てるとき。",
+      "sources": [
+        {
+          "title": "Manage costs effectively (Claude Code)",
+          "url": "https://code.claude.com/docs/en/costs"
+        }
+      ],
+      "question": "Claude Console の API 課金で、開発者120人に Claude Code を配る予定です。経理は全員に広げる前に月の予算を出してほしいと言っています。チームによって使うモデルやリポジトリの大きさがかなり違います。予算の出し方として最も適切なのはどれですか？",
+      "myAnswer": "B",
+      "correct": "B",
+      "explanation": "Claude Code の「Manage costs effectively」にある「start with a small pilot group and use the tracking tools below to establish a baseline before wider rollout」と、「Claude Console」の節（ワークスペースの支出上限、Console のダッシュボードと Claude Code Analytics API による利用者ごとの集計）が根拠です。",
+      "no": 101,
+      "unit": "5-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
+    },
+    {
+      "topic": "機能ごとの費用の振り分け（API キーを分けて分析 API でキー別に取る）/ モデル別・一覧価格での計算・count_tokens の比率",
+      "choices": [
+        "A. 1つのキーのまま、cost をモデル別に取り、モデルで機能を見分ける",
+        "B. 応答ごとの usage に一覧価格を掛け、機能ごとに足し合わせる",
+        "C. 機能ごとに API キーを分け、分析 API の cost をキー別に取る",
+        "D. 送る前に count_tokens で機能ごとの入力を数え、その比率で請求を分ける"
+      ],
+      "why": "Usage and Cost Analytics API の cost は、ワークスペース・API キー・モデルなどの単位で分けて取れ、amount は割引を反映した金額（割引後・クレジット適用前）です。機能ごとにキーを分けておけば、キー別の集計がそのまま機能別の費用になります。翌月にそろえばよいので、反映に数時間かかるこの API で足ります。【解説】キー（またはワークスペース）を機能ごとに分ける設計は、公式が示す集計の切り口に合わせた判断です。",
+      "whyNot": {
+        "A": "3機能とも同じ Sonnet 5.5 なので、モデル別では機能を見分けられません。機能ごとにモデルを使い分けている場合なら手がかりになります。",
+        "B": "一覧価格での計算は、契約の割引を反映した請求額と合いません（分析 API の list_amount と amount の違いに当たります）。その場で目安を出したいときには使えます。",
+        "D": "count_tokens が数えるのは入力だけで、機能によって出力の量は大きく違うことがあります。値も見積もりです。"
+      },
+      "example": "製品の機能・社内の部署・顧客企業ごとに、費用を振り分けて報告するとき。",
+      "sources": [
+        {
+          "title": "Usage and Cost Analytics API",
+          "url": "https://platform.claude.com/docs/en/manage-claude/usage-cost-analytics-api"
+        },
+        {
+          "title": "Usage and Cost API",
+          "url": "https://platform.claude.com/docs/en/manage-claude/usage-cost-api"
+        },
+        {
+          "title": "Token counting",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+        }
+      ],
+      "question": "1つの製品で、チャット・文書要約・FAQ の自動作成の3機能が、どれも Sonnet 5.5 を同じ API キーで呼んでいます。どの機能の費用を先に減らすか決めるため、月ごとの機能別の費用を、契約の割引を反映した請求と同じ金額で知りたいです。数字は翌月にそろえば十分です。最も適切な方法はどれですか？",
+      "myAnswer": "C",
+      "correct": "C",
+      "explanation": "Usage and Cost Analytics API の「Attribute spend」（workspace・API key・model などで分ける）と「Cost endpoint」（amount は割引後、list_amount は一覧価格）、旧来の Usage and Cost API の「Cost attribution」、Token counting の「estimate」が根拠です。前の単元の API キーとワークスペース（5-2）の知識も使います。",
+      "no": 102,
+      "unit": "5-4",
+      "result": "guess",
+      "confidence": "low",
+      "status": "active",
+      "streak": 0,
+      "addedAt": "2026-11-05",
+      "nextReview": "2026-11-07"
     }
   ]
 }

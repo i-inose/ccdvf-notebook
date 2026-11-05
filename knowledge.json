@@ -952,6 +952,97 @@
           "addedAt": "2026-11-04"
         }
       ]
+    },
+    {
+      "unit": "5-4",
+      "title": "Cost and Token Management",
+      "terms": [
+        {
+          "name": "キャッシュのブレークポイント（cache breakpoint）と遡りの範囲（lookback window）",
+          "meaning": "cache_control を付けた位置がキャッシュの書き込み位置になり、読み出しはそこから最大20ブロック前まで、過去の書き込みを探して遡る。1リクエストに置けるのは4つまで。",
+          "analogy": "本のしおり。しおりを挟んだページまでは読み直さずに済むが、探してくれるのはしおりから20ページ前までで、それより前のしおりは見つけてくれない。",
+          "exam": "出題範囲の cache check-pointing は、このブレークポイントの置き方を指すと考えられる【解説】。置くのは「毎回同じ内容の最後のブロック」。時刻や質問のように毎回変わるブロックに置くと書き込みだけが続く。1ターンで20ブロック以上増える会話は、前回の書き込み位置にも置く。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompt caching",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "usage の内訳（input_tokens・cache_creation_input_tokens・cache_read_input_tokens）",
+          "meaning": "応答の usage は入力を3つに分けて返す。input_tokens は最後のブレークポイントより後ろの分だけで、合計の入力は3つの和。書き込みは cache_creation の中で5分と1時間に分かれる。",
+          "analogy": "レシートの「定価の品」「会員価格の品」「新規入会の手数料」の3行。どれか1行だけ見ても、払った合計は分からない。",
+          "exam": "キャッシュを使うと input_tokens は合計より大幅に小さくなる。費用は行ごとに単価が違う（書き込み1.25倍・2倍、読み出しは0.1倍で Opus 5.5 と Sonnet 5.5 は0.05倍）。web 検索の回数は usage.server_tool_use に出る。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompt caching",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "費用の見積もり（cost modeling）と倍率の重ね掛け",
+          "meaning": "モデルの単価に、キャッシュの倍率・Batch の半額・US 内の推論（inference_geo: \"us\"）の1.1倍などを掛け合わせ、サーバーツールの料金を足して費用を出すこと。",
+          "analogy": "旅行の見積もり。基本料金に早割や繁忙期の割増を掛け、現地のオプション代を別に足す。",
+          "exam": "倍率は重ねて掛かる。高速モードは Batch と併用できない。web 検索は1,000回あたり $10 が別にかかり、web fetch は追加料金なし。トークン計数（count_tokens）は無料。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Pricing",
+              "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "Usage and Cost Analytics API",
+          "meaning": "組織のトークン使用量（/analytics/usage）と費用（/analytics/cost）を、モデル・ワークスペース・API キー・利用者などの切り口で取る API（ベータ）。",
+          "analogy": "会社の経費精算システムの部門別レポート。個人のレシートを足すより、会社の口座の明細から集計したほうが請求と合う。",
+          "exam": "Admin API キーなど Admin API の認証情報で呼ぶ。amount は割引後でセント単位の文字列、list_amount は一覧価格。反映は通常4時間以内（遅いと24時間）、値は月末から約7日まで修正される。旧来の Usage and Cost API も引き続き使える。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Usage and Cost Analytics API",
+              "url": "https://platform.claude.com/docs/en/manage-claude/usage-cost-analytics-api"
+            },
+            {
+              "title": "Admin API",
+              "url": "https://platform.claude.com/docs/en/manage-claude/admin-api"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "タスク予算（task budget）",
+          "meaning": "output_config.task_budget で、エージェントのループ全体（思考・ツール呼び出し・ツールの結果・出力）に使えるトークンの目安を伝える機能（ベータ）。Claude は残量を見ながら作業を配分して終える。",
+          "analogy": "旅行の予算を同行者に伝えておくこと。残りを見て計画を変えてくれるが、財布の上限そのものではない。",
+          "exam": "助言であって強制の上限ではない。強制の上限は1リクエストごとの max_tokens。予算はまず予算なしで代表的なタスクを測り、p99 から始める。最小は20,000トークン。remaining を毎回書き換えるとキャッシュが外れる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Task budgets",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/task-budgets"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "task_budget と max_tokens",
+          "text": "task_budget は、エージェントのループ全体に使えるトークンの目安で、Claude が残量を見て作業を配分する。超えることもある。\nmax_tokens は、1回のリクエストで生成できるトークンの強制の上限で、達すると stop_reason: max_tokens で切れる。\n費用や時間に確実な上限が要るときは、task_budget で目安を渡し、max_tokens で上限を持つ。",
+          "addedAt": "2026-11-05"
+        }
+      ]
     }
   ]
 }
