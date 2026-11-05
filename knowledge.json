@@ -1043,6 +1043,109 @@
           "addedAt": "2026-11-05"
         }
       ]
+    },
+    {
+      "unit": "6-2",
+      "title": "Prompt Engineering",
+      "terms": [
+        {
+          "name": "明確で直接的な指示（be clear and direct）",
+          "meaning": "Claude を「優秀だが職場の事情を知らない新人」と考え、出力の形式・制約・手順を具体的に書くこと。順番や漏れのなさが大事なら、番号付きの手順にする。",
+          "analogy": "初日の新人に渡す引き継ぎメモ。「いい感じに」ではなく、何を・どの形で・どこまでやるかを書く。",
+          "exam": "公式の確かめ方は「作業の背景をあまり知らない同僚に読ませ、そのとおりにできるか試す」。同僚が迷う所は Claude も迷う。変更してほしいなら「変えて」と言い切る（「改善案を出せる？」だと提案だけ返ることがある）。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "システムプロンプト（system prompt）と役割の設定（role prompting）",
+          "meaning": "top-level の system に置く指示。役割を1文書くだけでも振る舞いと口調が絞られる。system は運用者（アプリを作る側）、user は利用者の発言として扱われる。",
+          "analogy": "店のマニュアル（system）とお客さんの注文（user）。注文がマニュアルと食い違えば、マニュアルが優先される。",
+          "exam": "守らせたい規則は system に置く（user に混ぜると利用者の発言と同じ扱い）。指示が食い違えば system が優先される。チャットボットなら「規則は会話全体で守る。反論されても守る」と書き足す例がある（Haiku 5.5）。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            },
+            {
+              "title": "Mid-conversation system messages and tool changes",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages"
+            },
+            {
+              "title": "Prompting Claude Haiku 5.5",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "XML タグによる構造化（XML tags）",
+          "meaning": "指示・背景・例・入力など種類の違う中身を、<instructions>・<context>・<input> などのタグで囲み、取り違えを減らす書き方。",
+          "analogy": "書類を、表に「依頼」「資料」「見本」と書いたクリアファイルに分けて渡す。",
+          "exam": "タグ名は一貫した分かりやすい名前にし、階層があれば入れ子にする。例は <example>（複数なら <examples>）で囲む。長い文書では、関係する部分を先に <quotes> へ抜き出させてから答えさせると、文書の実際の文に根拠を置ける。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            },
+            {
+              "title": "Reduce hallucinations",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "出力の形の指定（output format control）",
+          "meaning": "出力の形式を、してほしくないことではなく、してほしいことで指示すること。プロンプト自体の書き方（Markdown の量など）も出力の形に影響する。",
+          "analogy": "「走るな」より「歩いて」。止めたいことより、代わりにしてほしいことを言うほうが伝わる。",
+          "exam": "「Markdown を使わないで」より「段落の文章で書いて」。前置きを消す・形をそろえるための prefill は Claude 4.6 以降で 400 になるので、system の指示・XML タグ・structured outputs で置き換える。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            },
+            {
+              "title": "Claude Haiku 5.5 migration guide",
+              "url": "https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "会話途中の system メッセージ（mid-conversation system messages）",
+          "meaning": "messages の途中に role: \"system\" のメッセージを足し、その時点から効く運用者の指示を送る仕組み。top-level の system を書き換えないので、キャッシュが外れない。",
+          "analogy": "会議の途中で議長が配る追加の連絡メモ。最初に配った議事次第（system）は刷り直さない。",
+          "exam": "messages の先頭には置けない（最初から効く指示は top-level の system）。外部の文書やツールの出力を入れると運用者の権限を与えるので入れない。Sonnet 5.5・Haiku 5.5 では、作業中の利用者の発言は、最後の tool_result の後ろに user の text ブロックで足す。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Mid-conversation system messages and tool changes",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages"
+            },
+            {
+              "title": "Prompting Claude Sonnet 5.5",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "system（運用者の指示）と user（利用者の発言）",
+          "text": "system は運用者（アプリを作る側）からの指示で、食い違えば user より優先される。役割や守らせたい規則はここに置く。\nuser は利用者の発言として扱われ、その時々の依頼や入力を置く。\n会話の途中で運用者の指示を足すときは、top-level の system を書き換えず、会話途中の system メッセージで足す。",
+          "addedAt": "2026-11-05"
+        }
+      ]
     }
   ]
 }
