@@ -483,6 +483,66 @@
             }
           ],
           "addedAt": "2026-11-02"
+        },
+        {
+          "name": "同期クライアントと非同期クライアント（Anthropic / AsyncAnthropic）",
+          "meaning": "Python SDK には、呼んだら返事が来るまで待つ同期クライアント（Anthropic）と、await で待ちの間にほかの処理を進められる非同期クライアント（AsyncAnthropic）がある。使い方（メソッド名や引数）は同じ。",
+          "analogy": "同期は「レジに1人で並んで、自分の会計が終わるまで動けない」やり方です。\n非同期は「番号札をもらって、呼ばれるまでほかの買い物を続ける」やり方です。\n1人分の短いスクリプトなら同期で十分ですが、同時に何十人もさばく Web サーバーでは番号札（async / await）のほうが待ち時間を無駄にしません。",
+          "exam": "asyncio で動くアプリ（多数の同時リクエストをさばくサーバーなど）では AsyncAnthropic を使い、呼び出しに await を付ける。\n非同期のコードの中で同期クライアントを呼ぶと、返事待ちの間ほかの処理が止まる。\n同時接続の性能をさらに上げたいときは、aiohttp を HTTP の土台に使う選択肢もある。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "SDK のストリーミング補助（messages.stream・text_stream・get_final_message）",
+          "meaning": "client.messages.stream(...) を with 文で使うと、文字だけを順に取り出す text_stream と、最後に組み上がったメッセージ全体を返す get_final_message() が使える。生のイベントだけでよければ messages.create(..., stream=True) を使う。",
+          "analogy": "宅配の荷物を想像してください。\nstream=True は「部品が1個ずつ届くので、自分で組み立てる」受け取り方です。\nmessages.stream() は「部品も1個ずつ見せてくれるうえに、最後に組み立て済みの完成品（get_final_message）も渡してくれる」受け取り方です。\n完成品まで作ってくれる分、手元に置いておく量（メモリ）は増えます。",
+          "exam": "画面に文字を流しつつ、最後に usage（トークン数）や全文を保存したい → messages.stream() と text_stream・get_final_message()。\nイベントを別の仕組みに中継するだけで、完成形は要らず、メモリを抑えたい → create(stream=True)。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "SDK の例外クラス（APIConnectionError・RateLimitError・APIStatusError など）",
+          "meaning": "API につながらないときや 4xx・5xx が返ったとき、SDK は APIError の子クラスを投げる。接続できない → APIConnectionError、400 → BadRequestError、401 → AuthenticationError、429 → RateLimitError、500 以上 → InternalServerError、タイムアウト → APITimeoutError。",
+          "analogy": "病院の受付で「どこが痛いか」で診療科を分けるのと同じです。\n「そもそも病院に着けない」（接続エラー）、「混んでいるので少し待って」（429）、「保険証が違う」（401）では、取るべき行動が違います。\n例外の種類ごとに except を分けておくと、それぞれに合った対応ができます。",
+          "exam": "except は、細かい種類（RateLimitError など）を先に、広い種類（APIStatusError や APIError）を後に書く。広いものを先に書くと、細かいほうの分岐に入らない。\nAPIStatusError からは status_code と response を読める。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            },
+            {
+              "title": "Claude API errors",
+              "url": "https://platform.claude.com/docs/en/api/errors"
+            }
+          ],
+          "addedAt": "2026-11-03"
+        },
+        {
+          "name": "リクエストごとの上書き（with_options）と環境変数（ANTHROPIC_API_KEY・ANTHROPIC_BASE_URL・ANTHROPIC_LOG）",
+          "meaning": "client.with_options(timeout=…, max_retries=…) で、その呼び出しだけ設定を変えられる。SDK は環境変数 ANTHROPIC_API_KEY からキーを、ANTHROPIC_BASE_URL から接続先を読み、ANTHROPIC_LOG=debug / info でログを出す。",
+          "analogy": "家のエアコンの「いつもの設定」（クライアント全体の設定）はそのままに、今夜だけリモコンで温度を変える（with_options）イメージです。\n環境変数は、玄関に貼った「この家のルール」の紙のようなもので、コードを書き換えずに鍵（API キー）や行き先（接続先）を差し替えられます。",
+          "exam": "1つの機能だけ短いタイムアウトやリトライ0回にしたい → with_options。クライアント全体の timeout を変えるとほかの呼び出しにも効いてしまう。\nキーは ANTHROPIC_API_KEY に置けば Anthropic() と引数なしで作れる。\n検証用サーバーやプロキシに向けたい → ANTHROPIC_BASE_URL。SDK の送受信を詳しく見たい → ANTHROPIC_LOG=debug。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Python SDK",
+              "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+            }
+          ],
+          "addedAt": "2026-11-03"
         }
       ],
       "distinctions": [
@@ -495,6 +555,11 @@
           "title": "SSE（server-sent events）と WebSocket",
           "text": "SSE は HTTP の上で、サーバーからクライアントへ一方向にイベントを流し続ける方式。Claude の Messages API のストリーミングはこれ。\nWebSocket は1本の接続でサーバーとクライアントが双方向にやり取りする方式【解説】。\nClaude から文字を少しずつ受け取るだけなら SSE、作業中のエージェントに利用者が追加の指示を送り込むなら、自分のアプリ側に WebSocket の窓口を用意する。",
           "addedAt": "2026-11-02"
+        },
+        {
+          "title": "messages.stream() と messages.create(stream=True)",
+          "text": "どちらも SSE で少しずつ受け取る点は同じ。\nmessages.stream() は文字だけの text_stream と、最後のメッセージ全体（get_final_message）を組み立ててくれる補助付き。\ncreate(stream=True) はイベントを順に返すだけで、完成形を作らない分メモリが少なくて済む。\n「最後に全文や usage も欲しい」なら前者、「流すだけ」なら後者。",
+          "addedAt": "2026-11-03"
         }
       ]
     },
@@ -732,6 +797,74 @@
             }
           ],
           "addedAt": "2026-11-03"
+        },
+        {
+          "name": "プロンプトキャッシュ（prompt caching）と cache_control",
+          "meaning": "tools → system → messages の順に並んだプロンプトの先頭部分（プレフィックス）を cache_control の位置までキャッシュし、次のリクエストで安く速く読み直す仕組み。",
+          "analogy": "毎回同じ前置きの資料をコピーし直す代わりに、机の上に開いたまま置いておき、続きのページだけ足していく感じ。",
+          "exam": "変わらない部分を前に、変わる部分を後ろに置く。既定の寿命は5分（使うたびに延長）、1時間も選べる。書き込みは 5分で1.25倍・1時間で2倍、読み出しは基本0.1倍（Opus 5.5・Sonnet 5.5 は0.05倍、Fable 5.1 は0.025倍）。ヒットは usage の cache_read_input_tokens で確かめる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompt caching",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+            }
+          ],
+          "addedAt": "2026-11-04"
+        },
+        {
+          "name": "Message Batches API",
+          "meaning": "大量の Messages リクエストをまとめて非同期に処理する API。費用は50%引きで、多くは1時間以内、遅くとも24時間で終わる。",
+          "analogy": "郵便の「急がない便」。まとめて出すと安くなるが、届く時刻は指定できない。",
+          "exam": "結果の順番は送った順と限らないので custom_id で突き合わせる。stream: true は使えない。結果は29日間取得できる。すぐ返事が要る対話には向かない。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Batch processing",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+            }
+          ],
+          "addedAt": "2026-11-04"
+        },
+        {
+          "name": "第三者ベンダー経由の利用（Amazon Bedrock・Claude Models on Google Cloud）",
+          "meaning": "AWS や Google Cloud のアカウント・認証・請求で Claude を呼ぶ方法。AWS には、AWS が推論基盤を運用する Claude in Amazon Bedrock（Opus 4.7 以降は Messages API 形式で、SDK は AnthropicBedrockMantle）と、Anthropic が運用する Claude Platform on AWS がある。Google Cloud（Agent Platform）では AnthropicVertex を使う。",
+          "analogy": "同じブランドの商品を、直営店ではなく行きつけのデパートで買うようなもの。支払いはデパートのカードでできるが、品ぞろえが直営店と少し違う。",
+          "exam": "AWS を唯一のデータ処理者にしたいなら Bedrock、Batch・Files・ベータ機能などをすぐ使いたいなら Claude Platform on AWS。認証は主にクラウドの資格情報（IAM・SigV4）で、Bedrock の短期のベアラートークンや Platform on AWS の API キーもある。Bedrock では Message Batches API、Files API、画像の URL ソースなどが使えない。データの置き場所を限定する地域（regional / multi-region）エンドポイントは global より10%高い。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Claude in Amazon Bedrock",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock"
+            },
+            {
+              "title": "Claude Platform on AWS",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws"
+            },
+            {
+              "title": "Claude Models on Google Cloud (Google managed)",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed"
+            }
+          ],
+          "addedAt": "2026-11-04"
+        },
+        {
+          "name": "思考ブロック（thinking block）と signature",
+          "meaning": "思考が有効なとき応答の先頭に来る thinking ブロック。表示用の要約（または空）と、思考全体を暗号化した signature を持つ。",
+          "analogy": "答案の前に付いた封をした下書き。中身は見えなくても、続きを書くときは封のまま一緒に返す必要がある。",
+          "exam": "ツール使用中は tool_result と一緒に、thinking ブロックを完全・無変更で返す（redacted_thinking も落とさない）。課金は要約ではなく元の思考トークン全体。思考の設定を変えるとキャッシュが外れる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Thinking",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+            }
+          ],
+          "addedAt": "2026-11-04"
         }
       ],
       "distinctions": [
@@ -739,6 +872,84 @@
           "title": "クライアントツールとサーバーツール",
           "text": "クライアントツール（自作のツールや bash・text_editor）はアプリ側で実行し、tool_result を自分で返す。\nサーバーツール（web_search・web_fetch・code_execution など）は Anthropic 側で実行され、結果が同じ応答に入る。\n「tool_result を返す処理を書く必要があるか」で見分ける。",
           "addedAt": "2026-11-03"
+        },
+        {
+          "title": "リアルタイム（Messages API）とバッチ（Message Batches API）の選び方",
+          "text": "ユーザーが画面で待っている、またはツールの結果を見て次の一手を決める処理は、Messages API（必要ならストリーミング）で呼ぶ。\n結果が数時間後でもよい大量の処理（評価・分類・要約の一括実行）は、Message Batches API で50%安く流す。\n迷ったら「誰かが今この返事を待っているか」で決める。",
+          "addedAt": "2026-11-04"
+        }
+      ]
+    },
+    {
+      "unit": "5-3",
+      "title": "Model Selection and Tradeoffs",
+      "terms": [
+        {
+          "name": "モデルの階層（model tiers: Opus / Sonnet / Haiku）",
+          "meaning": "Opus は複雑なエージェント作業向け、Sonnet は速さと賢さの両立、Haiku は最速・最安で大量処理向け。その上に、いま最も高性能な Fable 5.1 がある。",
+          "analogy": "引っ越しのトラックの大・中・小。荷物の量と道の狭さで選び、いつも大型が正解とは限らない。",
+          "exam": "分類・抽出・ルーティングなど大量で遅延に厳しい処理は Haiku、長時間の自律コーディングや複雑な推論は Opus、日常のコーディングや分析は Sonnet。「常に最上位」は誤答の定番。公式は「多くの作業は Opus 5.5 から始め、effort を xhigh・max にしても足りなければ Fable 5.1 へ」としている。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Models overview",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+            },
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            }
+          ],
+          "addedAt": "2026-11-04"
+        },
+        {
+          "name": "効率優先と能力優先（efficiency-first / capability-first）",
+          "meaning": "速く安いモデルから始めて足りなければ上げるか、最も強いモデルから始めて後で効率化するか、の2つの始め方。",
+          "analogy": "服を買うとき、まず手頃な物で試して不満なら買い替えるか、最初に良い物を買って後で普段着を探すか。",
+          "exam": "効率優先はプロトタイプ・厳しい遅延要件・コスト重視・大量で単純なタスク向け。能力優先は複雑な推論・科学や数学・精度がコストより大事な場面向け。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            }
+          ],
+          "addedAt": "2026-11-04"
+        },
+        {
+          "name": "評価セットによるモデル比較（benchmark tests / evals）",
+          "meaning": "自分のユースケースのプロンプトとデータで作ったテストで、モデルの精度・品質・エッジケースとコストを比べること。",
+          "analogy": "車を選ぶとき、カタログの燃費ではなく、自分の通勤路を実際に試乗して比べる。",
+          "exam": "モデルを替えるかどうかの判断で最も重要なのは良い評価セット。公開ランキングや「最新だから」は根拠にならない。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Choosing the right model",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+            }
+          ],
+          "addedAt": "2026-11-04"
+        },
+        {
+          "name": "複数モデルの組み合わせ（executor/advisor・orchestrator/worker）",
+          "meaning": "安いモデルが作業を回して難所だけ上位モデルに相談する形と、上位モデルが計画し大量の作業を安いモデルに配る形。",
+          "analogy": "新人が仕事を進めて迷ったときだけ上司に聞く形と、上司が段取りを組んで作業を部下に割り振る形。",
+          "exam": "数か所だけ難しい一連の作業は executor/advisor。互いに独立した大量の作業や1つのコンテキストに入らない作業は orchestrator/worker。どちらも単一モデルを低い effort で使う場合と比べて決める。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Optimizing for cost and intelligence",
+              "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+            }
+          ],
+          "addedAt": "2026-11-04"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "「effort を下げる」と「モデルを替える」",
+          "text": "effort は同じモデルのまま、賢さと遅延・費用を引き換える調整つまみ。\nモデルを替えるのは能力そのものを変える大きな判断。\n公式は「effort の調整のほうが、モデルを替えるより良いレバーであることが多い」としている。\nまず effort を評価で試し、それでも足りないときにモデルを替える。",
+          "addedAt": "2026-11-04"
         }
       ]
     }
