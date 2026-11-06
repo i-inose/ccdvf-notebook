@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CCDV-F 前提知識ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* レイアウト: 全体の地図 → 章（流れ・本文・用語・取り違え）を上から順に読む。用語はタップで用語集の説明が開く */
+:root {
+  --paper: #f6f7f9; --sheet: #ffffff; --grid: #e3e8ef; --ink: #1d2a3a; --ink-soft: #5a6778;
+  --line: #d5dce6; --accent: #2456a6; --accent-soft: #e6eefb; --red: #c8322b; --red-soft: #fbe9e7;
+  --green: #1f7a4d; --green-soft: #e3f4ea; --amber: #a86400; --amber-soft: #fdf1dc;
+  --font-display: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #12161c; --sheet: #1a2029; --grid: #1f2630; --ink: #e4e9f0; --ink-soft: #9aa6b5;
+    --line: #2e3744; --accent: #8db4f5; --accent-soft: #1d2a40; --red: #ff8a80; --red-soft: #3a1f1e;
+    --green: #7fd1a4; --green-soft: #17302a; --amber: #f2b85c; --amber-soft: #3a2c15; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px; color: var(--ink); font-family: var(--font-body);
+  font-size: 15px; line-height: 1.8; -webkit-text-size-adjust: 100%; overflow-wrap: anywhere;
+}
+.wrap {
+  max-width: 680px; margin: 0 auto;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(40px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px;
+}
+header { display: grid; gap: 4px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--accent); }
+h1 { font-family: var(--font-display); font-weight: 900; font-size: 24px; line-height: 1.3; margin: 0; }
+h2 { font-family: var(--font-display); font-weight: 900; font-size: 19px; line-height: 1.4; margin: 0; }
+h3 { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin: 6px 0 0; color: var(--ink-soft); }
+.lead { margin: 0; color: var(--ink-soft); font-size: 14px; }
+nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+nav a { color: var(--accent); }
+.panel { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 14px; min-width: 0; display: grid; gap: 10px; }
+.panel p { margin: 0; }
+.toc { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.toc a { color: var(--ink); text-decoration: none; display: flex; gap: 8px; align-items: baseline; }
+.toc .no { font-family: var(--font-mono); color: var(--accent); min-width: 1.6em; }
+.toc .done { margin-left: auto; font-size: 12px; color: var(--green); }
+.chap-no { font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: .06em; }
+.one { font-weight: 700; }
+.flow { display: grid; gap: 0; margin: 2px 0; padding: 0; list-style: none; counter-reset: s; }
+.flow li {
+  position: relative; padding: 8px 10px 8px 38px; border: 1px solid var(--line); border-radius: 8px; background: var(--accent-soft); font-size: 14px;
+}
+.flow li + li { margin-top: 18px; }
+.flow li + li::before { content: "↓"; position: absolute; top: -19px; left: 14px; color: var(--ink-soft); font-size: 13px; }
+.flow li::after {
+  counter-increment: s; content: counter(s); position: absolute; left: 10px; top: 8px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+}
+.story p + p { margin-top: 8px; }
+.terms { display: flex; flex-wrap: wrap; gap: 6px; }
+.term {
+  all: unset; cursor: pointer; font-size: 13px; padding: 3px 10px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--sheet); color: var(--accent);
+}
+.term[aria-expanded="true"] { background: var(--accent); color: var(--sheet); border-color: var(--accent); }
+.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.def { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 6px; padding: 10px 12px; font-size: 14px; display: grid; gap: 6px; }
+.def .name { font-weight: 700; }
+.def .lbl { font-size: 12px; color: var(--ink-soft); margin-right: 6px; }
+.traps { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.traps li { background: var(--amber-soft); border-radius: 6px; padding: 8px 10px; font-size: 14px; }
+.traps b { color: var(--amber); }
+code { font-family: var(--font-mono); font-size: 13px; background: var(--accent-soft); padding: 0 4px; border-radius: 4px; }
+.readrow { display: flex; justify-content: flex-end; }
+.read {
+  all: unset; cursor: pointer; font-size: 13px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-soft);
+}
+.read[aria-pressed="true"] { background: var(--green-soft); color: var(--green); border-color: var(--green); }
+.map { display: grid; gap: 6px; font-size: 14px; }
+.map .row { display: grid; grid-template-columns: 2.2em minmax(0, 1fr); gap: 6px; align-items: baseline; }
+.map .row span:first-child { font-family: var(--font-mono); color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">CLAUDE CERTIFIED DEVELOPER – FOUNDATIONS · CCDV-F v1.0</span>
+    <h1>前提知識ノート</h1>
+    <p class="lead">問題文を読むための土台を、1本の流れにまとめたページです。用語を1つずつ覚える前に、まず上から順に読んで「どこの話か」をつかんでください。青い用語をタップすると、用語集の説明が開きます。</p>
+    <nav>
+      <a href="./">間違いノート</a>
+      <a href="quiz.html">クイズ</a>
+      <a href="cards.html">単語カード</a>
+      <a href="knowledge.html">用語ノート</a>
+    </nav>
+  </header>
+
+  <section class="panel" aria-labelledby="h-map">
+    <h2 id="h-map">全体の地図</h2>
+    <p>試験の話は、ほとんどが「あなたのアプリが Claude を1回呼ぶ」流れのどこかに乗っています。</p>
+    <ol class="flow">
+      <li>アプリ（クライアント）が、HTTP でリクエストを作る（宛先・ヘッダー・JSON の本文）</li>
+      <li>Claude API が受け取り、制限（レート制限・支出上限）を確かめる</li>
+      <li>モデルがトークンを読み、必要なら考え（思考）、必要ならツールを頼む</li>
+      <li>レスポンスが返る（中身のブロック・止まった理由・使ったトークン数）</li>
+      <li>アプリが結果を使う。ツールを頼まれていたら実行して、また 1 へ</li>
+    </ol>
+    <p>章はこの流れの順に並んでいます。問題文で分からない言葉が出たら、「この流れのどこの話か」を先に考えると、選択肢が絞りやすくなります。</p>
+    <ul class="toc" id="toc"></ul>
+  </section>
+
+  <div id="chapters" style="display:grid;gap:14px"></div>
+
+  <p class="lead" id="status"></p>
+</div>
+
+<script>
+// 章の定義。用語の説明そのものは glossary.json（公式ドキュメントで確かめ済み）から読む
+const CHAPTERS = [
+  {
+    id: "web", title: "Web の通信の基本",
+    one: "アプリは、決まった形の「依頼の手紙」を送り、「返事の手紙」を受け取る。",
+    flow: [
+      "クライアント（頼む側）が、エンドポイント（宛先の URL）を決める",
+      "HTTP メソッド（POST など）・ヘッダー（API キーなどの付加情報）・本文（JSON）でリクエストを作る",
+      "サーバー（応える側）が処理し、ステータスコード（200・400・429 など）と本文を返す"
+    ],
+    story: [
+      "API は、プログラムが別のプログラムに仕事を頼むための窓口です。Claude API も、HTTP という Web の通信の決まりで呼びます。",
+      "リクエストには「どこへ（エンドポイント）」「何をするか（メソッド）」「付加情報（ヘッダー）」「中身（JSON の本文）」が入ります。誰が送ったかは、ヘッダーの API キーで示します。",
+      "返事のレスポンスには、結果を表す3桁のステータスコードが付きます。2xx は成功、4xx は送った側の問題、5xx はサーバー側の問題、と大きく分けて覚えます。",
+      "SDK は、この手紙の組み立てや、失敗したときの再送を代わりにやってくれる部品です。API キーはコードに直接書かず、環境変数やシークレットの保管庫から渡します。"
+    ],
+    terms: ["client-server", "api", "request-response", "endpoint", "http-method", "http-header", "json", "http-status", "api-key-x-api-key", "sdk", "env-var", "secrets", "curl"],
+    traps: []
+  },
+  {
+    id: "messages", title: "Claude API の1往復",
+    one: "POST /v1/messages に「モデル・上限・会話」を送り、「中身のブロック・止まった理由・使った量」が返る。",
+    flow: [
+      "リクエスト: model・max_tokens・messages（user と assistant の交互）、必要なら system",
+      "レスポンス: content（ブロックの配列。type で中身を見分ける）",
+      "stop_reason（なぜ止まったか）と usage（入力・出力のトークン数）を見て、次の処理を決める"
+    ],
+    story: [
+      "Claude を呼ぶ中心の API が Messages API です。送るのは、使うモデル、出力の上限（max_tokens）、そして会話（messages）です。運用者からの指示は system に置きます。",
+      "API は前の会話を覚えていません。会話を続けるときは、それまでのやりとりを毎回 messages に入れて送ります。",
+      "返事の content は「ブロック」の並びで、type が text なら文章、tool_use ならツールの依頼、thinking なら思考です。先頭だけを読むのではなく、type で見分けて読みます。",
+      "stop_reason は止まった理由です。end_turn は書き終えた、max_tokens は上限で途中で切れた、tool_use はツールを呼んでほしい、という合図です。どれかで次の処理が変わります。"
+    ],
+    terms: ["claude-api-messages-api", "messages-role-turn", "system-prompt", "max-tokens", "content-block-type", "stop-reason", "usage-tokens", "model-id-alias-snapshot", "anthropic-version-header", "stop-sequences"],
+    traps: [
+      "<b>途中で切れた</b>のは <code>max_tokens</code> と <code>model_context_window_exceeded</code>。<code>end_turn</code> は書き終え、<code>stop_sequence</code> は狙いどおりの停止、<code>tool_use</code> はアプリの番。",
+      "<b>refusal</b> は断られた合図。上限を上げたり同じ内容を送り直したりせず、理由を確かめて言い換えるか、別のモデルで送る。"
+    ]
+  },
+  {
+    id: "tokens", title: "トークン・コンテキストウィンドウ・お金",
+    one: "量はトークンで数え、1回に扱える量には上限（ウィンドウ）があり、料金もトークンで決まる。",
+    flow: [
+      "文章はトークンという小さな単位に切って数える",
+      "入力（送った分）と出力（生成した分）のトークンが、それぞれ料金になる",
+      "入力と出力（思考を含む）は、コンテキストウィンドウの上限に収まる必要がある"
+    ],
+    story: [
+      "Claude は文章をトークンに切って読み書きします。料金も、レート制限も、上限も、すべてトークンで数えます。",
+      "コンテキストウィンドウは、1回に扱える量の上限です。送った会話・文書・ツールの説明と、生成した出力の両方が入ります。",
+      "モデルによってトークンの切り方（トークナイザー）が違うことがあり、同じ文章でもトークン数が変わります。見積もるときは、使うモデルを指定してトークン計数で数えます。",
+      "モデルは大きく Opus（能力重視）・Sonnet（速さと賢さの両立）・Haiku（速く安い）の3つの階層に分かれ、さらに上位に Fable があります。用途に合わせて選びます。"
+    ],
+    terms: ["llm", "token", "context-window", "token-counting", "claude-models", "model-deprecation", "usage-tokens"],
+    traps: [
+      "<b>キャッシュした部分も</b>コンテキストウィンドウを同じだけ占める。キャッシュが変えるのは料金とレート制限の数え方だけ。",
+      "<b>モデルを替えてトークン数が増えた</b>ら、理由はトークナイザー。temperature や学習データ量とは関係ない。"
+    ]
+  },
+  {
+    id: "limits", title: "制限とエラー",
+    one: "使いすぎを防ぐ上限があり、超えると 429。エラーは「直してから送る」か「待って送り直す」かに分ける。",
+    flow: [
+      "1分あたりのリクエスト数（RPM）・入力トークン（ITPM）・出力トークン（OTPM）に上限がある",
+      "超えると 429。混雑は 529、サーバーの不具合は 500",
+      "400 は送り方の誤りなので直してから送る。429・5xx は待ってから送り直す（指数バックオフ）"
+    ],
+    story: [
+      "Claude API には、組織ごとに1分あたりの上限（レート制限）と、月の金額の上限（支出上限）があります。この2つは別物です。",
+      "レート制限は、組織の中でワークスペースごとに低めに分けて設定できます。同じワークスペースの中では、API キーを分けても同じ枠を使います。",
+      "エラーはステータスコードで分かれます。400（書き方の誤り）や 401（認証の誤り）は、送り直しても直りません。429・500・529 は、少し待てば通ることがあるので、待ち時間を延ばしながら再試行します。SDK は自動で何回か再試行します。",
+      "サポートに問い合わせるときは、レスポンスに付く request-id を添えます。1件ずつの呼び出しを特定できる ID です。"
+    ],
+    terms: ["rate-limit-rpm-itpm-otpm", "error-types-retry", "retry-after-header", "retry-backoff", "sdk-max-retries", "timeout", "usage-tier-spend-limit", "console-workspace", "api-key-types", "request-id", "ratelimit-headers"],
+    traps: [
+      "<b>同じワークスペースで API キーを分けても</b>、レート制限の枠は同じ。分けるならワークスペースを分けて、その制限を低くする。",
+      "<b>支出上限</b>は月の金額の上限で、1分あたりのトークン数は抑えられない。",
+      "<b>問い合わせ用に残す値</b>は request-id。組織 ID やワークスペース ID では、どの呼び出しかを特定できない。"
+    ]
+  },
+  {
+    id: "speed", title: "速く・安く・まとめて",
+    one: "体感を速くするならストリーミング、同じ前置きを安くするならキャッシュ、急がない大量処理ならバッチ。",
+    flow: [
+      "待ち時間の体感を減らす → ストリーミング（できた分から受け取る）",
+      "毎回同じ長い前置きを送っている → プロンプトキャッシュ（先頭からの完全一致）",
+      "急がない大量の処理 → Message Batches API（まとめて送り、後で結果を受け取る）"
+    ],
+    story: [
+      "ストリーミングは、応答が完成するのを待たず、できた分から受け取る方法です。全体の時間は変わりませんが、最初の文字が早く出ます。",
+      "プロンプトキャッシュは、毎回同じ前置き（指示・例・長い文書）を保存して、次から安く速く読む仕組みです。先頭から完全に一致する部分しか使えないので、変わらない部分を前に、毎回変わる部分を後ろに置きます。",
+      "Message Batches API は、急がない大量の依頼をまとめて送り、後で結果を受け取る方法です。料金は通常の半額で、ほとんどは1時間以内、遅くとも24時間以内に処理されます。レート制限も Messages API とは別枠です。",
+      "たくさんの依頼を同時に送るなら、非同期処理で並べて送ります。その分、レート制限に当たりやすくなります。"
+    ],
+    terms: ["streaming", "sse", "latency", "ttft-otps", "prompt-caching", "cache-breakpoint-prefix", "cache-ttl", "cache-usage-fields", "message-batches-api", "async", "fast-mode"],
+    traps: [
+      "<b>キャッシュから読んだ分</b>は多くのモデルで ITPM に数えない。キャッシュへ<b>書き込む分</b>は数える。",
+      "<b>固定の部分を前、変わる部分を後ろ</b>。毎回変わる問い合わせ本文を先頭に置くと、キャッシュが効かない。"
+    ]
+  },
+  {
+    id: "thinking", title: "考える量を決める",
+    one: "答える前に考えさせることができ、その量は effort などで決める。考えた分も出力として数える。",
+    flow: [
+      "思考を有効にすると、Claude は答える前に thinking ブロックで考える",
+      "新しいモデルは、考えるかどうか・どれだけ考えるかを Claude が決める（適応型思考）。力の入れ具合は effort で指定する",
+      "思考のトークンは出力として課金され、max_tokens の中で数える"
+    ],
+    story: [
+      "拡張思考は、考える量を budget_tokens で決める古い方式です。新しいモデルの適応型思考では、考えるかどうか・どれだけ考えるかを Claude が決め、全体の力の入れ具合を effort で指定します。",
+      "effort を下げると、簡単な入力では考えずにすぐ答えることがあり、速く安くなります。上げると、丁寧になる代わりに長く高くなります。",
+      "思考のトークンは見えにくいだけで、出力として課金され、max_tokens の上限にも入ります。",
+      "ツールを使っている途中では、Claude が書いた思考ブロックを、署名ごと書き換えずにそのまま返します。"
+    ],
+    terms: ["extended-thinking", "adaptive-thinking", "effort", "thinking-display", "thinking-block-signature", "temperature", "between-tools"],
+    traps: [
+      "<b>1,024 トークン</b>は拡張思考の budget_tokens の最低値。適応型思考には最低の思考量はない。",
+      "<b>思考トークン</b>は課金される（出力として）。max_tokens とは別枠ではない。"
+    ]
+  },
+  {
+    id: "tools", title: "ツールとエージェント",
+    one: "Claude は外の世界を直接触れない。「これを呼んで」と頼み、アプリが実行して結果を返す。これをくり返すのがエージェント。",
+    flow: [
+      "アプリが tools（名前・説明・入力の JSON Schema）を渡す",
+      "Claude が tool_use ブロックで依頼する（stop_reason は tool_use）",
+      "アプリがツールを実行し、次の user メッセージで tool_result を返す",
+      "Claude が結果を読んで、次のツールを頼むか、答える（くり返し＝エージェントのループ）"
+    ],
+    story: [
+      "ツール使用は、Claude にアプリの機能（検索・計算・DB など）を使わせる仕組みです。ツールの入力の形は JSON Schema で伝えます。",
+      "Claude はツールを自分では実行しません。tool_use で「この入力で呼んで」と頼み、アプリが実行して tool_result で返します。web 検索のように Anthropic 側で実行するサーバーツールもあります。",
+      "手順をコードで決めて Claude を呼ぶのがワークフロー、次に何をするかを Claude が決めて進むのがエージェントです。このループを回す仕組みをハーネスと呼び、Agent SDK や Claude Code はその完成品です。",
+      "MCP は、ツールやデータを共通の形で Claude に渡すための規格です。tool_result の中身は外から来たデータとして扱われ、指示としては信頼されません（プロンプトインジェクション対策）。"
+    ],
+    terms: ["tool-use", "tool-use-result-blocks", "tool-choice", "json-schema", "structured-outputs", "strict-tool-use", "server-tools-pause-turn", "workflow-vs-agent", "harness", "orchestrator-workers", "agent-sdk", "mcp", "mcp-transports", "prompt-injection"],
+    traps: [
+      "<b>tool_result を返すとき</b>、その呼び出しの思考ブロックは署名ごとそのまま返す。削ったり要約したりしない。",
+      "<b>作業中の利用者の発言</b>は、tool_result の中に混ぜない。Sonnet 5.5・Haiku 5.5 では、最後の tool_result の後ろに text ブロックで足す。",
+      "<b>規則を tool_result に入れても</b>守らせる力はない。守らせたい規則は system に置く。"
+    ]
+  },
+  {
+    id: "prompt", title: "プロンプトの書き方",
+    one: "事情を知らない新人に渡すメモのつもりで、望む形を具体的に書く。",
+    flow: [
+      "役割と守らせたい規則は system（運用者の指示）、その時々の依頼は user（利用者の発言）",
+      "種類の違う中身（指示・例・文書・入力）は XML タグで分ける",
+      "してほしくないことより、してほしい形を書く。例で方法を見せる",
+      "効いたかどうかは、評価セットで確かめる"
+    ],
+    story: [
+      "system は運用者（アプリを作る側）の指示で、user は利用者の発言として扱われます。食い違えば system が優先されるので、守らせたい規則は system に置きます。",
+      "指示・例・長い文書・利用者の入力が混ざるときは、<instructions> や <example> などの XML タグで囲むと取り違えが減ります。長い文書は上に、質問は最後に置きます。",
+      "「〜しないで」より「〜の形で書いて」のほうが伝わります。「重要」「厳守」のような強い言葉を足しても、あいまいな指示ははっきりしません。",
+      "assistant の書き出しを先に入れる prefill は、Claude 4.6 以降のモデルでは 400 エラーになります。代わりに system の指示・XML タグ・structured outputs を使います。"
+    ],
+    terms: ["system-prompt", "xml-tags", "zero-one-few-shot", "prefill", "mid-conversation-system-messages", "hallucination", "prompt-leak", "jailbreak", "benchmark-eval", "llm-based-grading-rubric"],
+    traps: [
+      "<b>prefill</b> は Claude 4.6 以降で 400。thinking を止めても通らない（Haiku 5.5）。",
+      "<b>「Markdown 禁止」</b>を強く繰り返すより、「段落の文章で書く」と望む形を書き、プロンプト自体の Markdown も減らす。",
+      "<b>長い文書は上、質問は最後</b>。根拠を示させたいなら、先に関係する部分を <quotes> に抜き出させる。"
+    ]
+  },
+  {
+    id: "dev", title: "開発の道具（Git・テスト・Claude Code）",
+    one: "コードの変更は Git で記録し、レビューとテストを通してから取り込む。Claude Code はその流れの中で働くエージェント。",
+    flow: [
+      "リポジトリでブランチを切り、変更をコミットする",
+      "プルリクエストを出し、コードレビューを受ける。CI がテストを自動で回す",
+      "問題がなければマージする"
+    ],
+    story: [
+      "Git はコードの変更履歴を記録する道具で、リポジトリはその保管場所です。作業はブランチで分けて進め、区切りごとにコミットします。",
+      "プルリクエストは「この変更を取り込んでください」という依頼で、ここでコードレビューが行われます。CI は、変更のたびにテストなどを自動で回す仕組みです。",
+      "Claude Code は、端末でファイルを読み書きし、コマンドを実行するエージェントです。プロジェクトの決まりは CLAUDE.md に書き、決まった時点に必ず処理を挟みたいときは hooks、権限や設定は settings.json で決めます。"
+    ],
+    terms: ["git", "repository", "branch-checkout", "commit", "pull-request", "code-review", "ci", "github-actions", "test-testcase", "bash-shell", "claude-code", "claude-md", "subagent", "hooks", "settings-json-scopes", "permission-modes"],
+    traps: []
+  }
+];
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const READ_KEY = "ccdvf-primer-read";
+let readSet = new Set();
+try { readSet = new Set(JSON.parse(localStorage.getItem(READ_KEY) || "[]")); } catch (e) {}
+const saveRead = () => { try { localStorage.setItem(READ_KEY, JSON.stringify([...readSet])); } catch (e) {} };
+
+function renderToc() {
+  document.getElementById("toc").innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="#ch-${c.id}"><span class="no">${i + 1}</span><span>${esc(c.title)}</span>${readSet.has(c.id) ? '<span class="done">読んだ</span>' : ""}</a></li>`).join("");
+}
+
+function render(byId) {
+  const box = document.getElementById("chapters");
+  box.innerHTML = CHAPTERS.map((c, i) => {
+    const terms = c.terms.filter(id => byId[id]);
+    return `<section class="panel" id="ch-${c.id}" aria-labelledby="h-${c.id}">
+      <span class="chap-no">第${i + 1}章</span>
+      <h2 id="h-${c.id}">${esc(c.title)}</h2>
+      <p class="one">${esc(c.one)}</p>
+      <ol class="flow">${c.flow.map(f => `<li>${esc(f)}</li>`).join("")}</ol>
+      <div class="story">${c.story.map(p => `<p>${esc(p)}</p>`).join("")}</div>
+      <h3>この章の用語（タップで説明）</h3>
+      <div class="terms">${terms.map(id => `<button class="term" type="button" data-id="${id}" aria-expanded="false">${esc(byId[id].name)}</button>`).join("")}</div>
+      <div class="defbox"></div>
+      ${c.traps.length ? `<h3>ノートで実際に出た取り違え</h3><ul class="traps">${c.traps.map(t => `<li>${t}</li>`).join("")}</ul>` : ""}
+      <div class="readrow"><button class="read" type="button" data-ch="${c.id}" aria-pressed="${readSet.has(c.id)}">${readSet.has(c.id) ? "読んだ ✓" : "読んだら押す"}</button></div>
+    </section>`;
+  }).join("");
+
+  box.addEventListener("click", e => {
+    const t = e.target.closest(".term");
+    if (t) {
+      const sec = t.closest("section");
+      const defbox = sec.querySelector(".defbox");
+      const open = t.getAttribute("aria-expanded") === "true";
+      sec.querySelectorAll(".term").forEach(b => b.setAttribute("aria-expanded", "false"));
+      if (open) { defbox.innerHTML = ""; return; }
+      t.setAttribute("aria-expanded", "true");
+      const g = byId[t.dataset.id];
+      defbox.innerHTML = `<div class="def">
+        <div class="name">${esc(g.name)}</div>
+        <div><span class="lbl">ひとこと</span>${esc(g.short)}</div>
+        <div><span class="lbl">説明</span>${esc(g.detail)}</div>
+        ${g.analogy ? `<div><span class="lbl">たとえ</span>${esc(g.analogy)}</div>` : ""}
+        ${g.exam ? `<div><span class="lbl">試験では</span>${esc(g.exam)}</div>` : ""}
+      </div>`;
+      return;
+    }
+    const r = e.target.closest(".read");
+    if (r) {
+      const id = r.dataset.ch;
+      if (readSet.has(id)) readSet.delete(id); else readSet.add(id);
+      saveRead();
+      r.setAttribute("aria-pressed", readSet.has(id));
+      r.textContent = readSet.has(id) ? "読んだ ✓" : "読んだら押す";
+      renderToc();
+    }
+  });
+}
+
+renderToc();
+fetch("glossary.json", { cache: "no-store" }).then(r => r.json()).then(g => {
+  const byId = Object.fromEntries((g.terms || []).map(t => [t.id, t]));
+  render(byId);
+  const n = CHAPTERS.reduce((a, c) => a + c.terms.filter(id => byId[id]).length, 0);
+  document.getElementById("status").textContent = `9章・用語 ${n} 個（用語の説明は用語集 ${g.updatedAt || ""} 版から読んでいます）`;
+}).catch(() => {
+  document.getElementById("status").textContent = "用語集を読み込めませんでした。時間をおいて開き直してください。";
+});
+</script>
+</body>
+</html>
