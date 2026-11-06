@@ -136,8 +136,7 @@
       "sectioning と orchestrator-workers の取り違え。分け方を開発者が前もって決めるのが sectioning、入力を見て指揮役が決めるのが orchestrator-workers。",
       "種類の違う問い合わせを1つのプロンプトに例を足して処理し続ける。片方に合わせると他方が下がるなら、ルーティングで分ける。",
       "単純な質問にもサブエージェントを多数起動する問題に、一律の上限やモデルの変更で対処する。リードのプロンプトに複雑さごとの数の目安を書く。",
-      "計画・実装・テストを「文脈がきれいになる」とサブエージェントの連鎖に分ける。段階どうしで文脈を多く共有するならメインの会話で進める。",
-      "仮説を互いに反論させたいのにサブエージェントを選ぶ。サブエージェントは結果を返すだけで、議論させるならエージェントチーム。"
+      "サブエージェントの使いどころの誤り。段階どうしで文脈を多く共有するならメインの会話、仮説を互いに反論させたいならエージェントチーム。"
      ],
      "terms": [
       "workflow-vs-agent",
@@ -172,6 +171,92 @@
       {
        "title": "Subagents in the SDK",
        "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
+      }
+     ],
+     "points": [
+      "まず検索と例で最適化した1回の呼び出しを考え、必要なときだけ複雑にする",
+      "手順が決まった仕事はワークフロー（決めたコードの道筋で動かす形）にする",
+      "要る手順を予測できない問題はエージェント（LLM が手順を決める形）に任せる",
+      "分け方を先に決めるのが sectioning、指揮役がその場で分けて配るのが orchestrator-workers",
+      "結果だけ要る独立作業はサブエージェント（任せる別のエージェント）、反論し合わせるならエージェントチーム"
+     ],
+     "diagrams": [
+      {
+       "type": "tree",
+       "title": "仕組みの選び方",
+       "q": "1回の呼び出しで足りる？",
+       "branches": [
+        {
+         "when": "はい",
+         "a": "検索と例で最適化した1回の呼び出し"
+        },
+        {
+         "when": "いいえ",
+         "q": "手順が前もって決まる？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "ワークフロー",
+           "note": "予測しやすく費用が読める"
+          },
+          {
+           "when": "いいえ",
+           "a": "エージェント",
+           "note": "停止条件・ガードレール（安全策）を用意"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "sectioning と orchestrator-workers",
+       "head": [
+        "",
+        "sectioning（分けて同時実行）",
+        "orchestrator-workers（指揮役が配る）"
+       ],
+       "rows": [
+        [
+         "分け方を決めるのは",
+         "開発者が前もって",
+         "指揮役の LLM がその場で"
+        ],
+        [
+         "向く仕事",
+         "前もって分けられる独立作業",
+         "変更ファイル数が毎回違うコード修正"
+        ],
+        [
+         "選ぶ基準",
+         "要る作業を予測できる",
+         "要る作業を予測できない"
+        ]
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "サブエージェントへの委任",
+       "steps": [
+        {
+         "actor": "親",
+         "text": "委任の指示文だけを渡す",
+         "note": "会話履歴は渡らない。パスやエラー文は指示文に書く"
+        },
+        {
+         "actor": "サブエージェント",
+         "text": "自分のコンテキストでツールを使う",
+         "note": "途中の呼び出しと結果は中に残る"
+        },
+        {
+         "actor": "サブエージェント",
+         "text": "最後のメッセージだけを返す"
+        },
+        {
+         "actor": "親",
+         "text": "結果を受け取って作業を続ける"
+        }
+       ]
       }
      ],
      "weight": 4.5
@@ -306,7 +391,6 @@
      "pitfalls": [
       "allowed_tools で読み取りに絞ったつもりで bypassPermissions にする。挙げていないツールもすべて承認されるので、dontAsk と組み合わせる。",
       "毎回の記録をプロンプト・スキル・サブエージェント・prompt 型のフックで行わせる。確実に動かすならコードで動くフック（PostToolUse のコールバックなど）。",
-      "Messages API の stream: true（応答を少しずつ受け取る出力側の仕組み）と、Agent SDK のストリーミング入力モードを取り違える。",
       "社外にファイルを置けないのに、クラウド環境の通信制限や MCP トンネルを選ぶ。bash とファイル操作を社内で動かすのはセルフホストのサンドボックス。",
       "Managed Agents は、終わったセッションを削除しても、セルフホストにしても ZDR の対象外。task budget（目安）とセッション予算（強制の上限）も取り違えやすい。",
       "Sonnet 5.5・Haiku 5.5 で、作業中の利用者の発言を tool_result の中や直後の system メッセージに入れる。最後の tool_result の後ろに user の text ブロックで足す。"
@@ -380,6 +464,114 @@
       {
        "title": "API and data retention",
        "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+      }
+     ],
+     "points": [
+      "細かく制御したいなら Client SDK（API を使いやすくした部品一式）でループを自作する",
+      "ループごと自社で動かすなら Agent SDK、運用を減らすなら Managed Agents を選ぶ",
+      "社外に置けないファイルはセルフホストのサンドボックス（自社で動く実行環境）で扱う",
+      "例外なく毎回行う処理はフック（決まった時点で動く処理）をコードで書く",
+      "読み取りに絞るなら allowed_tools（自動承認の一覧）と dontAsk を組み合わせる"
+     ],
+     "diagrams": [
+      {
+       "type": "flow",
+       "title": "エージェントのループ",
+       "steps": [
+        {
+         "actor": "ハーネス",
+         "text": "Claude を呼び出す",
+         "note": "ハーネス＝ループを回すアプリ側"
+        },
+        {
+         "actor": "Claude",
+         "text": "tool_use（ツールを呼ぶ依頼）を返す"
+        },
+        {
+         "actor": "ハーネス",
+         "text": "ツールを実行する",
+         "note": "前後で PreToolUse・PostToolUse フックが動く"
+        },
+        {
+         "actor": "ハーネス",
+         "text": "tool_result（実行結果）を付けて呼ぶ",
+         "note": "失敗は is_error: true で返す"
+        }
+       ],
+       "loop": "stop_reason が tool_use の間 2〜4 をくり返す"
+      },
+      {
+       "type": "table",
+       "title": "3つの作り方",
+       "head": [
+        "",
+        "Client SDK",
+        "Agent SDK",
+        "Managed Agents"
+       ],
+       "rows": [
+        [
+         "ループを回すのは",
+         "自分のコード",
+         "SDK（自社のプロセス）",
+         "Anthropic"
+        ],
+        [
+         "ツールの実行場所",
+         "自分のアプリ",
+         "自社の環境",
+         "クラウドかセルフホスト"
+        ],
+        [
+         "履歴の保存",
+         "残らない（毎回送る）",
+         "ローカルのディスク",
+         "サーバー側"
+        ],
+        [
+         "向く場面",
+         "細かく制御・短い処理",
+         "ループごと自社で動かす",
+         "長い作業・非同期を任せる"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "作り方と環境の選び方",
+       "q": "インフラを持たず長い作業を任せたい？",
+       "branches": [
+        {
+         "when": "はい",
+         "q": "社外に置けないファイルを扱う？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "セルフホストのサンドボックス",
+           "note": "それでも履歴は Anthropic に届く"
+          },
+          {
+           "when": "いいえ",
+           "a": "クラウド環境",
+           "note": "迷ったらこちら"
+          }
+         ]
+        },
+        {
+         "when": "いいえ",
+         "q": "ループごと自社で動かしたい？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "Agent SDK"
+          },
+          {
+           "when": "いいえ（細かく制御）",
+           "a": "Client SDK で自作ループ"
+          }
+         ]
+        }
+       ]
       }
      ],
      "weight": 5.3
@@ -497,8 +689,7 @@
      ],
      "pitfalls": [
       "Strands で会話管理を指定しない＝削らない、と考える。既定はスライディングウィンドウで、大きなウィンドウのモデルやキャッシュの TTL では外れた最初のメッセージは戻らない。",
-      "会話をまたぐ好みをチェックポインターに任せる。新しいスレッドは空から始まるので、好みはストアに置く。",
-      "数日の承認待ちを timeout の延長やメモリ上のチェックポインターで乗り切ろうとする。interrupt と永続的なチェックポインターで再開する。",
+      "LangGraph の記憶の取り違え。会話をまたぐ好みはストアに置く。数日の承認待ちは timeout の延長やメモリ上のチェックポインターでなく、interrupt と永続的なチェックポインターで再開する。",
       "検索結果を順に待つのが遅さの原因なのに、高速モードや小さいモデルで速くしようとする。リードはサブエージェントを同時に起動し、各自もツールを並列に呼ぶ。",
       "Graph・Swarm・Workflow の取り違え。失敗時の行き先を開発者が決めるなら Graph、エージェントが次を決めるのが Swarm、くり返しを持てないのが Workflow。",
       "結果は正しいのに、ツールを呼ぶ順番でテストして落とす。状態を変えるエージェントは最終状態で評価する。temperature を 0 にしても同じ出力は保証されない。"
@@ -571,6 +762,89 @@
       {
        "title": "Multi-agent Applications（Pydantic AI）",
        "url": "https://pydantic.dev/docs/ai/guides/multi-agent-applications/"
+      }
+     ],
+     "points": [
+      "stop_reason（応答が止まった理由）が tool_use の間ループし、最大反復回数で止める",
+      "独立した読み取りは並列に、副作用（外に残る変化）や順番がある操作は順番に実行する",
+      "会話をまたぐ好みはストア、スレッド内の状態はチェックポインター（スレッドごとの保存）に置く",
+      "Strands で会話管理を指定しないと、スライディングウィンドウ（古いものから外す方式）で削られる",
+      "状態を変えるエージェントは、ツールを呼ぶ順番ではなく最終状態で評価する"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "Strands の Graph・Swarm・Workflow",
+       "head": [
+        "",
+        "Graph",
+        "Swarm",
+        "Workflow"
+       ],
+       "rows": [
+        [
+         "道筋を決めるのは",
+         "開発者が節と辺を前もって",
+         "エージェント自身",
+         "依存関係で固定（DAG）"
+        ],
+        [
+         "くり返し・差し戻し",
+         "持てる（エラーの辺も）",
+         "その場で生まれる",
+         "持てない"
+        ],
+        [
+         "向く場面",
+         "分岐・失敗時の行き先が決まった流れ",
+         "道筋を決められない協力",
+         "独立作業を並行に流す工程"
+        ]
+       ]
+      },
+      {
+       "type": "nest",
+       "title": "LangGraph の記憶の置き場所",
+       "label": "記憶（memory）",
+       "children": [
+        {
+         "label": "短期（1つのスレッドの中の履歴・状態）",
+         "children": [
+          {
+           "label": "チェックポインター",
+           "note": "新しいスレッドは空から。中断と再開にも使う"
+          }
+         ]
+        },
+        {
+         "label": "長期（会話をまたぐ好み・事実）",
+         "children": [
+          {
+           "label": "ストア",
+           "note": "スレッドをまたいで読める"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "長いタスクの手段",
+       "q": "どんな長いタスク？",
+       "branches": [
+        {
+         "when": "やり取りが多い",
+         "a": "compaction（古いターンを要約に置換）"
+        },
+        {
+         "when": "節目のはっきりした反復開発",
+         "a": "構造化したメモ（note-taking）"
+        },
+        {
+         "when": "並行の探索が効く調査",
+         "a": "マルチエージェント"
+        }
+       ]
       }
      ],
      "weight": 4.9
@@ -735,6 +1009,96 @@
        "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
       }
      ],
+     "points": [
+      "「正確で速く安く」は要件にならない。観点ごとに測り方と数値の目標を決める",
+      "ZDR（応答後に保存しない取り決め）が守るのは対象の機能だけ",
+      "Files API・Batches API などは ZDR 対象外。API は止めず範囲の外に出る",
+      "自社クラウド経由・SSO（1つのアカウントで入る）が要件なら Claude apps gateway",
+      "間を空けて続く Agent SDK の作業は hybrid（待機中は止めて状態を戻す）"
+     ],
+     "diagrams": [
+      {
+       "type": "nest",
+       "title": "ZDR が守る範囲",
+       "label": "ZDR（ゼロデータ保持）の組織",
+       "children": [
+        {
+         "label": "ZDR の対象",
+         "children": [
+          {
+           "label": "Messages API",
+           "note": "PDF は直接入れる"
+          }
+         ]
+        },
+        {
+         "label": "ZDR の対象外（止められず範囲の外に出る）",
+         "children": [
+          {
+           "label": "Files API",
+           "note": "削除するか期限まで保持"
+          },
+          {
+           "label": "Message Batches API",
+           "note": "29日保持"
+          },
+          {
+           "label": "code execution（コード実行）"
+          },
+          {
+           "label": "Managed Agents"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "Claude apps gateway の流れ",
+       "steps": [
+        {
+         "actor": "開発者",
+         "text": "社内の IdP（ID 管理）でサインイン"
+        },
+        {
+         "actor": "ゲートウェイ",
+         "text": "IdP のグループごとの許可リストで確認",
+         "note": "許されないモデルはサーバー側で拒む"
+        },
+        {
+         "actor": "ゲートウェイ",
+         "text": "自分だけが持つ認証情報で上流へ送る",
+         "note": "上流は Amazon Bedrock など"
+        }
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "Agent SDK の実行の型の選び方",
+       "q": "1回で終わる作業？",
+       "branches": [
+        {
+         "when": "はい",
+         "a": "ephemeral（使い捨て）"
+        },
+        {
+         "when": "いいえ",
+         "q": "大量の処理が常に流れてくる？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "long-running（常駐）"
+          },
+          {
+           "when": "いいえ（間が空く）",
+           "a": "hybrid（混合）",
+           "note": "SessionStore から状態を戻す"
+          }
+         ]
+        }
+       ]
+      }
+     ],
      "weight": 3.4
     },
     {
@@ -834,7 +1198,6 @@
       "「Models API で、どのサービスが非推奨のモデルを使っているか分かる」は誤り。使用箇所は Console の Usage の Export で探す。",
       "「非推奨でも廃止日までは品質が同じなので直前に切り替える」は誤り。早めに後継を試す。",
       "SDK を使わないサービスも見たいのに SDK のトレースや ANTHROPIC_LOG を選ぶのは誤り。API のトレースを Console で設定する。",
-      "「Usage and Cost Analytics API で遅延とエラーを見る」は誤り。使用量と費用を見る API で、反映にも数時間かかることがある。",
       "「ZDR の組織では Full content を選べない」「Full content にすると Anthropic 側で30日保存される」はどちらも誤り。",
       "エージェントの ID の文字列だけでセッションを作ると、全員が最新の版になる。一部だけで試すなら版を指定する。"
      ],
@@ -871,6 +1234,83 @@
       {
        "title": "Model deprecations",
        "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+      }
+     ],
+     "points": [
+      "評価セットは本番の入力に合わせ、エッジケース（まれだが起こる入力）も入れる",
+      "新しい版を一部だけで試すなら、セッションを version（版）指定で作る",
+      "SDK を使わない呼び出しも見るなら、API のトレースを Console で設定する",
+      "非推奨モデルの使用箇所は Console の Usage の Export で探し、早めに移す"
+     ],
+     "diagrams": [
+      {
+       "type": "flow",
+       "title": "ライフサイクルの4つの段階【解説】",
+       "steps": [
+        {
+         "actor": "開発",
+         "text": "リリース前に評価セットを見直す"
+        },
+        {
+         "actor": "導入",
+         "text": "新しい版を一部だけで試す"
+        },
+        {
+         "actor": "運用",
+         "text": "トレース（処理の記録）で監視する"
+        },
+        {
+         "actor": "保守",
+         "text": "モデルの廃止に合わせて移行する"
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "モデルの状態",
+       "steps": [
+        {
+         "text": "Active（推奨）"
+        },
+        {
+         "text": "Legacy（更新が止まる）"
+        },
+        {
+         "text": "Deprecated（非推奨）",
+         "note": "動くが、廃止日と後継が示される"
+        },
+        {
+         "text": "Retired（廃止済み）",
+         "note": "リクエストが失敗する"
+        }
+       ],
+       "loop": "公開モデルの廃止は少なくとも60日前に知らされる"
+      },
+      {
+       "type": "table",
+       "title": "SDK のトレースと API のトレース",
+       "head": [
+        "",
+        "SDK のトレース",
+        "API のトレース"
+       ],
+       "rows": [
+        [
+         "設定する場所",
+         "コード",
+         "Console で送り先を追加"
+        ],
+        [
+         "記録の対象",
+         "SDK を使う呼び出しだけ",
+         "どのクライアントの呼び出しも"
+        ],
+        [
+         "コードの変更",
+         "要る",
+         "要らない（Admin 権限が要る）"
+        ]
+       ]
       }
      ],
      "weight": 2.8
@@ -1027,7 +1467,6 @@
       "サーバーツールの pause_turn に tool_result を返すのは誤りです。止まった応答をそのまま入れ、同じ tools で送り直します。",
       "input_json_delta の断片は届くたびに解析できません。つないでから content_block_stop で解析します。eager_input_streaming は壊れた JSON が届きうる設定です。",
       "Haiku 4.5 で cache_read と cache_creation がどちらも 0 なのは、置き場所の誤りではなく、最小の長さ（4,096 トークン）に届いていないためです。",
-      "citations を有効にした document と structured outputs は併用できず 400 になります。",
       "Claude Platform on AWS の推論データの処理者は Anthropic です。AWS を唯一の処理者にしたいなら Claude in Amazon Bedrock を選びます。"
      ],
      "terms": [
@@ -1123,6 +1562,103 @@
       {
        "title": "Claude Models on Google Cloud (Google managed)",
        "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed"
+      }
+     ],
+     "points": [
+      "ユーザーが待たない大量処理は Message Batches API（まとめて後で受け取る API）で50%安く流す",
+      "並列の tool_result（ツールの結果）は tool_use_id で対応づけ、1つの user メッセージで返す",
+      "pause_turn（サーバーツールの一時停止）には、止まった応答をそのまま入れ同じ tools で送り直す",
+      "キャッシュは変わらない部分を前に置き、cache_read_input_tokens でヒットを確かめる",
+      "AWS を唯一のデータ処理者にしたいなら Claude in Amazon Bedrock を選ぶ"
+     ],
+     "diagrams": [
+      {
+       "type": "flow",
+       "title": "ツール使用の1周",
+       "steps": [
+        {
+         "actor": "アプリ",
+         "text": "tools（使える関数の一覧）を渡す",
+         "note": "name・description・input_schema"
+        },
+        {
+         "actor": "Claude",
+         "text": "tool_use（呼び出しの依頼）を返す",
+         "note": "stop_reason は tool_use"
+        },
+        {
+         "actor": "アプリ",
+         "text": "ツールを実行する"
+        },
+        {
+         "actor": "アプリ",
+         "text": "tool_result（結果）を user メッセージで返す",
+         "note": "並列なら1つの user メッセージにまとめる。失敗は is_error: true"
+        }
+       ],
+       "loop": "答えが出るまで 2〜4 をくり返す"
+      },
+      {
+       "type": "tree",
+       "title": "リアルタイムとバッチの選び方",
+       "q": "誰かが今この返事を待っている？",
+       "branches": [
+        {
+         "when": "はい",
+         "q": "できた分から見せたい・max_tokens が大きい？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "Messages API＋ストリーミング（stream: true）"
+          },
+          {
+           "when": "いいえ",
+           "a": "Messages API（通常の呼び出し）"
+          }
+         ]
+        },
+        {
+         "when": "いいえ（数時間後でよい大量処理）",
+         "a": "Message Batches API",
+         "note": "50%引き・多くは1時間以内、遅くとも24時間"
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "AWS・Google Cloud 経由の違い",
+       "head": [
+        "",
+        "Bedrock",
+        "Claude Platform on AWS",
+        "Google Cloud"
+       ],
+       "rows": [
+        [
+         "運用するのは",
+         "AWS",
+         "Anthropic",
+         "Agent Platform 経由"
+        ],
+        [
+         "請求",
+         "AWS",
+         "AWS Marketplace",
+         "Google Cloud"
+        ],
+        [
+         "Batch・Files",
+         "使えない",
+         "使える",
+         "使えない"
+        ],
+        [
+         "選ぶ場面",
+         "AWS を唯一の処理者にしたい",
+         "Batch・Files を AWS 請求で使いたい",
+         "Google Cloud の請求で使いたい"
+        ]
+       ]
       }
      ],
      "weight": 6.8
@@ -1254,7 +1790,6 @@
      "pitfalls": [
       "一覧 API の続きは first_id ではなく、last_id を after_id に渡して取ります。offset 方式ではありません。",
       "構造化出力で minimum・maximum を使うと 400 になります。additionalProperties を true にしても別の 400 になります。",
-      "Promise.all は1件の失敗で全体が失敗になります。成功分を使い失敗分だけ再実行したいなら Promise.allSettled です。",
       "Claude が Bash だけで変えたファイルは /rewind で戻りません。Git で戻します。",
       "手元の /code-review は REVIEW.md を読みません。両方に効かせたい規則は CLAUDE.md に書きます。",
       "GITHUB_TOKEN で push しても CI のワークフローは起動しません。権限の追加では直りません。"
@@ -1348,6 +1883,90 @@
       {
        "title": "Commands",
        "url": "https://code.claude.com/docs/en/commands"
+      }
+     ],
+     "points": [
+      "429・500・529 は指数バックオフ（倍々に待つ）で再試行し、400・401・403 は送る側を直す",
+      "構造化出力（JSON の形をそろえる機能）で minimum・maximum を使うと 400 になる",
+      "成功分を使い失敗分だけ再実行するなら Promise.allSettled（全件の成否を返す）を選ぶ",
+      "Bash だけで変えたファイルは /rewind（復元点に戻す）では戻らないので Git で戻す",
+      "手元の /code-review は REVIEW.md を読まないので、共通の規則は CLAUDE.md に書く"
+     ],
+     "diagrams": [
+      {
+       "type": "tree",
+       "title": "API エラーの対処",
+       "q": "ステータスコード（結果の番号）は？",
+       "branches": [
+        {
+         "when": "400・401・403",
+         "a": "送る側を直す",
+         "note": "同じ内容を何度送っても失敗する。SDK の自動再試行の対象外"
+        },
+        {
+         "when": "429・500・529",
+         "q": "月の利用上限の 429？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "待っても回復しない",
+           "note": "enforced_spend_limit_reached。retry-after がない"
+          },
+          {
+           "when": "いいえ",
+           "a": "指数バックオフ（倍々に待つ）で再試行",
+           "note": "SDK は既定で2回。retry-after があれば従う"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "一覧 API の続きの取り方",
+       "steps": [
+        {
+         "actor": "アプリ",
+         "text": "一覧 API を呼ぶ",
+         "note": "1ページ既定20件"
+        },
+        {
+         "actor": "API",
+         "text": "has_more（続きがあるか）と last_id を返す"
+        },
+        {
+         "actor": "アプリ",
+         "text": "last_id を after_id に渡して次を取る",
+         "note": "first_id でも offset 方式でもない"
+        }
+       ],
+       "loop": "has_more が true の間 2〜3 をくり返す"
+      },
+      {
+       "type": "table",
+       "title": "チェックポイント（/rewind）と Git のコミット",
+       "head": [
+        "",
+        "/rewind",
+        "Git のコミット"
+       ],
+       "rows": [
+        [
+         "戻せるもの",
+         "Claude の編集ツールで変えたファイルと会話",
+         "コミットした全体の状態"
+        ],
+        [
+         "戻せないもの",
+         "Bash だけで変わったファイル",
+         "コミットしていない変更"
+        ],
+        [
+         "共有",
+         "自分のセッションの中だけ",
+         "チームで共有・レビューできる"
+        ]
+       ]
       }
      ],
      "weight": 7.4
@@ -1491,7 +2110,6 @@
      ],
      "pitfalls": [
       "「Agent SDK も claude -p と同じく既定で Claude Code のプロンプトを使う」は誤り。SDK の既定は最小のプロンプト。",
-      "「setting_sources でシステムプロンプトの中身が変わる」は誤り。CLAUDE.md などを読むかどうかの設定。",
       "「claude.ai のアカウントの Instructions やスキルが API にも効く」は誤り。API には付かず、スキルも同期されない。",
       "「サンドボックスと deny ルールがあるのでプラグインは安全」は誤り。フックや MCP サーバーはサンドボックスの外で動く。",
       "「fork すればファイルも分かれる」「resume すればファイルも戻る」は誤り。ファイルは file checkpointing で戻す。",
@@ -1570,6 +2188,98 @@
       {
        "title": "Using agent memory",
        "url": "https://platform.claude.com/docs/en/managed-agents/memory"
+      }
+     ],
+     "points": [
+      "claude.ai の system prompt（最初の指示）は API に付かない。要るなら自分で書く",
+      "Agent SDK は systemPrompt 未指定だと最小のプロンプトで、安全の指示もない",
+      "カスタムスキルはサーフェス（使う場所）間で同期されず、それぞれに上げる",
+      "お金が動く操作はツールで渡さない。strict: true は入力の形だけを保証する",
+      "プラグインのフックや MCP サーバーはサンドボックスの外で動く。入れる前に読む"
+     ],
+     "diagrams": [
+      {
+       "type": "tree",
+       "title": "Agent SDK のシステムプロンプトの選び方",
+       "q": "systemPrompt を指定する？",
+       "branches": [
+        {
+         "when": "しない",
+         "a": "最小のプロンプト",
+         "note": "ツール呼び出しだけ。安全の指示なし"
+        },
+        {
+         "when": "する",
+         "q": "人が見ながら進めるコーディングツール？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "claude_code プリセット",
+           "note": "append で末尾に足す"
+          },
+          {
+           "when": "いいえ",
+           "a": "独自の文字列",
+           "note": "安全の指示も自分で書く"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "サーフェスごとの違い",
+       "head": [
+        "",
+        "claude.ai",
+        "API",
+        "Claude Code"
+       ],
+       "rows": [
+        [
+         "最初の指示",
+         "日付などの system prompt が付く",
+         "何も付かない",
+         "Claude Code のプロンプト"
+        ],
+        [
+         "スキルの実行環境",
+         "設定しだい",
+         "ネットワークに出られない",
+         "利用者と同じネットワーク"
+        ]
+       ]
+      },
+      {
+       "type": "table",
+       "title": "セッションの機能",
+       "head": [
+        "機能",
+        "何をするか",
+        "戻らないもの"
+       ],
+       "rows": [
+        [
+         "continue",
+         "今のディレクトリの最新を続ける",
+         "複数の利用者だと他人の会話に続く"
+        ],
+        [
+         "resume",
+         "session_id のセッションに戻る",
+         "ファイルの状態"
+        ],
+        [
+         "fork",
+         "会話の写しから新しいセッション",
+         "ファイルは分かれない"
+        ],
+        [
+         "file checkpointing",
+         "ツールで変えたファイルを戻す",
+         "会話・Bash だけの変更"
+        ]
+       ]
       }
      ],
      "weight": 8.6
@@ -1701,8 +2411,7 @@
       "「ユーザー設定 ~/.claude/settings.json に書けば共有ファイルより優先される」は誤り。ユーザー設定は共有プロジェクト設定より下の層。",
       "「deniedModels を各リポジトリの .claude/settings.json に書く」は誤り。管理設定からだけ読まれる。",
       "「model を固定すれば利用者は新しい版を使えない」は誤り。model は最初の選択で、/model で切り替えられる。",
-      "「^2.1.0 なら 2.2 には移らない」は誤り。2.1.x だけにするのは ~2.1.0。",
-      "「サーバー管理設定で Bedrock の利用者にもモデルの env を配れる」は誤り。サードパーティの接続先には届かない。"
+      "「^2.1.0 なら 2.2 には移らない」は誤り。2.1.x だけにするのは ~2.1.0。"
      ],
      "terms": [
       "claude-md",
@@ -1764,6 +2473,89 @@
       {
        "title": "Host a marketplace",
        "url": "https://code.claude.com/docs/en/plugins/host-marketplace"
+      }
+     ],
+     "points": [
+      "必ず止めたい操作は settings.json（設定ファイル）の permissions.deny に置く",
+      "CLAUDE.md（毎回読む指示ファイル）は指針で、守らせる強制力はない",
+      "管理設定が最上位で、ユーザー設定は共有のプロジェクト設定より下の層",
+      "availableModels・deniedModels（モデルの制限）は管理設定からだけ読まれる",
+      "依存を 2.1.x だけにするなら ~2.1.0。^2.1.0 は 2.2 にも移る"
+     ],
+     "diagrams": [
+      {
+       "type": "flow",
+       "title": "settings.json の優先順位（上ほど強い）",
+       "steps": [
+        {
+         "text": "管理設定（managed settings）",
+         "note": "利用者は上書きできない"
+        },
+        {
+         "text": "コマンドライン（--settings）"
+        },
+        {
+         "text": ".claude/settings.local.json",
+         "note": "自分だけの上書き"
+        },
+        {
+         "text": ".claude/settings.json",
+         "note": "コミットしてチームで共有"
+        },
+        {
+         "text": "~/.claude/settings.json（ユーザー設定）"
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "CLAUDE.md と settings.json",
+       "head": [
+        "",
+        "CLAUDE.md",
+        "settings.json"
+       ],
+       "rows": [
+        [
+         "働き",
+         "毎回読み込まれる指示",
+         "クライアントが守らせる設定"
+        ],
+        [
+         "強さ",
+         "判断に影響するが強制しない",
+         "Claude の判断と関係なく効く"
+        ],
+        [
+         "置くもの",
+         "書き方や手順の方針",
+         "必ず止めたい操作・使えるモデル"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "モデルの版をどう管理するか",
+       "q": "何をしたい？",
+       "branches": [
+        {
+         "when": "最初に使うモデルを決める",
+         "a": "model",
+         "note": "/model で利用者が切り替えられる"
+        },
+        {
+         "when": "選べるモデルを絞る",
+         "a": "availableModels（管理設定）"
+        },
+        {
+         "when": "特定の新しい版を止める",
+         "a": "deniedModels（管理設定）"
+        },
+        {
+         "when": "Bedrock などで版を固定",
+         "a": "モデルの環境変数を版付き ID に"
+        }
+       ]
       }
      ],
      "weight": 4.1
@@ -1905,7 +2697,6 @@
       "「覚えて」で入る自動メモリはマシンごとで、チームには共有されない。チームの指示はリポジトリの CLAUDE.md",
       "disable-model-invocation: true（人だけが呼べる）と user-invocable: false（Claude だけが呼べる）は逆",
       "claude -p は既定で Manual。許可のない呼び出しは拒否される（必ず対話で許可を求める、は誤り）",
-      "同じ会話から2つの方針を試すなら --fork-session か /branch。--continue や同じセッションの2端末再開は元に書き足す",
       "/btw はツールを使えない。まだ読んでいないファイルを調べさせるならサブエージェント"
      ],
      "terms": [
@@ -1959,6 +2750,106 @@
       {
        "title": "Settings",
        "url": "https://code.claude.com/docs/en/settings"
+      }
+     ],
+     "points": [
+      "チームでそろえる指示は、リポジトリの CLAUDE.md（最初に読む指示ファイル）に置く",
+      "CLAUDE.md は強制しない。必ず止めたい操作は管理設定の permissions.deny（拒否ルール）に置く",
+      "claude -p（ヘッドレスモード）は既定で Manual。許可のない呼び出しは拒否される",
+      "元を残して別の方針を試すなら --fork-session か /branch（会話を分ける）を使う",
+      "disable-model-invocation: true（人だけが呼べる）は副作用のある手順に使う"
+     ],
+     "diagrams": [
+      {
+       "type": "nest",
+       "title": "CLAUDE.md の4つの置き場所",
+       "label": "CLAUDE.md（最初に読む指示ファイル）",
+       "note": "見つかったものはすべてつなげて読む",
+       "children": [
+        {
+         "label": "組織（managed policy）",
+         "note": "管理者が配る"
+        },
+        {
+         "label": "ユーザー ~/.claude/CLAUDE.md",
+         "note": "自分のすべてのプロジェクト"
+        },
+        {
+         "label": "プロジェクト ./CLAUDE.md",
+         "note": "リポジトリに置きチームで共有"
+        },
+        {
+         "label": "ローカル ./CLAUDE.local.md",
+         "note": "自分だけ・このリポジトリだけ"
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "権限モード（実行前の確認の設定）",
+       "head": [
+        "モード",
+        "何をするか",
+        "使う場面"
+       ],
+       "rows": [
+        [
+         "Manual（default）",
+         "許可のない呼び出しは拒否",
+         "-p と Agent SDK の既定"
+        ],
+        [
+         "plan",
+         "調べて計画を書くだけ",
+         "承認まで編集させない"
+        ],
+        [
+         "acceptEdits",
+         "ファイル編集を確認なしで許す",
+         "編集を先に進めてよい"
+        ],
+        [
+         "auto",
+         "分類器が1件ずつ確かめる",
+         "確認を減らす（安全の保証なし）"
+        ],
+        [
+         "dontAsk",
+         "事前許可のない呼び出しを拒否",
+         "無人で読み取りに絞る"
+        ],
+        [
+         "bypassPermissions",
+         "すべての確認を飛ばす",
+         "隔離したコンテナや VM だけ"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "セッションの再開と分岐",
+       "q": "元の会話を残したまま試す？",
+       "branches": [
+        {
+         "when": "はい",
+         "a": "--resume に --fork-session、または /branch",
+         "note": "写しの新しいセッションで始まる"
+        },
+        {
+         "when": "いいえ",
+         "q": "どのセッションを開く？",
+         "branches": [
+          {
+           "when": "今のディレクトリで最新",
+           "a": "--continue"
+          },
+          {
+           "when": "名前や ID で指定",
+           "a": "--resume"
+          }
+         ]
+        }
+       ]
       }
      ],
      "weight": 3.1
@@ -2061,7 +2952,6 @@
      ],
      "pitfalls": [
       "stop_reason が end_turn なら上限で切れたのではない。max_tokens を上げる・続きを頼むは max_tokens のときの対処",
-      "400・401 を送り直しても直らない。直すのはリクエストやキー",
       "error_max_turns は予算切れ（error_max_budget_usd）とは別。session_id で再開して上限を上げる",
       "success でも structured_output がないことがある。subtype と structured_output の両方を確かめる",
       "モデルの版でエスケープが変わった失敗は temperature やツール説明では直らない。JSON を解析して比べる",
@@ -2122,6 +3012,95 @@
       {
        "title": "Troubleshooting tool use",
        "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/troubleshooting-tool-use"
+      }
+     ],
+     "points": [
+      "まずトレース（処理全体の記録）や /context で正しく届いたかを確かめ、次にプロンプトを直す",
+      "429・500・529 は待って再試行、400・401・403 はリクエストやキーを直す",
+      "error_max_turns（ターンの上限）は session_id で再開し、上限を上げて続ける",
+      "success でも structured_output（構造化出力）がないことがある。両方を確かめる",
+      "読み込まれているのに守られない指示は、強調せず食い違いを消して短くする"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "連携部分の問題とモデルの出力の問題",
+       "head": [
+        "",
+        "連携部分（コード・設定・経路）",
+        "モデルの出力"
+       ],
+       "rows": [
+        [
+         "状態",
+         "届いていない・応答の扱いが壊れる",
+         "届いているが内容が違う"
+        ],
+        [
+         "始まり方",
+         "設定やコードの変更直後から毎回",
+         "入力や指示の内容で変わる【解説】"
+        ],
+        [
+         "直し方",
+         "設定・コード・中継・スキーマ",
+         "指示の書き方・例・モデル選び"
+        ],
+        [
+         "効かない手",
+         "モデル替え・プロンプト強化",
+         "連携部分の作り直し"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "HTTP エラーで再試行するか",
+       "q": "ステータスは 429・500・529？",
+       "branches": [
+        {
+         "when": "はい",
+         "q": "enforced_spend_limit_reached？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "月の支出上限。待っても直らない"
+          },
+          {
+           "when": "いいえ",
+           "a": "retry-after か指数バックオフで再試行",
+           "note": "指数バックオフ＝待ち時間を倍々に延ばす"
+          }
+         ]
+        },
+        {
+         "when": "400・401・403・404・413",
+         "a": "送り直さず、リクエストやキーを直す"
+        }
+       ]
+      },
+      {
+       "type": "nest",
+       "title": "Agent SDK のトレースの入れ子",
+       "label": "claude_code.interaction（1ターン）",
+       "note": "CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1 が要る",
+       "children": [
+        {
+         "label": "llm_request（API 呼び出し）"
+        },
+        {
+         "label": "tool（ツール）",
+         "children": [
+          {
+           "label": "blocked_on_user（許可待ち）",
+           "note": "大半なら原因は承認待ち"
+          },
+          {
+           "label": "execution（実行）"
+          }
+         ]
+        }
+       ]
       }
      ],
      "weight": 2.6
@@ -2272,7 +3251,6 @@
      "pitfalls": [
       "キャッシュから読んだ入力はコンテキストウィンドウに数えない、は誤り。キャッシュは料金が変わるだけです。",
       "temperature を 0 にすれば毎回同じ回答になる、は誤り。Opus 5.5 では既定値以外を送ると 400 にもなります。",
-      "Claude 4.7 以降で budget_tokens を小さくしたり max_tokens を上げたりしても 400 は直りません。type を adaptive にし、effort で調整します。",
       "入力が超えたら API が古い会話を自動で削る、は誤り。入力だけで超えると 400 です。",
       "高速モードは TTFT を縮める、Batch API と併用できる、は誤り。速くなるのは OTPS で、Batch とは併用できません。",
       "思考トークンは表示されないので課金されない、は誤り。出力トークンとして課金され、max_tokens にも数えます。"
@@ -2326,6 +3304,113 @@
       {
        "title": "Claude Opus 5.5 migration guide",
        "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
+      }
+     ],
+     "points": [
+      "料金・出力の上限・レート制限（使える量の上限）は、すべてトークン数で数える",
+      "コンテキストウィンドウ（参照できる全量）には出力・思考・キャッシュ読み出しも数える",
+      "temperature（ランダムさ）を0にしても毎回同じ回答にはならない",
+      "Claude 4.7 以降の思考は適応型思考（深さを Claude が決める）で、effort で調整する",
+      "高速モードが速くするのは OTPS（1秒の出力量）で、TTFT（最初の1文字まで）ではない"
+     ],
+     "diagrams": [
+      {
+       "type": "nest",
+       "title": "コンテキストウィンドウに数えるもの",
+       "label": "コンテキストウィンドウ（参照できる全量）",
+       "note": "現行モデルは 1M トークン。学習データは入らない",
+       "children": [
+        {
+         "label": "入力",
+         "children": [
+          {
+           "label": "システムプロンプト（最初の指示）"
+          },
+          {
+           "label": "すべてのメッセージ"
+          },
+          {
+           "label": "ツール定義"
+          },
+          {
+           "label": "キャッシュから読んだ入力",
+           "note": "キャッシュは料金が変わるだけ"
+          }
+         ]
+        },
+        {
+         "label": "出力（その回に生成する分）",
+         "children": [
+          {
+           "label": "思考",
+           "note": "出力トークンとして課金"
+          },
+          {
+           "label": "回答"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "拡張思考と適応型思考",
+       "head": [
+        "",
+        "拡張思考（extended）",
+        "適応型思考（adaptive）"
+       ],
+       "rows": [
+        [
+         "指定",
+         "type: enabled＋budget_tokens",
+         "type: adaptive＋effort"
+        ],
+        [
+         "思考の量を決めるのは",
+         "自分（budget_tokens）",
+         "Claude がリクエストごと"
+        ],
+        [
+         "Claude 4.7 以降",
+         "400 エラー",
+         "これだけ使える"
+        ],
+        [
+         "厳密な上限",
+         "max_tokens",
+         "max_tokens"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "effort（考える量の目安）の選び方",
+       "q": "どんな作業？",
+       "branches": [
+        {
+         "when": "単純な作業・サブエージェント",
+         "a": "low"
+        },
+        {
+         "when": "速さ・費用・性能の釣り合い",
+         "a": "medium",
+         "note": "Opus 5.5・Haiku 5.5 の既定"
+        },
+        {
+         "when": "複雑な推論・難しいコーディング",
+         "a": "high",
+         "note": "多くのモデルの既定"
+        },
+        {
+         "when": "30分を超えるエージェント作業",
+         "a": "xhigh"
+        },
+        {
+         "when": "最も深い推論",
+         "a": "max"
+        }
+       ]
       }
      ],
      "weight": 5.2
@@ -2447,7 +3532,6 @@
      ],
      "pitfalls": [
       "SDK を使えばレート制限の上限や料金が変わる、は誤り。SDK は HTTP の呼び出しを包むだけです。",
-      "SDK を版上げすれば anthropic-workspace-id も自動で付く、は誤り。必要なら default_headers などで自分で渡します。",
       "ストリーミングは 200 が返れば安心、は誤り。200 の後に error イベントが届くことがあります。",
       "message_delta の usage を足し合わせる、は誤り。累積値なので最後の値を使います。",
       "429 が出たら API キーを分ける、は誤り。レート制限は組織単位で、急な増加なら徐々に増やし、retry-after を守ります。",
@@ -2502,6 +3586,98 @@
       {
        "title": "Agent SDK hosting",
        "url": "https://code.claude.com/docs/en/agent-sdk/hosting"
+      }
+     ],
+     "points": [
+      "SDK（開発用の道具一式）は HTTP を包むだけで、料金・レート制限・能力は同じ",
+      "Messages API はステートレス（前の会話を覚えない）なので、毎回履歴を全部送る",
+      "SDK は 429・5xx などを既定2回リトライし、400・401 は出し直しても直らない",
+      "ストリーミングは SSE（一方向に流す方式）で、WebSocket（双方向）ではない",
+      "非ストリーミングで10分を超えそうなら、ストリーミングか Batches API にする"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "SDK と HTTP 直接（curl）",
+       "head": [
+        "",
+        "SDK",
+        "HTTP で直接（curl など）"
+       ],
+       "rows": [
+        [
+         "呼ぶ API",
+         "同じ REST API",
+         "同じ REST API"
+        ],
+        [
+         "ヘッダー（付帯情報）",
+         "認証・版・content-type を自動",
+         "自分で付ける"
+        ],
+        [
+         "リトライ",
+         "既定で2回自動",
+         "自分で書く"
+        ],
+        [
+         "料金・レート制限・能力",
+         "同じ",
+         "同じ"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "エラーが出たときの判断",
+       "q": "どのエラー？",
+       "branches": [
+        {
+         "when": "接続エラー・408・409・429・5xx",
+         "a": "SDK が自動で出し直す（既定2回）",
+         "note": "retry-after（待つ秒数）があれば守る"
+        },
+        {
+         "when": "400・401",
+         "a": "出し直しても直らない。リクエストかキーを直す"
+        },
+        {
+         "when": "429 enforced_spend_limit_reached",
+         "a": "月の支出上限。リトライしても直らない"
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "ストリーミング（SSE）のイベントの順番",
+       "steps": [
+        {
+         "actor": "API",
+         "text": "message_start"
+        },
+        {
+         "actor": "API",
+         "text": "content_block_start"
+        },
+        {
+         "actor": "API",
+         "text": "content_block_delta（文字の断片）",
+         "note": "複数回届く。文字は text_delta"
+        },
+        {
+         "actor": "API",
+         "text": "content_block_stop"
+        },
+        {
+         "actor": "API",
+         "text": "message_delta（stop_reason・usage）",
+         "note": "usage は累積値。足さずに最後の値を使う"
+        },
+        {
+         "actor": "API",
+         "text": "message_stop"
+        }
+       ]
       }
      ],
      "weight": 6.1
@@ -2673,6 +3849,101 @@
        "url": "https://platform.claude.com/docs/en/models/opus-5-5/migration-guide"
       }
      ],
+     "points": [
+      "「常に最上位を選ぶ」は誤り。日常は Sonnet 5.5、多くの作業は Opus 5.5 から",
+      "モデルを替える前に、effort（考える量の目安）の調整を評価セットで試す",
+      "費用はトークン単価ではなく、完了したタスク1件あたりの費用で比べる",
+      "thinking の受け付ける値はモデルごとに違うので、ルーターでは設定を分ける",
+      "ID を替えるだけでは移行できない。移行ガイドで壊れる変更（400 になる変更）を確かめる"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "モデルの階層と向く作業",
+       "head": [
+        "モデル",
+        "向く作業",
+        "入力・出力の単価（$/MTok）"
+       ],
+       "rows": [
+        [
+         "Haiku",
+         "分類・抽出・振り分け",
+         "最安・遅延が最短"
+        ],
+        [
+         "Sonnet 5.5",
+         "日常のコード生成・データ分析",
+         "$2・$10"
+        ],
+        [
+         "Opus 5.5",
+         "長時間のコーディング・複雑な推論",
+         "$4・$20"
+        ],
+        [
+         "Fable 5.1",
+         "難しい推論・数時間続く仕事",
+         "$10・$50（遅延は最大）"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "どのモデルから始めるか",
+       "q": "どんな作業？",
+       "branches": [
+        {
+         "when": "大量で遅延に厳しい分類・抽出",
+         "a": "Haiku"
+        },
+        {
+         "when": "日常のコード生成・データ分析",
+         "a": "Sonnet 5.5 から"
+        },
+        {
+         "when": "それ以外の多くの作業",
+         "q": "Opus 5.5 で effort を xhigh・max にしても足りない？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "Fable 5.1 へ"
+          },
+          {
+           "when": "いいえ",
+           "a": "Opus 5.5 のまま"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "壊れる変更と振る舞いの変化",
+       "head": [
+        "",
+        "壊れる変更（breaking change）",
+        "振る舞いの変化（behavior change）"
+       ],
+       "rows": [
+        [
+         "起きること",
+         "API が 400 で拒む",
+         "通るが出力の傾向が変わる"
+        ],
+        [
+         "例",
+         "enabled の拡張思考・prefill・temperature",
+         "effort の既定が medium・思考の欄が空"
+        ],
+        [
+         "気づき方",
+         "エラーで分かる",
+         "評価セットで測って気づく"
+        ]
+       ]
+      }
+     ],
      "weight": 2.7
     },
     {
@@ -2794,8 +4065,7 @@
       "時刻など毎回変わるブロックにブレークポイントを置く、は誤り。毎回同じ内容の最後のブロックに置きます。",
       "履歴が伸びて当たらないので1時間の TTL にする、は誤り。原因が20ブロックの遡りの範囲なら、前回の書き込み位置に2つ目のブレークポイントを置きます。",
       "input_tokens だけで入力費用を集計する、は誤り。キャッシュを使うと合計は3つの和です。",
-      "task_budget で費用を確実に止められる、は誤り。強制の上限は max_tokens です。",
-      "長い TTL と短い TTL は順不同、は誤り。長い TTL を前に置きます。"
+      "task_budget で費用を確実に止められる、は誤り。強制の上限は max_tokens です。"
      ],
      "terms": [
       "usage-tokens",
@@ -2840,6 +4110,90 @@
       {
        "title": "Optimizing for cost and intelligence",
        "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+      }
+     ],
+     "points": [
+      "キャッシュを使うと、入力の合計は input・cache_creation・cache_read の3つの和",
+      "ブレークポイント（キャッシュの区切り）は毎回同じ内容の最後のブロックに置く",
+      "読み出しは基本0.1倍、Opus 5.5・Sonnet 5.5 は0.05倍。書き込みは1.25倍か2倍",
+      "強制の上限は max_tokens。task_budget（ループ全体の目安）は助言にすぎない",
+      "費用はモデル単価に倍率を重ねて掛け、サーバーツールの料金を足して見積もる"
+     ],
+     "diagrams": [
+      {
+       "type": "nest",
+       "title": "usage の入力トークンの内訳",
+       "label": "入力の合計（3つの和）",
+       "children": [
+        {
+         "label": "input_tokens",
+         "note": "最後のブレークポイントより後ろの分だけ"
+        },
+        {
+         "label": "cache_creation_input_tokens（書き込み）",
+         "children": [
+          {
+           "label": "ephemeral_5m（5分）"
+          },
+          {
+           "label": "ephemeral_1h（1時間）"
+          }
+         ]
+        },
+        {
+         "label": "cache_read_input_tokens（読み出し）",
+         "note": "多くのモデルで ITPM に数えない"
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "キャッシュが効く順番（先頭から）",
+       "steps": [
+        {
+         "text": "tools（ツール定義）",
+         "note": "変えるとキャッシュ全体が無効"
+        },
+        {
+         "text": "system（システムプロンプト）"
+        },
+        {
+         "text": "messages の変わらない部分"
+        },
+        {
+         "text": "ブレークポイント（cache_control）",
+         "note": "ここまでが一字一句同じならヒット"
+        },
+        {
+         "text": "毎回変わる値（時刻・質問）は後ろへ"
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "キャッシュの書き込みと読み出し",
+       "head": [
+        "",
+        "書き込み",
+        "読み出し"
+       ],
+       "rows": [
+        [
+         "単価",
+         "5分は1.25倍、1時間は2倍",
+         "0.1倍（Opus 5.5・Sonnet 5.5 は0.05倍）"
+        ],
+        [
+         "ITPM（1分の入力上限）",
+         "数える",
+         "多くのモデルで数えない"
+        ],
+        [
+         "起きるとき",
+         "最初・内容が変わった・寿命切れ",
+         "プレフィックス一致かつ寿命内"
+        ]
+       ]
       }
      ],
      "weight": 2.8
@@ -2976,7 +4330,6 @@
      "pitfalls": [
       "プロンプトキャッシュは料金が変わるだけで、ウィンドウの消費は減らない",
       "max_tokens は出力の上限で、入力に入る量は変わらない",
-      "ウィンドウに収まっても全部入れるのが最善ではない（context rot）",
       "サブエージェントは親の履歴もシステムプロンプトも受け取らない。要る事実は指示文に書く",
       "コンパクションの後、画像・文書・範囲内の system メッセージの指示と effort は送り直す・言い直す",
       "context editing の後もアプリの履歴は消さない。手元で消すとキャッシュと思考ブロックが無効になりうる"
@@ -3029,6 +4382,110 @@
       {
        "title": "Prompting best practices",
        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+      }
+     ],
+     "points": [
+      "ウィンドウに収まっても全部入れない。トークンが増えるほど想起が落ちる（context rot）",
+      "プロンプトキャッシュ（前半の使い回し）は料金と速さだけ変わり、ウィンドウ消費は減らない",
+      "サブエージェント（作業を任す別エージェント）には指示文だけが渡る。要る事実は書いて渡す",
+      "context editing（古いツール結果を API 側で消す機能）の後も、アプリの履歴は消さない",
+      "コンパクション（古い会話の要約化）の後、画像・文書・system の指示・effort は送り直す"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "文脈を小さく保つ手段",
+       "head": [
+        "手段",
+        "何をするか",
+        "向く場面"
+       ],
+       "rows": [
+        [
+         "応答の絞り込み",
+         "最初から少なく返す",
+         "ツールを自分で変えられる"
+        ],
+        [
+         "プログラムによるツール呼び出し",
+         "途中の結果を文脈に入れない",
+         "多数の項目に同じ処理"
+        ],
+        [
+         "ツール結果のクリア",
+         "古い結果をサーバー側で消す",
+         "ツールを多用する長い作業"
+        ],
+        [
+         "コンパクション",
+         "古い会話を要約に置き換える",
+         "長い会話全体"
+        ],
+        [
+         "メモリツール",
+         "ウィンドウ外のファイルに残す",
+         "要約・新セッション後も要る情報"
+        ],
+        [
+         "サブエージェント",
+         "別の文脈で作業し報告だけ返す",
+         "大量の出力が出る作業"
+        ]
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "サブエージェントで文脈を分ける",
+       "steps": [
+        {
+         "actor": "親",
+         "text": "委任の指示文（prompt）だけを渡す",
+         "note": "親の履歴・system は渡らない"
+        },
+        {
+         "actor": "サブエージェント",
+         "text": "自分のウィンドウで作業する",
+         "note": "途中のツール結果はこの中に残る"
+        },
+        {
+         "actor": "サブエージェント",
+         "text": "最後の報告だけを返す"
+        },
+        {
+         "actor": "親",
+         "text": "文脈が小さいまま次へ進む"
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "ツール結果のクリア（clear_tool_uses）",
+       "steps": [
+        {
+         "actor": "API",
+         "text": "入力が trigger を超えたか見る",
+         "note": "既定は10万入力トークン"
+        },
+        {
+         "actor": "API",
+         "text": "古いツール結果から消し、置き換え文にする",
+         "note": "exclude_tools のツールは消さない"
+        },
+        {
+         "actor": "API",
+         "text": "直近 keep 件は残す",
+         "note": "既定は3件"
+        },
+        {
+         "actor": "API",
+         "text": "消した内容を applied_edits に出す"
+        },
+        {
+         "actor": "アプリ",
+         "text": "完全な履歴を持ち続ける",
+         "note": "手元で消すとキャッシュが無効になりうる"
+        }
+       ]
       }
      ],
      "weight": 3.8
@@ -3146,8 +4603,7 @@
       "「Markdown を使わないで」と強く繰り返すより、望む形（段落の文章）を書く",
       "stop_sequences は生成を止めるだけで、前置きや記号を消す手段ではない",
       "prefill は Claude 4.6 以降で 400。system の指示や structured outputs に置き換える",
-      "大文字や強調語では、あいまいな指示はあいまいなまま",
-      "遅延と費用の目標は、プロンプトを削るより別のモデルを同じ評価セットで測る"
+      "大文字や強調語では、あいまいな指示はあいまいなまま"
      ],
      "terms": [
       "system-prompt",
@@ -3201,6 +4657,88 @@
       {
        "title": "Prompting Claude Haiku 5.5",
        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5"
+      }
+     ],
+     "points": [
+      "役割と守らせたい規則は system（運用者の指示）に置く。食い違えば system が優先",
+      "few-shot（例を付ける方法）は本番に近い多様な例を3〜5個、<example> で囲む",
+      "第三者の内容は tool_result（ツールの結果）に入れ、自分の指示は入れない",
+      "prefill（返答の書き出しの先書き）は 4.6 以降 400。system の指示などに替える",
+      "遅延と費用は、プロンプトを削るより effort（考える深さ）やモデルの選択で直す"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "system と user",
+       "head": [
+        "",
+        "system",
+        "user"
+       ],
+       "rows": [
+        [
+         "誰の言葉か",
+         "運用者（アプリを作る側）",
+         "利用者"
+        ],
+        [
+         "食い違ったとき",
+         "優先される",
+         "system に従う"
+        ],
+        [
+         "置くもの",
+         "役割・守らせたい規則",
+         "その時々の依頼や入力"
+        ],
+        [
+         "途中で足すとき",
+         "会話途中の system メッセージ",
+         "最後の tool_result の後ろに text"
+        ]
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "反復による改善（公式の流れ）",
+       "steps": [
+        {
+         "text": "成功の基準を測れる形で決め、テストケースを作る"
+        },
+        {
+         "text": "最初のプロンプトを書く"
+        },
+        {
+         "text": "テストして直す",
+         "note": "採点はコードが最速。判断はルーブリック（基準表）で別モデル"
+        },
+        {
+         "text": "最終確認"
+        },
+        {
+         "text": "出荷"
+        }
+       ],
+       "loop": "基準を満たすまで 3 をくり返す"
+      },
+      {
+       "type": "tree",
+       "title": "何で直すか",
+       "q": "困っていることは？",
+       "branches": [
+        {
+         "when": "指示の取り違え・出力の形・くせ",
+         "a": "プロンプトで直す（指示や例を足す・外す）"
+        },
+        {
+         "when": "考える量・待ち時間・費用",
+         "a": "effort やモデルの選択で直す"
+        },
+        {
+         "when": "第三者の内容を指示と取り違える",
+         "a": "tool_result に入れ、出どころを示す"
+        }
+       ]
       }
      ],
      "weight": 4.6
@@ -3311,7 +4849,6 @@
       "構造化出力でも enum の大文字小文字は保証されない。stop_reason を見ても見つからないので、大小を無視して比べる",
       "スキーマどおりでも中身は検算する。strict tool use も中身は保証しない",
       "拒否は HTTP 200 の通常の応答。SDK の例外やエラー率では見えない",
-      "explanation は解析せず表示だけ。分岐は stop_reason か stop_details.type",
       "Batch の succeeded でも stop_reason が refusal のことがある",
       "reasoning_extraction は再試行や fallback では直らない。推論を出力の項目に書かせる指示を直す"
      ],
@@ -3358,6 +4895,89 @@
       {
        "title": "Versioning",
        "url": "https://platform.claude.com/docs/en/api/versioning"
+      }
+     ],
+     "points": [
+      "構造化出力（JSON の形をそろえる機能）が保証するのは形だけ。中身はコードで検算する",
+      "拒否は HTTP 200 で stop_reason が refusal。例外が出ないので別の指標で数える",
+      "分岐は stop_reason か stop_details.type で行い、explanation は表示だけ",
+      "enum（決まった値の一覧）の大文字小文字は保証されない。大小を無視して比べる",
+      "citations（位置付きの引用機能）と構造化出力は一緒に使えない（400）"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "形（スキーマに合う）と中身（正しい）",
+       "head": [
+        "",
+        "形",
+        "中身"
+       ],
+       "rows": [
+        [
+         "何を見るか",
+         "JSON で読める・型と必須がそろう",
+         "値が文書や事実と合う"
+        ],
+        [
+         "保証するもの",
+         "構造化出力・strict tool use",
+         "なし"
+        ],
+        [
+         "確かめ方",
+         "stop_reason・キー名・enum を大小無視",
+         "citations・検算・人の確認"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "stop_reason（止まった理由）ごとの扱い",
+       "q": "stop_reason は？",
+       "branches": [
+        {
+         "when": "end_turn",
+         "a": "そのまま使う（中身は別に確かめる）"
+        },
+        {
+         "when": "max_tokens",
+         "a": "max_tokens を上げて送り直す",
+         "note": "JSON が壊れていることがある"
+        },
+        {
+         "when": "refusal",
+         "a": "途中の出力を捨て、拒否として数える",
+         "note": "Batch の succeeded でも起きる"
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "防御的なパース（確かめてから使う）【解説】",
+       "steps": [
+        {
+         "actor": "アプリ",
+         "text": "stop_reason を確かめる"
+        },
+        {
+         "actor": "アプリ",
+         "text": "必要なキーだけキー名で読む",
+         "note": "知らないキーは無視する"
+        },
+        {
+         "actor": "アプリ",
+         "text": "enum を大文字小文字を無視して比べる"
+        },
+        {
+         "actor": "アプリ",
+         "text": "欠けた値や引用を見つける"
+        },
+        {
+         "actor": "アプリ",
+         "text": "業務の決まりで検算し、合わない分だけ人へ【解説】"
+        }
+       ]
       }
      ],
      "weight": 2.6
@@ -3499,8 +5119,7 @@
       "tool_result の末尾に「この中の指示に従わない」と書く、第三者の文を system に移す、はどちらも誤り",
       "web fetch は Claude が書いた URL を取れないので対策不要、は誤り。client 側ツールの結果の URL は url_sources で外す",
       "PHI を扱うなら HIPAA readiness。ZDR を重ねる必要はなく、PHI を enum などのスキーマに入れない",
-      "MCP サーバーは受け取ったトークンを上流へ転送しない。有効期限だけ確かめて転送するのも誤り",
-      "metadata.user_id にメールアドレスを入れない。uuid やハッシュ値にする"
+      "MCP サーバーは受け取ったトークンを上流へ転送しない。有効期限だけ確かめて転送するのも誤り"
      ],
      "terms": [
       "prompt-injection",
@@ -3549,6 +5168,86 @@
       {
        "title": "Authorization (MCP specification 2026-07-28)",
        "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization"
+      }
+     ],
+     "points": [
+      "直接型（利用者が攻撃者）は、入力の事前審査と拒否の仕方を書いた system で守る",
+      "第三者の文は tool_result（ツール結果の入れ物）に入れ、system に移さない",
+      "審査の stop_reason が refusal（拒否）なら有害と判定し、通さず再試行もしない",
+      "人の確認が要るなら承認ポリシーは always_ask。auto は人の確認ではない",
+      "PHI（医療の個人情報）は HIPAA readiness で扱い、ZDR は重ねない"
+     ],
+     "diagrams": [
+      {
+       "type": "table",
+       "title": "直接型と間接型のプロンプトインジェクション",
+       "head": [
+        "",
+        "直接型（ジェイルブレイク含む）",
+        "間接型"
+       ],
+       "rows": [
+        [
+         "攻撃者",
+         "利用者自身",
+         "第三者（メール・Web・ツール結果）"
+        ],
+        [
+         "信頼できないもの",
+         "利用者",
+         "Claude が読む内容"
+        ],
+        [
+         "主な守り",
+         "入力の事前審査・拒否の system・くり返す人を制限",
+         "tool_result に入れる・出力の審査・読む役と行動する役を分ける"
+        ],
+        [
+         "共通の守り",
+         "レッドチーム（わざと攻撃を試す）と監視",
+         "レッドチームと監視"
+        ]
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "無害性スクリーン（入力の事前審査）",
+       "steps": [
+        {
+         "actor": "アプリ",
+         "text": "利用者の入力を受け取る"
+        },
+        {
+         "actor": "Haiku 5.5",
+         "text": "入力を分類する",
+         "note": "structured outputs（決めた JSON の形）で真偽値を返す"
+        },
+        {
+         "actor": "アプリ",
+         "text": "有害なら止める",
+         "note": "stop_reason が refusal（拒否）も有害として扱う"
+        },
+        {
+         "actor": "Claude 本体",
+         "text": "通った入力にだけ答える"
+        }
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "web fetch の持ち出しをどう防ぐ",
+       "q": "取得先は決まっている？",
+       "branches": [
+        {
+         "when": "はい",
+         "a": "allowed_domains（取得先を絞る）"
+        },
+        {
+         "when": "いいえ",
+         "a": "url_sources（取得元の経路）を絞る",
+         "note": "client 側ツールの結果の URL を外す"
+        }
+       ]
       }
      ],
      "weight": 3.2
@@ -3645,7 +5344,6 @@
      ],
      "pitfalls": [
       "Bash(curl *) を deny に入れれば通信を止められる、は誤り。スクリプトからの通信はサンドボックスで止める",
-      "WebFetch のルールで Bash の通信まで止められる、は誤り。WebFetch ツールにだけ効く",
       "読み取り専用ならホームをまるごとマウントしてよい、は誤り。要るソースだけを認証情報を除いて渡す",
       "CLAUDE.md やシステムプロンプトに書けば守られる、は誤り。保証には権限ルール・フック・サンドボックス",
       "社外送信を止める設定を各自の settings.json に書く、は不十分。管理設定の env で強制する",
@@ -3692,6 +5390,103 @@
       {
        "title": "Content moderation",
        "url": "https://platform.claude.com/docs/en/about-claude/use-case-guides/content-moderation"
+      }
+     ],
+     "points": [
+      "保証が要る制限は、CLAUDE.md や system でなく権限ルール・フック・サンドボックスで止める",
+      "スクリプトや sh -c からの通信はサンドボックス（OS で制限する仕組み）で止める",
+      "コンテナには要るソースだけを、認証情報を除いてマウント（中から見せる）する",
+      "社外送信を止める環境変数は、管理設定（組織が配る最上位の設定）の env に入れる",
+      "審査は危険度を段階にし、高は自動で止め、中は人の確認に回す"
+     ],
+     "diagrams": [
+      {
+       "type": "nest",
+       "title": "指示（案内）と強制",
+       "label": "多層防御（複数の制御を重ねる）",
+       "children": [
+        {
+         "label": "指示（案内）",
+         "note": "お願いで、保証にならない",
+         "children": [
+          {
+           "label": "CLAUDE.md"
+          },
+          {
+           "label": "システムプロンプト"
+          }
+         ]
+        },
+        {
+         "label": "強制",
+         "note": "Claude の判断に関係なく効く",
+         "children": [
+          {
+           "label": "権限ルール（許可・確認・拒否）"
+          },
+          {
+           "label": "フック（決まった時点で動く処理）"
+          },
+          {
+           "label": "サンドボックス（OS で制限）"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "権限ルールとサンドボックス",
+       "head": [
+        "",
+        "権限ルール",
+        "サンドボックス"
+       ],
+       "rows": [
+        [
+         "効く対象",
+         "Claude のツール呼び出し",
+         "Bash などのコマンドと子プロセス"
+        ],
+        [
+         "判定のしかた",
+         "Bash はコマンドの文字列に当てる",
+         "OS の仕組みでファイルと通信先を制限"
+        ],
+        [
+         "止められないもの",
+         "スクリプト内の通信、パスや sh -c",
+         "組み込みツール（権限ルールが効く）"
+        ],
+        [
+         "使い方",
+         "両方を重ねる",
+         "両方を重ねる"
+        ]
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "段階的な審査（コンテンツポリシー）",
+       "steps": [
+        {
+         "actor": "Haiku 5.5",
+         "text": "危険度・カテゴリ・理由を JSON で返す",
+         "note": "件数が多いなら小さいモデルで費用を抑える"
+        },
+        {
+         "actor": "アプリ",
+         "text": "危険度が高いものは自動で止める"
+        },
+        {
+         "actor": "人",
+         "text": "中程度のものだけ確認する"
+        },
+        {
+         "actor": "アプリ",
+         "text": "止めた理由を利用者に伝える"
+        }
+       ]
       }
      ],
      "weight": 2.3
@@ -3824,6 +5619,93 @@
        "url": "https://code.claude.com/docs/en/best-practices"
       }
      ],
+     "points": [
+      "破壊的な操作は PreToolUse（ツール実行前）フックで exit 2 を返して止める",
+      "exit 1 は止めないエラー。通知が出るだけでツールは動く",
+      "PostToolUse（実行後）では取り消せないので、記録や整形に使う",
+      "毎回の検査は canUseTool でなく PreToolUse フックに置く。自動承認は届かない",
+      "社外 PR が来る CI の claude -p には --bare（自動読み込みを省く）を付ける"
+     ],
+     "diagrams": [
+      {
+       "type": "flow",
+       "title": "ツール呼び出しとフックの順番",
+       "steps": [
+        {
+         "actor": "Claude",
+         "text": "ツールを呼ぶ"
+        },
+        {
+         "actor": "フック",
+         "text": "PreToolUse（実行前）で検査",
+         "note": "毎回動き、ほかの判定より先"
+        },
+        {
+         "actor": "ツール",
+         "text": "止められなければ実行される"
+        },
+        {
+         "actor": "フック",
+         "text": "PostToolUse（実行後）で記録・整形",
+         "note": "ここでは取り消せない"
+        }
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "PreToolUse フックの返し方",
+       "q": "どう終わる？",
+       "branches": [
+        {
+         "when": "exit 2",
+         "a": "止める（stderr の内容が理由になる）"
+        },
+        {
+         "when": "exit 1",
+         "a": "止まらない（通知だけ）"
+        },
+        {
+         "when": "exit 0＋permissionDecision: deny",
+         "a": "止める"
+        },
+        {
+         "when": "起動失敗・時間切れ",
+         "a": "onFailure: \"block\" なら止める"
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "PreToolUse と PostToolUse",
+       "head": [
+        "",
+        "PreToolUse",
+        "PostToolUse"
+       ],
+       "rows": [
+        [
+         "動く時点",
+         "ツールが動く前（毎回）",
+         "ツールが成功した後"
+        ],
+        [
+         "exit 2",
+         "呼び出しを止める",
+         "stderr を見せるだけ"
+        ],
+        [
+         "exit 1",
+         "止めない",
+         "止めない"
+        ],
+        [
+         "向く用途",
+         "破壊的な操作の阻止",
+         "実行後の記録や整形【解説】"
+        ]
+       ]
+      }
+     ],
      "weight": 1.0
     },
     {
@@ -3949,7 +5831,6 @@
      ],
      "pitfalls": [
       "本番を後任者の個人キーに差し替える、期限 Never の個人キーにする、は誤り。サービスアカウントキーに切り替える",
-      "所有者のないワークスペースキーなら異動の影響がない、は不適切。legacy で、どの ID の処理かを示せない",
       "SDK を上げれば anthropic-workspace-id を自動で付ける、は誤り。既定ヘッダーで自分で渡す",
       "毎月キーを作り直せば「長く有効な認証情報を置かない」を満たす、は誤り。OIDC で交換し、旧キーは Console で消す",
       "期限切れの 401 はリトライで乗り切れる、は誤り。Admin API で期限を調べて切れる前に差し替える",
@@ -4002,6 +5883,91 @@
       {
        "title": "Python SDK",
        "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+      }
+     ],
+     "points": [
+      "API キーはシークレットマネージャーに置き、ANTHROPIC_API_KEY で SDK に渡す",
+      "CI や本番にはサービスアカウントキー（人でなく処理の ID のキー）を使う",
+      "GitHub Actions は OIDC（ID を証明する標準）で交換し、長く有効なキーを置かない",
+      "期限は Admin API（組織をコードで管理する API）で調べ、切れる前に差し替える",
+      "試すだけの人には、必要なワークスペースにだけ Workspace User を与える"
+     ],
+     "diagrams": [
+      {
+       "type": "tree",
+       "title": "どの認証を使うか",
+       "q": "処理がクラウドの ID（IAM ロールなど）を持つ？",
+       "branches": [
+        {
+         "when": "はい",
+         "a": "Workload Identity Federation",
+         "note": "静的なキーそのものをなくす"
+        },
+        {
+         "when": "いいえ",
+         "q": "CI や本番など共有・自動の処理？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "service account key（サービスアカウントキー）"
+          },
+          {
+           "when": "いいえ",
+           "a": "personal key（個人キー）"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "API キーの種類",
+       "head": [
+        "",
+        "personal key",
+        "service account key",
+        "workspace key（legacy）"
+       ],
+       "rows": [
+        [
+         "誰として動くか",
+         "作った本人",
+         "サービスアカウント",
+         "作ったワークスペース"
+        ],
+        [
+         "作った人が離れたら",
+         "使えなくなる",
+         "動き続ける",
+         "動き続ける"
+        ],
+        [
+         "向く用途",
+         "本人の作業",
+         "CI・本番など共有・自動",
+         "新しい連携には勧めない"
+        ]
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "認証情報を付けるプロキシ",
+       "steps": [
+        {
+         "actor": "エージェント",
+         "text": "認証情報なしでリクエストを出す",
+         "note": "認証情報を一度も見ない"
+        },
+        {
+         "actor": "プロキシ",
+         "text": "境界の外で認証情報を付ける",
+         "note": "TLS（暗号化）を終端するプロキシにする"
+        },
+        {
+         "actor": "外部の API",
+         "text": "認証済みのリクエストを受け取る"
+        }
+       ]
       }
      ],
      "weight": 1.6
@@ -4146,7 +6112,6 @@
       "似たツールの取り違えを strict: true で直そうとする。strict は入力の形を保証するだけで、選び分けは description で直す。",
       "サーバーツールと自作ツールが混ざったターンを pause_turn と同じに扱う。stop_reason は tool_use なので、自作ツールの tool_result を返す。",
       "tool_result の前にテキストを置く。tool_result は content の先頭に置き、文章はその後ろに置く（前に置くと 400）。",
-      "ツールが多すぎるとき、キャッシュでまとめて読ませれば足りると考える。取り違えは減らないので、tool search tool と defer_loading を使う。",
       "Managed Agents の auto を人の確認と思う。人が見る必要があるツールは always_ask にする。",
       "ハーネスの指示を tool_result の中に書く。第三者の内容として扱われるので、user ターンで送る。"
      ],
@@ -4219,6 +6184,97 @@
       {
        "title": "Writing effective tools for AI agents",
        "url": "https://www.anthropic.com/engineering/writing-tools-for-agents"
+      }
+     ],
+     "points": [
+      "ツール使用では Claude は何も実行せず、アプリが tool_use（呼び出しの依頼）を受けて実行する",
+      "tool_result（ツールの結果）は content の先頭に置く。前に文章を置くと 400 エラー",
+      "似たツールの取り違えは strict（入力の形の保証）ではなく description（説明）で直す",
+      "失敗は is_error: true の tool_result で、何が起きて次に何を試すかを書いて返す",
+      "人の承認が要るなら手書きのループ、Managed Agents なら always_ask（承認待ち）を使う"
+     ],
+     "diagrams": [
+      {
+       "type": "flow",
+       "title": "ツール使用の1周（クライアントツール）",
+       "steps": [
+        {
+         "actor": "アプリ",
+         "text": "tools（使えるツールの一覧）を渡す",
+         "note": "各ツールは name・description・input_schema"
+        },
+        {
+         "actor": "Claude",
+         "text": "tool_use（呼び出しの依頼）を返す",
+         "note": "stop_reason は tool_use"
+        },
+        {
+         "actor": "アプリ",
+         "text": "name で振り分けてツールを実行",
+         "note": "dispatch（振り分け）"
+        },
+        {
+         "actor": "アプリ",
+         "text": "tool_result（結果）を content の先頭で返す",
+         "note": "失敗なら is_error: true"
+        },
+        {
+         "actor": "Claude",
+         "text": "end_turn（答え終わり）で止まる"
+        }
+       ],
+       "loop": "stop_reason が tool_use の間、2〜4 をくり返す"
+      },
+      {
+       "type": "tree",
+       "title": "止まった理由ごとの扱い",
+       "q": "stop_reason（止まった理由）は？",
+       "branches": [
+        {
+         "when": "tool_use",
+         "a": "自作ツールを実行し tool_result を返す",
+         "note": "サーバーツールが混ざっても自作分だけ返す"
+        },
+        {
+         "when": "pause_turn（一時停止）",
+         "a": "応答を assistant に足し、同じ tools で再送",
+         "note": "サーバーツールのループが長いとき"
+        },
+        {
+         "when": "end_turn・max_tokens など",
+         "a": "ループを抜けて、それぞれ扱う"
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "description と strict と input_examples",
+       "head": [
+        "",
+        "description（説明）",
+        "strict: true",
+        "input_examples（入力の例）"
+       ],
+       "rows": [
+        [
+         "効くこと",
+         "どれを・いつ使うかの判断",
+         "入力がスキーマに合う保証",
+         "入れ子・省略できる引数の埋め方"
+        ],
+        [
+         "直らないこと",
+         "入力の型の誤り",
+         "似た2つの選び分け",
+         "呼ぶかどうかの判断"
+        ],
+        [
+         "注意点",
+         "1ツール3〜4文以上",
+         "1リクエスト20個まで",
+         "合わない例は 400"
+        ]
+       ]
       }
      ],
      "weight": 4.4
@@ -4338,8 +6394,7 @@
       "利用者が選んで始める定型の依頼を tools にする。モデルが勝手に呼ぶので、prompts にする。",
       "MCP connector で stdio のサーバーや resources を使おうとする。connector はリモートの HTTP のサーバーのツールだけを扱う。",
       "2026-07-28 版で Mcp-Session-Id のセッションに頼る。セッションは取り除かれたので、ハンドル（ID）を引数で渡す。",
-      "annotations の idempotentHint を、呼ぶたびに追加や作成をするツールにも付ける。繰り返すと重複する。",
-      "ツールが多すぎるとき、ツール定義の末尾の cache_control で済ませる。取り違えは減らないので、tool search tool と defer_loading を使う。"
+      "annotations の idempotentHint を、呼ぶたびに追加や作成をするツールにも付ける。繰り返すと重複する。"
      ],
      "terms": [
       "mcp",
@@ -4403,6 +6458,105 @@
       {
        "title": "Connect Claude Code to tools via MCP",
        "url": "https://code.claude.com/docs/en/mcp"
+      }
+     ],
+     "points": [
+      "変更を伴う操作は tools、読むだけのデータは resources、利用者が選ぶ定型は prompts にする",
+      "stdio のサーバーは stdout に MCP 以外を書かない。ログは stderr（ログ用の出力）へ出す",
+      "リモートで公開するサーバーは Streamable HTTP（HTTP の窓口1つで返す方式）にする",
+      "MCP connector（API から MCP のツールを使う機能）はリモート HTTP のツールだけを扱う",
+      "呼び出しをまたぐ状態は、セッションではなくハンドル（ID）を引数で渡す"
+     ],
+     "diagrams": [
+      {
+       "type": "nest",
+       "title": "ホスト・クライアント・サーバーの関係",
+       "label": "ホスト（Claude Code などのアプリ）",
+       "note": "サーバーをまたぐやり取りはホストが制御",
+       "children": [
+        {
+         "label": "クライアント A",
+         "children": [
+          {
+           "label": "サーバー A",
+           "note": "1対1でやり取り"
+          }
+         ]
+        },
+        {
+         "label": "クライアント B",
+         "children": [
+          {
+           "label": "サーバー B",
+           "note": "会話全体もほかのサーバーも見えない"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "サーバーの3つの機能",
+       "head": [
+        "",
+        "tools",
+        "resources",
+        "prompts"
+       ],
+       "rows": [
+        [
+         "使うと決める人",
+         "モデル（Claude）",
+         "アプリ",
+         "利用者"
+        ],
+        [
+         "中身",
+         "変更も伴う関数",
+         "URI（場所）で読むデータ",
+         "引数付きの定型の指示"
+        ],
+        [
+         "例",
+         "請求書の発行",
+         "勘定科目の一覧",
+         "勝手に始めさせない依頼"
+        ],
+        [
+         "Claude Code では",
+         "—",
+         "@ で参照",
+         "/ のコマンド"
+        ]
+       ]
+      },
+      {
+       "type": "tree",
+       "title": "トランスポート（通信の方式）の選び方",
+       "q": "各自の PC で起動するローカルのサーバー？",
+       "branches": [
+        {
+         "when": "はい",
+         "a": "stdio（標準入出力）",
+         "note": "stdout は MCP だけ、ログは stderr"
+        },
+        {
+         "when": "いいえ",
+         "q": "頼まれなくてもイベントを送る？（Claude Code）",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "WebSocket（双方向の接続）",
+           "note": "OAuth に対応しない"
+          },
+          {
+           "when": "いいえ",
+           "a": "Streamable HTTP",
+           "note": "OAuth（利用者ごとの認可）に対応"
+          }
+         ]
+        }
+       ]
       }
      ],
      "weight": 2.1
@@ -4503,7 +6657,6 @@
       "組み込みのツールと同じことをする MCP サーバーを作る。ふつうのコーディング作業は組み込みのツールで足り、手順は Skill にする。",
       "社内の決まりを MCP のツールの説明に長く書き足す。Claude Code は説明を既定で4,096文字で切るので、Skill で渡す。",
       "API の Skill のスクリプトから外部の SaaS や社内のアプリを呼ばせる。コンテナはネットワークにつながらない。",
-      "Claude Code 用に書いた Skill が API でも使えると考える。自作の Skill は使う場所の間で同期されない。",
       "1つのアプリの中だけのデータのために MCP サーバーを作る。使い回す相手がいなければ、アプリで実行する自作ツールで渡す。",
       "スターの多い公開リポジトリの Skill をそのまま入れる。信頼できる出所以外は同梱のファイルをすべて監査する。"
      ],
@@ -4560,6 +6713,96 @@
       {
        "title": "Connect to remote MCP Servers",
        "url": "https://modelcontextprotocol.io/docs/develop/connect-remote-servers"
+      }
+     ],
+     "points": [
+      "ふつうのコーディング作業は組み込みのツールで足りる。同じことをするツールは作らない",
+      "同じ手順や資料を何度も貼っているなら Skill（指示書と資料のフォルダ）にする",
+      "Claude から見えない外部システムのデータを写しているなら MCP でつなぐ",
+      "1つのアプリの中だけのデータは、そのアプリで実行する自作ツールで渡す",
+      "API の Skill はネットワークにつながらないので、外部の API を呼ぶ用途には使えない"
+     ],
+     "diagrams": [
+      {
+       "type": "tree",
+       "title": "拡張の選び方",
+       "q": "何が足りない？",
+       "branches": [
+        {
+         "when": "ふつうのコーディング作業",
+         "a": "組み込みのツール",
+         "note": "同じものを自作すると保守が増えるだけ"
+        },
+        {
+         "when": "手順・資料の知識",
+         "a": "Skill",
+         "note": "例: テストの環境変数と順番"
+        },
+        {
+         "when": "見えないデータ",
+         "q": "使うのは1つのアプリの中だけ？",
+         "branches": [
+          {
+           "when": "はい",
+           "a": "自作ツール（アプリで実行）",
+           "note": "読む口を外に公開しなくてよい"
+          },
+          {
+           "when": "いいえ",
+           "a": "MCP",
+           "note": "複数のクライアントで同じ実装を使い回す"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "flow",
+       "title": "Skill の段階的な読み込み",
+       "steps": [
+        {
+         "text": "ふだんは名前と説明だけが入る",
+         "note": "1つ約100トークン"
+        },
+        {
+         "text": "依頼が説明に合うと SKILL.md の本文を読む"
+        },
+        {
+         "text": "さらに要るときだけ同梱の資料・スクリプトを使う",
+         "note": "スクリプトはコードでなく出力だけが入る"
+        }
+       ]
+      },
+      {
+       "type": "table",
+       "title": "Claude API と Claude Code の Skill",
+       "head": [
+        "",
+        "Claude API の Skill",
+        "Claude Code の Skill"
+       ],
+       "rows": [
+        [
+         "置き方",
+         "上げてワークスペースで共有",
+         "ファイルとして置く"
+        ],
+        [
+         "ネットワーク",
+         "つながらない",
+         "使える"
+        ],
+        [
+         "文書の Skill（pptx など）",
+         "使える",
+         "ない"
+        ],
+        [
+         "同期",
+         "使う場所の間で同期されない",
+         "使う場所の間で同期されない"
+        ]
+       ]
       }
      ],
      "weight": 4.1

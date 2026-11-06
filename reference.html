@@ -104,6 +104,38 @@ th { background: var(--accent-soft); }
 .toc .sub { padding-left: 2.4em; font-size: 13px; }
 .top { font-size: 13px; text-align: right; }
 .top a { color: var(--accent); }
+.points { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.points li { position: relative; padding: 6px 10px 6px 26px; background: var(--green-soft); border-radius: 6px; font-size: 14px; }
+.points li::before { content: "✓"; position: absolute; left: 9px; top: 6px; color: var(--green); font-weight: 700; }
+.dg { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 8px; background: var(--paper); }
+.dg-title { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+.dg-kind { font-family: var(--font-mono); font-size: 11px; color: var(--ink-soft); margin-left: 6px; font-weight: 500; }
+.dg .note { font-size: 12px; color: var(--ink-soft); }
+.fl { display: grid; gap: 0; }
+.fl-step { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 8px; align-items: center; background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-size: 14px; }
+.fl-arrow { text-align: center; color: var(--ink-soft); font-size: 13px; line-height: 1.3; height: 18px; }
+.actor { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.a0 { background: var(--accent-soft); color: var(--accent); } .a1 { background: var(--amber-soft); color: var(--amber); }
+.a2 { background: var(--green-soft); color: var(--green); } .a3 { background: var(--red-soft); color: var(--red); }
+.fl-loop { font-size: 13px; color: var(--accent); border: 1px dashed var(--accent); border-radius: 8px; padding: 5px 10px; text-align: center; margin-top: 6px; }
+.tr { display: grid; gap: 6px; }
+.tr-q { font-weight: 700; font-size: 14px; background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+.tr-q::before { content: "？ "; color: var(--accent); }
+.tr-br { margin-left: 12px; padding-left: 12px; border-left: 2px solid var(--line); display: grid; gap: 6px; }
+.tr-when { font-size: 12px; color: var(--ink-soft); }
+.tr-when b { color: var(--accent); }
+.tr-a { font-size: 14px; font-weight: 700; color: var(--green); background: var(--green-soft); border-radius: 8px; padding: 6px 10px; }
+.tr-a::before { content: "→ "; }
+.ns { border: 1.5px solid var(--accent); border-radius: 8px; padding: 6px 8px; display: grid; gap: 6px; background: var(--sheet); }
+.ns .ns { border-color: var(--line); background: var(--paper); }
+.ns .ns .ns { background: var(--sheet); }
+.ns-label { font-size: 13px; font-weight: 700; }
+.ns-kids { display: flex; flex-wrap: wrap; gap: 6px; }
+.ns-kids > .ns { flex: 1 1 120px; min-width: 0; }
+details.more { border-top: 1px dashed var(--line); padding-top: 8px; }
+.unit, .unit > *, .dg, .dg > *, details.more > *, .fl-step > * { min-width: 0; }
+details.more summary { cursor: pointer; color: var(--accent); font-size: 14px; }
+details.more[open] { display: grid; gap: 8px; }
 </style>
 </head>
 <body>
@@ -111,7 +143,7 @@ th { background: var(--accent-soft); }
   <header>
     <span class="eyebrow">CLAUDE CERTIFIED DEVELOPER – FOUNDATIONS · CCDV-F v1.0</span>
     <h1>CCDV-F 参考書</h1>
-    <p class="lead">試験の8つの出題範囲（ドメイン）と25の単元を、初学者向けに1ページで解説します。カッコ（）の中は言葉の軽い説明です。【解説】の付いた文は、公式ドキュメントで確かめていない補足です。</p>
+    <p class="lead">試験の8つの出題範囲（ドメイン）と25の単元を、図と要点で解説します。文章の解説は各単元の「詳しく読む」に畳んであります。カッコ（）の中は言葉の軽い説明です。【解説】の付いた文は、公式ドキュメントで確かめていない補足です。</p>
     <nav>
       <a href="./">間違いノート</a>
       <a href="primer.html">前提知識ノート</a>
@@ -129,19 +161,43 @@ th { background: var(--accent-soft); }
 </div>
 <script>
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const KIND = { flow: "流れ図", tree: "分かれ道", table: "比較の表", nest: "入れ子の地図" };
+function flowHtml(g) {
+  const actors = [...new Set((g.steps || []).map(x => x.actor).filter(Boolean))];
+  return `<div class="fl">${g.steps.map((x, i) => `${i ? '<div class="fl-arrow">↓</div>' : ""}<div class="fl-step">${x.actor ? `<span class="actor a${actors.indexOf(x.actor) % 4}">${esc(x.actor)}</span>` : "<span></span>"}<div>${esc(x.text)}${x.note ? `<div class="note">${esc(x.note)}</div>` : ""}</div></div>`).join("")}${g.loop ? `<div class="fl-loop">↻ ${esc(g.loop)}</div>` : ""}</div>`;
+}
+function treeNode(n) {
+  if (n.a !== undefined) return `<div class="tr-a">${esc(n.a)}${n.note ? `<div class="note">${esc(n.note)}</div>` : ""}</div>`;
+  return `<div class="tr"><div class="tr-q">${esc(n.q)}${n.note ? `<div class="note">${esc(n.note)}</div>` : ""}</div>${(n.branches || []).map(b => `<div class="tr-br"><div class="tr-when"><b>${esc(b.when)}</b></div>${treeNode(b)}</div>`).join("")}</div>`;
+}
+function tableHtml(head, rows) {
+  return `<div class="tbl"><table><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((x, i) => i ? `<td>${esc(x)}</td>` : `<th scope="row">${esc(x)}</th>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+function nestNode(n) {
+  return `<div class="ns"><div class="ns-label">${esc(n.label)}</div>${n.note ? `<div class="note">${esc(n.note)}</div>` : ""}${(n.children || []).length ? `<div class="ns-kids">${n.children.map(nestNode).join("")}</div>` : ""}</div>`;
+}
+function diagramHtml(g) {
+  let body = "";
+  if (g.type === "flow") body = flowHtml(g);
+  else if (g.type === "tree") body = treeNode(g);
+  else if (g.type === "table") body = tableHtml(g.head, g.rows);
+  else if (g.type === "nest") body = nestNode(g);
+  return `<figure class="dg" style="margin:0"><figcaption class="dg-title">${esc(g.title)}<span class="dg-kind">${KIND[g.type] || ""}</span></figcaption>${body}</figure>`;
+}
 function unitHtml(u, byId) {
   const terms = (u.terms || []).filter(id => byId[id]);
   return `<div class="unit" id="u-${esc(u.unit)}">
     <h3>${esc(u.unit)} ${esc(u.titleJa)} <span class="weight">${esc(u.title)}${u.weight ? " · " + u.weight + "%" : ""}</span></h3>
     <p class="asks"><b>問われること：</b>${esc(u.asks)}</p>
-    ${(u.sections || []).map(s => `<h4>${esc(s.heading)}</h4>
-      ${(s.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join("")}
-      ${(s.points || []).length ? `<ul class="pts">${s.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}`).join("")}
-    ${(u.compare || []).map(c => `<h4>${esc(c.title)}</h4><div class="tbl"><table><thead><tr>${c.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead>
-      <tbody>${c.rows.map(r => `<tr>${r.map(x => `<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`).join("")}
+    ${(u.points || []).length ? `<h4>要点</h4><ul class="points">${u.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}
+    ${(u.diagrams || []).map(diagramHtml).join("")}
     ${(u.pitfalls || []).length ? `<h4>よくある取り違え</h4><ul class="traps">${u.pitfalls.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}
     ${terms.length ? `<h4>関係する用語（タップで説明）</h4><div class="terms">${terms.map(id => `<button class="term" type="button" data-id="${id}" aria-expanded="false">${esc(byId[id].name)}</button>`).join("")}</div><div class="defbox"></div>` : ""}
-    ${(u.sources || []).length ? `<p class="src">出典：${u.sources.map(s => `<a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.title)}</a>`).join("・")}</p>` : ""}
+    <details class="more"><summary>詳しく読む（文章の解説）</summary>
+      ${(u.sections || []).map(s => `<h4>${esc(s.heading)}</h4>${(s.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join("")}${(s.points || []).length ? `<ul class="pts">${s.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}`).join("")}
+      ${(u.compare || []).map(c => `<h4>${esc(c.title)}</h4>${tableHtml(c.head, c.rows)}`).join("")}
+      ${(u.sources || []).length ? `<p class="src">出典：${u.sources.map(s => `<a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.title)}</a>`).join("・")}</p>` : ""}
+    </details>
   </div>`;
 }
 Promise.all([
