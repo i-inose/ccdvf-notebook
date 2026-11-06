@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CCDV-F 参考書</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* レイアウト: 目次（ドメインと配点）→ ドメインごとの概要 → 単元ごとの解説（問われること・本文・比較表・取り違え・用語・出典） */
+:root {
+  --paper: #f6f7f9; --sheet: #ffffff; --grid: #e3e8ef; --ink: #1d2a3a; --ink-soft: #5a6778;
+  --line: #d5dce6; --accent: #2456a6; --accent-soft: #e6eefb; --red: #c8322b; --red-soft: #fbe9e7;
+  --green: #1f7a4d; --green-soft: #e3f4ea; --amber: #a86400; --amber-soft: #fdf1dc;
+  --font-display: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #12161c; --sheet: #1a2029; --grid: #1f2630; --ink: #e4e9f0; --ink-soft: #9aa6b5;
+    --line: #2e3744; --accent: #8db4f5; --accent-soft: #1d2a40; --red: #ff8a80; --red-soft: #3a1f1e;
+    --green: #7fd1a4; --green-soft: #17302a; --amber: #f2b85c; --amber-soft: #3a2c15; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px; color: var(--ink); font-family: var(--font-body);
+  font-size: 15px; line-height: 1.8; -webkit-text-size-adjust: 100%; overflow-wrap: anywhere;
+}
+.wrap {
+  max-width: 680px; margin: 0 auto;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(40px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px;
+}
+header { display: grid; gap: 4px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--accent); }
+h1 { font-family: var(--font-display); font-weight: 900; font-size: 24px; line-height: 1.3; margin: 0; }
+h2 { font-family: var(--font-display); font-weight: 900; font-size: 19px; line-height: 1.4; margin: 0; }
+h3 { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin: 6px 0 0; color: var(--ink-soft); }
+.lead { margin: 0; color: var(--ink-soft); font-size: 14px; }
+nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+nav a { color: var(--accent); }
+.panel { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 14px; min-width: 0; display: grid; gap: 10px; }
+.panel p { margin: 0; }
+.toc { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.toc a { color: var(--ink); text-decoration: none; display: flex; gap: 8px; align-items: baseline; }
+.toc .no { font-family: var(--font-mono); color: var(--accent); min-width: 1.6em; }
+.toc .done { margin-left: auto; font-size: 12px; color: var(--green); }
+.chap-no { font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: .06em; }
+.one { font-weight: 700; }
+.flow { display: grid; gap: 0; margin: 2px 0; padding: 0; list-style: none; counter-reset: s; }
+.flow li {
+  position: relative; padding: 8px 10px 8px 38px; border: 1px solid var(--line); border-radius: 8px; background: var(--accent-soft); font-size: 14px;
+}
+.flow li + li { margin-top: 18px; }
+.flow li + li::before { content: "↓"; position: absolute; top: -19px; left: 14px; color: var(--ink-soft); font-size: 13px; }
+.flow li::after {
+  counter-increment: s; content: counter(s); position: absolute; left: 10px; top: 8px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+}
+.story p + p { margin-top: 8px; }
+.terms { display: flex; flex-wrap: wrap; gap: 6px; }
+.term {
+  all: unset; cursor: pointer; font-size: 13px; padding: 3px 10px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--sheet); color: var(--accent);
+}
+.term[aria-expanded="true"] { background: var(--accent); color: var(--sheet); border-color: var(--accent); }
+.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.def { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 6px; padding: 10px 12px; font-size: 14px; display: grid; gap: 6px; }
+.def .name { font-weight: 700; }
+.def .lbl { font-size: 12px; color: var(--ink-soft); margin-right: 6px; }
+.traps { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.traps li { background: var(--amber-soft); border-radius: 6px; padding: 8px 10px; font-size: 14px; }
+.traps b { color: var(--amber); }
+code { font-family: var(--font-mono); font-size: 13px; background: var(--accent-soft); padding: 0 4px; border-radius: 4px; }
+.readrow { display: flex; justify-content: flex-end; }
+.read {
+  all: unset; cursor: pointer; font-size: 13px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-soft);
+}
+.read[aria-pressed="true"] { background: var(--green-soft); color: var(--green); border-color: var(--green); }
+.map { display: grid; gap: 6px; font-size: 14px; }
+.map .row { display: grid; grid-template-columns: 2.2em minmax(0, 1fr); gap: 6px; align-items: baseline; }
+.map .row span:first-child { font-family: var(--font-mono); color: var(--accent); }
+
+.dom-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.weight { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); }
+.unit { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 8px; }
+.unit h3 { color: var(--ink); font-size: 17px; margin: 0; }
+.unit h4 { font-family: var(--font-display); font-size: 15px; margin: 4px 0 0; }
+.asks { background: var(--accent-soft); border-radius: 6px; padding: 8px 10px; font-size: 14px; }
+.unit ul.pts { margin: 0; padding-left: 1.3em; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13px; width: 100%; min-width: 420px; }
+th, td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); }
+.src { font-size: 12px; color: var(--ink-soft); }
+.src a { color: var(--accent); }
+.toc .sub { padding-left: 2.4em; font-size: 13px; }
+.top { font-size: 13px; text-align: right; }
+.top a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">CLAUDE CERTIFIED DEVELOPER – FOUNDATIONS · CCDV-F v1.0</span>
+    <h1>CCDV-F 参考書</h1>
+    <p class="lead">試験の8つの出題範囲（ドメイン）と25の単元を、初学者向けに1ページで解説します。カッコ（）の中は言葉の軽い説明です。【解説】の付いた文は、公式ドキュメントで確かめていない補足です。</p>
+    <nav>
+      <a href="./">間違いノート</a>
+      <a href="primer.html">前提知識ノート</a>
+      <a href="quiz.html">クイズ</a>
+      <a href="cards.html">単語カード</a>
+    </nav>
+  </header>
+  <section class="panel" aria-labelledby="h-toc">
+    <h2 id="h-toc">目次</h2>
+    <p>試験は53問・120分で、配点（ドメインの割合）が大きいほど多く出ます。最大は D2（33.1%）、次が D5（16.8%）と D1（14.7%）です。</p>
+    <ul class="toc" id="toc"></ul>
+  </section>
+  <div id="book" style="display:grid;gap:14px"></div>
+  <p class="lead" id="status">読み込み中…</p>
+</div>
+<script>
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function unitHtml(u, byId) {
+  const terms = (u.terms || []).filter(id => byId[id]);
+  return `<div class="unit" id="u-${esc(u.unit)}">
+    <h3>${esc(u.unit)} ${esc(u.titleJa)} <span class="weight">${esc(u.title)}${u.weight ? " · " + u.weight + "%" : ""}</span></h3>
+    <p class="asks"><b>問われること：</b>${esc(u.asks)}</p>
+    ${(u.sections || []).map(s => `<h4>${esc(s.heading)}</h4>
+      ${(s.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join("")}
+      ${(s.points || []).length ? `<ul class="pts">${s.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}`).join("")}
+    ${(u.compare || []).map(c => `<h4>${esc(c.title)}</h4><div class="tbl"><table><thead><tr>${c.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead>
+      <tbody>${c.rows.map(r => `<tr>${r.map(x => `<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`).join("")}
+    ${(u.pitfalls || []).length ? `<h4>よくある取り違え</h4><ul class="traps">${u.pitfalls.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}
+    ${terms.length ? `<h4>関係する用語（タップで説明）</h4><div class="terms">${terms.map(id => `<button class="term" type="button" data-id="${id}" aria-expanded="false">${esc(byId[id].name)}</button>`).join("")}</div><div class="defbox"></div>` : ""}
+    ${(u.sources || []).length ? `<p class="src">出典：${u.sources.map(s => `<a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.title)}</a>`).join("・")}</p>` : ""}
+  </div>`;
+}
+Promise.all([
+  fetch("reference.json", { cache: "no-store" }).then(r => r.json()),
+  fetch("glossary.json", { cache: "no-store" }).then(r => r.json()).catch(() => ({ terms: [] })),
+]).then(([ref, g]) => {
+  const byId = Object.fromEntries((g.terms || []).map(t => [t.id, t]));
+  document.getElementById("toc").innerHTML = ref.domains.map(d =>
+    `<li><a href="#d-${d.id}"><span class="no">${d.id}</span><span>${esc(d.titleJa)}</span><span class="weight" style="margin-left:auto">${d.weight}%</span></a></li>` +
+    d.units.map(u => `<li class="sub"><a href="#u-${u.unit}"><span class="no">${u.unit}</span><span>${esc(u.titleJa)}</span></a></li>`).join("")).join("");
+  const book = document.getElementById("book");
+  book.innerHTML = ref.domains.map(d => `<section class="panel" id="d-${d.id}" aria-labelledby="h-${d.id}">
+      <div class="dom-head"><span class="chap-no">${d.id}</span><h2 id="h-${d.id}">${esc(d.titleJa)}</h2><span class="weight">${esc(d.title)} · ${d.weight}%</span></div>
+      ${(d.overview || []).map(p => `<p>${esc(p)}</p>`).join("")}
+      ${d.units.map(u => unitHtml(u, byId)).join("")}
+      <p class="top"><a href="#h-toc">目次へ戻る</a></p>
+    </section>`).join("");
+  book.addEventListener("click", e => {
+    const t = e.target.closest(".term"); if (!t) return;
+    const unit = t.closest(".unit"); const box = unit.querySelector(".defbox");
+    const open = t.getAttribute("aria-expanded") === "true";
+    unit.querySelectorAll(".term").forEach(b => b.setAttribute("aria-expanded", "false"));
+    if (open) { box.innerHTML = ""; return; }
+    t.setAttribute("aria-expanded", "true");
+    const x = byId[t.dataset.id];
+    box.innerHTML = `<div class="def"><div class="name">${esc(x.name)}</div><div><span class="lbl">ひとこと</span>${esc(x.short)}</div><div><span class="lbl">説明</span>${esc(x.detail)}</div>${x.exam ? `<div><span class="lbl">試験では</span>${esc(x.exam)}</div>` : ""}</div>`;
+  });
+  const n = ref.domains.reduce((a, d) => a + d.units.length, 0);
+  document.getElementById("status").textContent = `${ref.domains.length}ドメイン・${n}単元（${ref.updatedAt} 作成）`;
+}).catch(() => { document.getElementById("status").textContent = "参考書のデータを読み込めませんでした。時間をおいて開き直してください。"; });
+</script>
+</body>
+</html>
