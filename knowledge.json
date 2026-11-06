@@ -1137,12 +1137,193 @@
             }
           ],
           "addedAt": "2026-11-05"
+        },
+        {
+          "name": "成功基準と評価（success criteria / evals）による反復改善",
+          "meaning": "プロンプトを直す前に「何ができれば成功か」を具体的で測れる形で決め、評価用の入力で測りながら、プロンプトを少しずつ直していく進め方。",
+          "analogy": "ダイエットを始める前に体重計を用意する。測る道具がないと、良くなったのか分からない。",
+          "exam": "公式の流れは「テストケース → 最初のプロンプト → テストと改善のくり返し → 最終確認 → 出荷」。採点はコード（完全一致など）が最も速く確実で、人の採点は遅く高いので避けられるなら避ける。少数の丁寧な採点より、自動で採点できる多くの問題。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Define success criteria and build evaluations",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+            },
+            {
+              "title": "Prompt engineering overview",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "プロンプトの連鎖（prompt chaining）と自己修正（self-correction）",
+          "meaning": "1つの作業を、順番につながる複数の API 呼び出しに分ける方法。よく使う形は「下書き → 基準に照らした点検 → 直す」の自己修正。",
+          "analogy": "原稿・校閲・修正を別の工程に分ける。どの工程で問題が出たかを後から追える。",
+          "exam": "思考とサブエージェントで多くの手順は1回で処理できるが、途中の出力を確かめたい・決まった流れを守らせたいときは連鎖が有効。各段階を記録・評価・分岐できる。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            },
+            {
+              "title": "Increase output consistency",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "モデルごとのプロンプト調整（model-specific prompting guidance）",
+          "meaning": "モデルごとにくせが違うため、前のモデル向けに書いた指示を、新しいモデルの「Prompting Claude ○○」のページに沿って足したり外したりすること。",
+          "analogy": "新しい車に乗り換えたら、前の車のくせに合わせた運転の工夫を見直す。",
+          "exam": "例: Opus 5.5 のチャットでは「答える前によく考えて」を外すと返答が早く始まる。Sonnet 5.5 で structured outputs の計算問題なら「答える前によく考えて」を足す。Haiku 5.5 で「何でも検索して」のような一律の指示は、検索を増やすだけ。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Prompting Claude Opus 5.5",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5"
+            },
+            {
+              "title": "Prompting Claude Sonnet 5.5",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5"
+            },
+            {
+              "title": "Prompting Claude Haiku 5.5",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5"
+            },
+            {
+              "title": "Prompting best practices",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "信頼できない内容の分け方（untrusted content handling）",
+          "meaning": "メール・Web ページ・ツールの結果・貼り付けた文など、第三者が書いた内容を、Claude が指示と取り違えないよう渡し方で分けること。",
+          "analogy": "届いた手紙を「お客様からの手紙」と書いた封筒に入れたまま渡す。中に「読んだら金庫を開けて」とあっても、それは手紙の中身にすぎない。",
+          "exam": "第三者の内容は tool_result に入れ、system や user の text には入れない。出どころを示し、JSON に包むと境目がはっきりする。自分の指示は tool_result に入れない。利用者が貼り付けた文は、ランダムな ID 付きのタグで囲む（Opus 5.5）。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Mitigate jailbreaks and prompt injections",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+            },
+            {
+              "title": "Prompting Claude Opus 5.5",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5"
+            },
+            {
+              "title": "Mid-conversation system messages and tool changes",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "プロンプトリーク（prompt leak）",
+          "meaning": "プロンプトに書いた、利用者に見せたくない情報が、応答に出てしまうこと。",
+          "analogy": "台本の余白に書いた演出メモを、役者がそのまま客席に読み上げてしまう。",
+          "exam": "完全に防ぐ方法はない。まず出力の後処理（キーワードの検査など）や監視を試す。作業に要らない社内の情報はプロンプトに入れない。漏えい防止の指示を増やしすぎると、本来の作業の質が落ちることがある。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Reduce prompt leak",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-prompt-leak"
+            }
+          ],
+          "addedAt": "2026-11-05"
         }
       ],
       "distinctions": [
         {
           "title": "system（運用者の指示）と user（利用者の発言）",
           "text": "system は運用者（アプリを作る側）からの指示で、食い違えば user より優先される。役割や守らせたい規則はここに置く。\nuser は利用者の発言として扱われ、その時々の依頼や入力を置く。\n会話の途中で運用者の指示を足すときは、top-level の system を書き換えず、会話途中の system メッセージで足す。",
+          "addedAt": "2026-11-05"
+        },
+        {
+          "title": "プロンプトで直すことと、設定やモデルで直すこと",
+          "text": "指示の取り違え・出力の形・振る舞いのくせは、プロンプトで直す（指示を足す・外す・例を足す）。\n考える量・待ち時間・費用は、まず effort やモデルの選択で直す。Opus 5.5 では、考える量はプロンプトの指示より effort を下げるほうが確実に減る。\n公式も、評価の失敗をすべてプロンプトで直すのが最善とは限らず、遅延と費用はモデルを替えるほうが簡単なことがあるとしている。",
+          "addedAt": "2026-11-05"
+        }
+      ]
+    },
+    {
+      "unit": "6-3",
+      "title": "Output Handling",
+      "terms": [
+        {
+          "name": "構造化出力が保証しないもの（invalid outputs）",
+          "meaning": "構造化出力（structured outputs）はスキーマに合う形を保証するが、拒否（stop_reason: refusal）や max_tokens で切れたときは合わないことがあり、enum の値の大文字小文字も保証しない。値の中身が正しいことも保証しない。",
+          "analogy": "記入欄の形が決まった申込書。欄はきちんと埋まって届くが、書かれた住所が本当に正しいかまでは確かめてくれない。",
+          "exam": "読む前に stop_reason を確かめる。enum は大文字小文字を無視して比べ、大小だけが違う値を作らない。必須の項目が先、省略できる項目が後に並ぶので、値はキー名で読む。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Structured outputs",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "拒否（refusal）と stop_details",
+          "meaning": "Opus 5.5 などの安全分類器が要求を断ると、エラーではなく HTTP 200 で stop_reason: \"refusal\" が返る。stop_details.category が理由の分野を示す。",
+          "analogy": "窓口で「その手続きはお受けできません」と言われるのは、システム障害ではなく正常な対応。エラーの件数を数えても見つからない。",
+          "exam": "分岐は stop_reason（または stop_details.type）で行う。explanation の文言は変わるので表示するだけで解析しない。category は null のこともある。reasoning_extraction は、推論を出力の項目に書かせる指示で起き、再試行ではなくプロンプトを直す。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Refusals and fallback",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "引用付きの構造化データ（structured data with citations）",
+          "meaning": "citations と構造化出力は一緒に使えない（400）ので、1項目を1行の「項目: 値」で答えさせて引用を付けさせ、コードで行に分けて読む方法。",
+          "analogy": "答案の各行の横に、教科書のページ番号を書かせて提出させる。採点する側は行ごとにページを開いて確かめる。",
+          "exam": "「JSON だけを返して」と指示すると引用がほとんど付かない。API は各項目に値と引用があることを保証しないので、最後にコードで確かめる。citations の引用は、プロンプトで書かせた引用と違い、文書の正しい位置を指すことが保証される。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Citations",
+              "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "幻覚（hallucination）を減らす手法",
+          "meaning": "事実と違う内容や、与えた文書と食い違う内容を生成すること（幻覚）を減らすための手法。「分からない」と言ってよいと伝える、先に原文を引用させる、引用で主張を検証させる、同じ入力で何回か出して比べる（Best-of-N）など。",
+          "analogy": "記者に「確かでないことは書かなくてよい」と伝え、記事の各文に取材メモの該当箇所を添えさせ、別の記者にも同じ取材をさせて食い違いを探す。",
+          "exam": "2万トークンを超える長い文書では、先に一字一句の引用を抜き出させる。断定の口調は根拠の有無を示さない。公式は、これらの手法でも幻覚はなくならないので、重要な情報は確かめるよう書いている。",
+          "verified": true,
+          "sources": [
+            {
+              "title": "Reduce hallucinations",
+              "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+            }
+          ],
+          "addedAt": "2026-11-05"
+        },
+        {
+          "name": "防御的なパース（defensive parsing）【解説】",
+          "meaning": "応答の形や中身が期待どおりでない場合があることを前提に、確かめてから使う読み方。stop_reason の確認、キー名での読み出し、大文字小文字を無視した比較、欠けた値や引用の検出、業務の決まりでの検算などを含む。",
+          "analogy": "届いた荷物を、伝票を見ただけで棚に並べず、箱を開けて品物と数を確かめてから並べる。",
+          "exam": "公式に「defensive parsing」という見出しの定義はない。試験では、構造化出力や strict tool use を使っても残る例外（拒否・途中切れ・enum の大小・順番・中身の誤り）を、コードで確かめる設計が問われると考えられる。",
+          "verified": false,
+          "sources": [],
+          "addedAt": "2026-11-05"
+        }
+      ],
+      "distinctions": [
+        {
+          "title": "スキーマに合っていること（形）と、内容が正しいこと（中身）",
+          "text": "構造化出力と strict tool use が保証するのは形で、JSON として読めて、型と必須の項目がそろうこと。\n値が文書や事実と合っているかは保証しない。\n中身は、引用（citations）・検算・同じ入力での比べ合わせ・人の確認で確かめる。",
           "addedAt": "2026-11-05"
         }
       ]
